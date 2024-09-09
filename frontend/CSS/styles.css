@@ -12,7 +12,7 @@ html, body {
 
 /* Image de fond couvrant toute la page */
 body {
-    background-image: url('../Img/Cybercity.jpg');
+    background-image: url('./Img/Cybercity.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
