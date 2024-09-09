@@ -7,6 +7,9 @@ ENV MYSQL_DATABASE=mydatabase
 ENV MYSQL_USER=myuser
 ENV MYSQL_PASSWORD=mypassword
 
+# Copier le script SQL d'initialisation dans le répertoire dédié de MariaDB
+COPY ./init.sql /docker-entrypoint-initdb.d/
+
 # Meilleure pratique : Utiliser un volume pour persister les données
 VOLUME /var/lib/mysql
 

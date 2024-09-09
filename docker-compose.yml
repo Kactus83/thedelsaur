@@ -11,7 +11,6 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
     ports:
-    
       - "3307:3306"
     networks:
       - backend-network
