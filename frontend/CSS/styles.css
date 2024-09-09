@@ -1,0 +1,174 @@
+/* Variables CSS */
+:root {
+    --primary-color: #0275d8;
+    --primary-hover-color: #025aa5;
+    --overlay-background: rgba(0, 0, 0, 0.6);
+    --form-background: rgba(255, 255, 255, 0.95);
+    --button-background: #212121;
+    --button-border-color: #fff;
+    --input-border-color: #ccc;
+    --input-border-radius: 5px;
+    --input-padding: 10px;
+}
+
+/* Réinitialisation des marges et hauteurs */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Image de fond couvrant toute la page */
+body {
+    background-image: url('../assets/img/Cybercity.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Bloc central avec un fond semi-transparent */
+.central-block {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 5px 5px 2px 1px rgba(0, 0, 0, 0.808);
+}
+
+/* Bouton */
+.btn-signup {
+    padding: 0.1em 0.25em;
+    width: 13em;
+    height: 4.2em;
+    background-color: #212121;
+    border: 0.08em solid #fff;
+    border-radius: 0.3em;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+
+.btn-login span, .btn-signup span {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0.4em;
+    width: 8.25em;
+    height: 2.5em;
+    background-color: #212121;
+    border-radius: 0.2em;
+    font-size: 1.5em;
+    color: #fff;
+    border: 0.08em solid #fff;
+    box-shadow: 0 0.4em 0.1em 0.019em #fff;
+}
+
+.btn-login span:hover, .btn-signup span:hover {
+transition: all 0.5s;
+transform: translate(0, 0.4em);
+box-shadow: 0 0 0 0 #fff;
+}
+.btn-login span:not(hover), .btn-signup span:not(hover) {
+transition: all 1s;
+}
+
+/* Adaptabilité pour les petits écrans */
+@media (max-width: 600px) {
+    .central-block {
+        padding: 20px;
+    }
+}
+
+/* Style des formulaires (login et signup) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--overlay-background);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.form-container {
+    background: var(--form-background);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #333;
+}
+
+/* Champs de saisie */
+.form-container input {
+    width: 100%;
+    padding: var(--input-padding);
+    margin: 10px 0;
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--input-border-radius);
+    font-size: 1em;
+}
+
+/* Bouton de soumission */
+.form-container .btn-submit {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: var(--input-border-radius);
+    width: 100%;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.form-container .btn-submit:hover {
+    background-color: var(--primary-hover-color);
+}
+
+/* Bouton de fermeture (croix) */
+.form-container .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #333;
+}
+
+.form-container .close-btn:hover {
+    color: #000;
+}
+
+/* Adaptabilité pour les petits écrans */
+@media (max-width: 600px) {
+    .form-container {
+        width: 90%;
+        padding: 20px;
+    }
+}

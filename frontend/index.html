@@ -4,14 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page</title>
-    <link rel="stylesheet" href="CSS/Index.css">
+    <link rel="stylesheet" href="CSS/styles.css">
 </head>
 <body>
     <div class="central-block">
-        <H1>The IdleSaur</H1>
+        <h1>The IdleSaur</h1>
         <br>
-        <button class="btn-login"><span>Se Connecter </span></button>
-        <button class="btn-signup"><span>S'inscrire</span></button>
+        <button class="btn-login" id="btn-login"><span>Se Connecter</span></button>
+        <button class="btn-signup" id="btn-signup"><span>S'inscrire</span></button>
     </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+        <!-- Formulaire de Connexion -->
+        <div class="form-container" id="login-form">
+            <button class="close-btn" id="close-login">&times;</button>
+            <h2>Se Connecter</h2>
+            <form id="loginForm">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mot de passe" required>
+                <button type="submit" class="btn-submit">Connexion</button>
+            </form>
+        </div>
+
+        <!-- Formulaire d'Inscription -->
+        <div class="form-container" id="signup-form">
+            <button class="close-btn" id="close-signup">&times;</button>
+            <h2>S'inscrire</h2>
+            <form id="signupForm">
+                <input type="text" id="signup-username" placeholder="Nom d'utilisateur" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Mot de passe" required>
+                <button type="submit" class="btn-submit">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="JS/script.js"></script>
 </body>
 </html>

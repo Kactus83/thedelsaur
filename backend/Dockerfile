@@ -1,7 +1,10 @@
 # Utiliser l'image officielle de Node.js avec une version LTS pour stabilité
 FROM node:16-alpine
 
-# Meilleure pratique : Définir un répertoire de travail pour l'application
+# Installer les dépendances de build nécessaires pour bcrypt
+RUN apk add --no-cache make gcc g++ python3
+
+# Définir un répertoire de travail pour l'application
 WORKDIR /app
 
 # Copier uniquement package.json et package-lock.json pour optimiser le cache Docker lors de l'installation des dépendances
@@ -16,5 +19,5 @@ COPY . .
 # Exposer le port utilisé par votre application Express
 EXPOSE 3000
 
-# Lancer l'application
-CMD ["node", "server.js"]
+# Lancer l'application via src/index.js
+CMD ["node", "src/index.js"]
