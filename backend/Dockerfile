@@ -4,11 +4,11 @@ FROM node:16-alpine
 # Meilleure pratique : Définir un répertoire de travail pour l'application
 WORKDIR /app
 
-# Meilleure pratique : Copier uniquement package.json et package-lock.json pour optimiser le cache Docker lors de l'installation des dépendances
+# Copier uniquement package.json et package-lock.json pour optimiser le cache Docker lors de l'installation des dépendances
 COPY package*.json ./
 
-# Installer les dépendances (npm ci est préférable pour garantir des installations propres)
-RUN npm ci --only=production
+# Installer les dépendances
+RUN npm install --only=production
 
 # Copier le reste de l'application
 COPY . .
