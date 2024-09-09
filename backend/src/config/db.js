@@ -11,9 +11,12 @@ const dbConfig = {
     database: process.env.DB_NAME || 'mydatabase'
 };
 
+// Variable globale pour stocker la connexion
+let db;
+
 // Fonction de connexion à la base de données avec reconnexion
 function connectWithRetry() {
-    const db = mysql.createConnection(dbConfig);
+    db = mysql.createConnection(dbConfig);
 
     db.connect((err) => {
         if (err) {
@@ -29,4 +32,5 @@ function connectWithRetry() {
 // Appel initial de la fonction de connexion
 connectWithRetry();
 
+// Exporter la connexion
 module.exports = db;
