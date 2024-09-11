@@ -1,0 +1,86 @@
+/* Styles de base pour la gestion des utilisateurs */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2em;
+    color: #333;
+}
+
+.back-btn {
+    text-decoration: none;
+    background-color: var(--primary-color, #0275d8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: var(--primary-hover-color, #025aa5);
+}
+
+/* Table de gestion des utilisateurs */
+#user-management {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#user-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#user-table th, #user-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#user-table th {
+    background-color: var(--primary-color, #0275d8);
+    color: white;
+}
+
+#user-table td {
+    background-color: white;
+}
+
+/* Boutons d'actions */
+.action-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: #c82333;
+}
+
+.action-btn.delete {
+    background-color: #dc3545;
+}
+
+.action-btn.update {
+    background-color: #28a745;
+}
+
+.action-btn.update:hover {
+    background-color: #218838;
+}
