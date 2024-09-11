@@ -17,7 +17,7 @@ In the Dinosaur Game, you will be responsible for taking care of your virtual pe
 
 ### Controls
 
-
+No control
 
 ### Scoring
 
