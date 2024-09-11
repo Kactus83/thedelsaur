@@ -54,3 +54,18 @@ exports.deleteUser = async (userId) => {
     throw err;
   }
 };
+
+
+// Requête pour créer un utilisateur
+exports.createUser = (username, email, passwordHash) => {
+  return new Promise((resolve, reject) => {
+    const query = 'INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)';
+    db.query(query, [username, email, passwordHash], (err, result) => {
+      if (err) {
+        console.error('Erreur lors de la création de l\'utilisateur:', err);
+        return reject(err); // Rejette la promesse en cas d'erreur
+      }
+      resolve(result.insertId); // Renvoie l'ID de l'utilisateur créé
+    });
+  });
+};
