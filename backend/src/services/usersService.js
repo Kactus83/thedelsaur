@@ -1,5 +1,5 @@
 const userModel = require('../models/userModel');
-const axios = require('axios');
+
 // Service pour récupérer tous les utilisateurs
 exports.getAllUsers = async () => {
   return await userModel.findAll();
