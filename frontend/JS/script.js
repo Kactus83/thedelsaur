@@ -35,23 +35,23 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('login-password').value;
 
     try {
-        const response = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
+        // Utilisation de Axios pour envoyer la requête de login
+        const response = await axios.post('http://localhost:3000/auth/login', {
+            email,
+            password
         });
 
-        const data = await response.json();
-        if (response.ok) {
-            alert('Connexion réussie !');
-            console.log('Token:', data.token);
-        } else {
-            alert('Erreur de connexion: ' + data.message);
-        }
+        // Axios renvoie les données de réponse dans 'response.data'
+        const data = response.data;
+        alert('Connexion réussie !');
+        console.log('Token:', data.token);
     } catch (error) {
-        console.error('Erreur:', error);
+        // Gestion des erreurs avec Axios
+        if (error.response) {
+            alert('Erreur de connexion: ' + error.response.data.message);
+        } else {
+            console.error('Erreur:', error);
+        }
     }
 });
 
@@ -64,22 +64,23 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('signup-password').value;
 
     try {
-        const response = await fetch('http://localhost:3000/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, email, password }),
+        // Utilisation de Axios pour envoyer la requête d'inscription
+        const response = await axios.post('http://localhost:3000/auth/signup', {
+            username,
+            email,
+            password
         });
 
-        const data = await response.json();
-        if (response.ok) {
-            alert('Inscription réussie !');
-            console.log('User:', data.user);
-        } else {
-            alert('Erreur d\'inscription: ' + data.message);
-        }
+        // Axios renvoie les données de réponse dans 'response.data'
+        const data = response.data;
+        alert('Inscription réussie !');
+        console.log('User:', data.user);
     } catch (error) {
-        console.error('Erreur:', error);
+        // Gestion des erreurs avec Axios
+        if (error.response) {
+            alert('Erreur d\'inscription: ' + error.response.data.message);
+        } else {
+            console.error('Erreur:', error);
+        }
     }
 });
