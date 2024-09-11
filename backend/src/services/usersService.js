@@ -1,28 +1,28 @@
 const userModel = require('../models/userModel');
 const axios = require('axios');
-// Service pour récupérer tous les utilisateurs userModel.findAll
+// Service pour récupérer tous les utilisateurs
 exports.getAllUsers = async () => {
-  return await axios.get();
+  return await userModel.findAll();
 };
 
-// Service pour récupérer un utilisateur par son ID userModel.findById
+// Service pour récupérer un utilisateur par son ID
 exports.getUserById = async (userId) => {
-  return await axios.get(userId);
+  return await userModel.findById(userId);
 };
 
-// Service pour récupérer un utilisateur par email userModel.findByEmail(email)
+// Service pour récupérer un utilisateur par email
 exports.getUserByEmail = async (email) => {
-  return await axios.get(email);
+  return await userModel.findByEmail(email);
 };
 
-// Service pour récupérer un utilisateur par username userModel.findByUsername(username)
+// Service pour récupérer un utilisateur par username
 exports.getUserByUsername = async (username) => {
-  return await axios.get(username);
+  return await userModel.findByUsername(username);
 };
 
-// Service pour supprimer un utilisateur par son ID userModel.findById(userId)
+// Service pour supprimer un utilisateur par son ID
 exports.deleteUser = async (userId) => {
-  const user = await axios.get(userId);
+  const user = await userModel.findById(userId);
   if (!user) {
     return null;
   }
