@@ -43,8 +43,10 @@ body {
     box-shadow: 5px 5px 2px 1px rgba(0, 0, 0, 0.808);
 }
 
-/* Bouton */
-.btn-signup {
+
+    /* Bouton */
+
+.btn-signup,.btn-login  {
     padding: 0.1em 0.25em;
     width: 13em;
     height: 4.2em;
