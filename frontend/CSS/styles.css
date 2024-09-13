@@ -9,6 +9,23 @@
     --input-border-color: #ccc;
     --input-border-radius: 5px;
     --input-padding: 10px;
+    --icon-color: #fff;
+    --icon-hover-color: #ccc;
+}
+
+/* Icône de gestion des utilisateurs en haut à droite */
+.user-management-icon {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 2em;
+    color: var(--icon-color);
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.user-management-icon:hover {
+    color: var(--icon-hover-color);
 }
 
 /* Réinitialisation des marges et hauteurs */
@@ -43,10 +60,8 @@ body {
     box-shadow: 5px 5px 2px 1px rgba(0, 0, 0, 0.808);
 }
 
-
-    /* Bouton */
-
-.btn-signup,.btn-login  {
+/* Boutons */
+.btn-signup, .btn-login {
     padding: 0.1em 0.25em;
     width: 13em;
     height: 4.2em;
@@ -56,7 +71,6 @@ body {
     font-size: 12px;
     cursor: pointer;
 }
-
 
 .btn-login span, .btn-signup span {
     position: relative;
@@ -75,18 +89,19 @@ body {
 }
 
 .btn-login span:hover, .btn-signup span:hover {
-transition: all 0.5s;
-transform: translate(0, 0.4em);
-box-shadow: 0 0 0 0 #fff;
-}
-.btn-login span:not(hover), .btn-signup span:not(hover) {
-transition: all 1s;
+    transition: all 0.5s;
+    transform: translate(0, 0.4em);
+    box-shadow: 0 0 0 0 #fff;
 }
 
 /* Adaptabilité pour les petits écrans */
 @media (max-width: 600px) {
     .central-block {
         padding: 20px;
+    }
+
+    .user-management-icon {
+        font-size: 1.8em;
     }
 }
 
