@@ -7,6 +7,9 @@ const router = express.Router();
 // Route pour récupérer tous les dinosaures
 router.get('/', dinosaurController.getAllDinosaurs);
 
+// Route pour récupérer le dinosaure de l'utilisateur connecté
+router.get('/my-dinosaur', authenticateJWT, dinosaurController.getMyDinosaur);
+
 // Route pour récupérer un dinosaure par son ID
 router.get('/:id', dinosaurController.getDinosaurById);
 
@@ -18,8 +21,5 @@ router.put('/:id', dinosaurController.updateDinosaur);
 
 // Route pour supprimer un dinosaure
 router.delete('/:id', dinosaurController.deleteDinosaur);
-
-// Route pour récupérer le dinosaure de l'utilisateur connecté
-router.get('/my-dinosaur', authenticateJWT, dinosaurController.getMyDinosaur);
 
 module.exports = router;
