@@ -54,6 +54,9 @@ body, html {
     align-items: stretch;
 }
 
+
+
+
 .topLeft{
     margin: 2px;
     border: 2px solid black;
@@ -61,10 +64,14 @@ body, html {
     background: rgba(255, 255, 255, 0.8);
 
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    flex-shrink: 0;
     justify-content: center;
+    align-items: stretch;
 }
+
+
+
 .bottomLeft {
     margin: 2px;
     border: 2px solid black;
@@ -76,6 +83,31 @@ body, html {
     flex-shrink: 0;
     justify-content: center;
 }
+
+.usersDisplay {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 0, 0, 0);
+
+    display: flex;
+    flex-grow: 6;
+    flex-shrink: 0;
+    justify-content: center;
+}
+.usersAccess {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 0, 0, 0);
+
+    display: flex;
+    flex-grow: 6;
+    flex-shrink: 0;
+    justify-content: center;
+}
+
+
 
 .topMiddle {
     margin: 2px;
@@ -118,6 +150,9 @@ body, html {
     flex-shrink: 0;
     justify-content: center;
 }
+
+
+
 .InRight {
     margin: 2px;
     border: 2px solid black;
