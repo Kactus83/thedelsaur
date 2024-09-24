@@ -22,6 +22,7 @@ const authenticateJWT = (req, res, next) => {
 
       // Ajouter les informations de l'utilisateur à la requête
       req.user = user;
+      console.log('Utilisateur authentifié:', user);
       next();
     });
   } else {
