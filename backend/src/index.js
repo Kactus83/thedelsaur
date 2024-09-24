@@ -22,6 +22,20 @@ app.use('/admin', adminRoutes);
 // Route Users Management
 app.use('/users', usersRoutes);
 
+// Route pour renvoyer un dinosaure statique
+router.get('/static', (req, res) => {
+  const staticDinosaur = {
+    id: 1,
+    name: 'Rex',
+    diet: 'carnivore',
+    energy: 100,
+    food: 50,
+    experience: 0,
+    created_at: new Date()
+  };
+  res.status(200).json(staticDinosaur);
+});
+
 // Démarrage du serveur
 app.listen(port, () => {
   console.log(`Backend server is running on http://localhost:${port}`);
