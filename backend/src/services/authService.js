@@ -1,14 +1,19 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const dinosaurService = require('./dinosaurService');
+const { generateRandomName, getRandomDiet } = require('../utils/dinosaurUtils');
 
 // Charger les variables d'environnement pour JWT secret
 require('dotenv').config();
 
-// Fonction pour le hashage du mot de passe
-exports.hashPassword = async (password) => {
+/**
+ * Hashage du mot de passe.
+ * @param {string} password - Le mot de passe en clair.
+ * @returns {Promise<string>} Le mot de passe hashé.
+ */
+const hashPassword = async (password) => {
   try {
-    // Générer un hash sécurisé avec bcrypt et un salt de 10 tours
     return await bcrypt.hash(password, 10);
   } catch (error) {
     console.error('Erreur lors du hashage du mot de passe:', error);
@@ -16,8 +21,13 @@ exports.hashPassword = async (password) => {
   }
 };
 
-// Fonction pour vérifier si le mot de passe est correct
-exports.checkPassword = async (password, hash) => {
+/**
+ * Vérifie si le mot de passe correspond au hash.
+ * @param {string} password - Le mot de passe en clair.
+ * @param {string} hash - Le hash du mot de passe.
+ * @returns {Promise<boolean>} Vrai si correspond, sinon faux.
+ */
+const checkPassword = async (password, hash) => {
   try {
     return await bcrypt.compare(password, hash);
   } catch (error) {
@@ -26,15 +36,17 @@ exports.checkPassword = async (password, hash) => {
   }
 };
 
-// Fonction pour générer un token JWT
-exports.generateToken = (user) => {
+/**
+ * Génère un token JWT.
+ * @param {Object} user - L'utilisateur.
+ * @returns {string} Le token JWT.
+ */
+const generateToken = (user) => {
   try {
-    // Vérifier si la clé secrète JWT est définie dans les variables d'environnement
     if (!process.env.JWT_SECRET) {
       throw new Error('JWT_SECRET est manquant dans les variables d\'environnement');
     }
 
-    // Générer un token JWT avec l'ID et l'email de l'utilisateur, valable pendant 1 heure
     return jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
@@ -46,8 +58,14 @@ exports.generateToken = (user) => {
   }
 };
 
-// Service pour enregistrer un nouvel utilisateur
-exports.signup = async (username, email, password) => {
+/**
+ * Inscrit un nouvel utilisateur et crée un dinosaure associé.
+ * @param {string} username - Nom d'utilisateur.
+ * @param {string} email - Email de l'utilisateur.
+ * @param {string} password - Mot de passe en clair.
+ * @returns {Promise<Object>} L'utilisateur créé et son dinosaure.
+ */
+const signup = async (username, email, password) => {
   try {
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await userModel.findByEmail(email);
@@ -56,21 +74,37 @@ exports.signup = async (username, email, password) => {
     }
 
     // Hasher le mot de passe
-    const passwordHash = await this.hashPassword(password);
+    const passwordHash = await hashPassword(password);
 
     // Créer un nouvel utilisateur dans la base de données
     const userId = await userModel.createUser(username, email, passwordHash);
-    
-    // Retourner les informations de l'utilisateur créé
-    return { id: userId, username, email };
+    const newUser = await userModel.findById(userId);
+
+    // Générer un nom aléatoire pour le dinosaure
+    const randomName = generateRandomName();
+
+    // Sélectionner un régime alimentaire aléatoire
+    const randomDiet = getRandomDiet();
+
+    // Créer le dinosaure associé à l'utilisateur avec les caractéristiques par défaut
+    const dinosaurId = await dinosaurService.createDinosaur(randomName, userId, randomDiet);
+    const newDinosaur = await dinosaurService.getDinosaurById(dinosaurId);
+
+    // Retourner l'utilisateur et le dinosaure
+    return { user: newUser, dinosaur: newDinosaur };
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);
     throw error;
   }
 };
 
-// Service pour connecter un utilisateur
-exports.login = async (email, password) => {
+/**
+ * Connecte un utilisateur en vérifiant ses identifiants.
+ * @param {string} email - Email de l'utilisateur.
+ * @param {string} password - Mot de passe en clair.
+ * @returns {Promise<Object>} Le token JWT et les informations de l'utilisateur.
+ */
+const login = async (email, password) => {
   try {
     // Vérifier si l'utilisateur existe
     const user = await userModel.findByEmail(email);
@@ -79,18 +113,26 @@ exports.login = async (email, password) => {
     }
 
     // Vérifier si le mot de passe est correct
-    const passwordValid = await this.checkPassword(password, user.password_hash);
+    const passwordValid = await checkPassword(password, user.password_hash);
     if (!passwordValid) {
       throw new Error('Identifiants invalides');
     }
 
     // Générer un token JWT pour l'utilisateur connecté
-    const token = this.generateToken(user);
-    
+    const token = generateToken(user);
+
     // Retourner le token et les informations de l'utilisateur
     return { token, user };
   } catch (error) {
     console.error('Erreur lors de la connexion:', error);
     throw error;
   }
+};
+
+module.exports = {
+  hashPassword,
+  checkPassword,
+  generateToken,
+  signup,
+  login
 };

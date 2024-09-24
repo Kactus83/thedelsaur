@@ -7,21 +7,15 @@ CREATE TABLE IF NOT EXISTS user (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Création de la table `dinosaur_type`
-CREATE TABLE IF NOT EXISTS dinosaur_type (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  species VARCHAR(255) NOT NULL,
-  diet ENUM('herbivore', 'carnivore', 'omnivore') NOT NULL
-);
-
--- Création de la table `dinosaur`
 CREATE TABLE IF NOT EXISTS dinosaur (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   user_id INT NOT NULL,
-  dinosaur_type_id INT NOT NULL,
+  diet ENUM('herbivore', 'carnivore', 'omnivore') NOT NULL,
+  energy INT NOT NULL,
+  food INT NOT NULL,
+  experience INT NOT NULL,
+  epoch ENUM('past', 'present', 'future') NOT NULL DEFAULT 'past',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-  FOREIGN KEY (dinosaur_type_id) REFERENCES dinosaur_type(id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );

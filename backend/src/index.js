@@ -3,6 +3,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const usersRoutes = require('./routes/usersRoutes');
+const dinosaurRoutes = require('./routes/dinosaurRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +22,9 @@ app.use('/admin', adminRoutes);
 
 // Route Users Management
 app.use('/users', usersRoutes);
+
+// Route Dinosaurs
+app.use('/dinosaurs', dinosaurRoutes);
 
 // Route pour renvoyer un dinosaure statique
 app.get('/static', (req, res) => {
