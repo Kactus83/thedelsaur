@@ -1,16 +1,16 @@
-// // Configuration d'Axios pour inclure automatiquement le token JWT
-// axios.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
+// Configuration d'Axios pour inclure automatiquement le token JWT
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 // Fonction pour récupérer le profil utilisateur et afficher le nom dans usersDisplay
 async function afficherUtilisateur() {
