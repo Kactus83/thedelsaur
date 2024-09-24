@@ -20,6 +20,8 @@ async function afficherUtilisateur() {
         
         // Récupération des données utilisateur
         const data = response.data;
+
+        console.log(data);
         
         // Sélection de la div usersDisplay
         const usersDisplay = document.querySelector('.usersDisplay');
