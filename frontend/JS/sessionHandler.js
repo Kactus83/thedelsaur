@@ -16,7 +16,7 @@ axios.interceptors.request.use(
 async function afficherUtilisateur() {
     try {
         // Envoi de la requête à l'API pour récupérer le profil utilisateur
-        const response = await axios.get('http://localhost:3000/users/myprofile');
+        const response = await axios.get('http://localhost:3000/users/my-profile');
         
         // Récupération des données utilisateur
         const data = response.data;
