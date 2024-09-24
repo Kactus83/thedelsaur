@@ -1,4 +1,4 @@
-/* Pas de changement pour le body et #main */
+
 body, html {
     text-align: center;
     height: 100%;
@@ -21,7 +21,6 @@ body, html {
     align-items: stretch;
 }
 
-/* Pas de changement pour #Left */
 #Left {
     margin: 2px;
     flex-grow: 1;
@@ -35,7 +34,6 @@ body, html {
     align-items: stretch;
 }
 
-/* Modification pour #Middle pour séparer topMiddle et bottomMiddle */
 #Middle {
     margin: 2px;
     flex-grow: 5;
@@ -62,7 +60,6 @@ body, html {
     align-items: stretch;
 }
 
-/* Adaptation pour topLeft et bottomLeft */
 .topLeft{
     margin: 2px;
     border: 2px solid black;
@@ -70,7 +67,7 @@ body, html {
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1; /* Chaque section prend 50% de la hauteur */
+    flex-grow: 1;
     flex-shrink: 0;
     justify-content: center;
 }
@@ -81,12 +78,11 @@ body, html {
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 6; /* Chaque section prend 50% de la hauteur */
+    flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
 }
 
-/* Modification pour topMiddle et bottomMiddle */
 .topMiddle {
     margin: 2px;
     border: 2px solid black;
@@ -94,7 +90,7 @@ body, html {
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1; /* occupe 50% de la hauteur de #Middle */
+    flex-grow: 0.5; 
     flex-shrink: 0;
     justify-content: center;
 }
@@ -106,11 +102,32 @@ body, html {
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 6; /* occupe 50% de la hauteur de #Middle */
+    flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
 }
+.Title {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgb(255, 242, 0);
 
+    display: flex;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+}
+.middleContent {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgb(255, 123, 0);
+
+    display: flex;
+    flex-grow: 6;
+    flex-shrink: 0;
+    justify-content: center;
+}
 .InRight {
     margin: 2px;
     border: 2px solid black;
@@ -118,9 +135,8 @@ body, html {
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 6; /* Chaque section prend 50% de la hauteur */
+    flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
 }
 
-/* Modification pour topMiddle et bottomMiddle */
