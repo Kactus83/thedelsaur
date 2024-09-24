@@ -50,10 +50,20 @@ const deleteDinosaur = async (dinosaurId) => {
   return await dinosaurModel.deleteDinosaur(dinosaurId);
 };
 
+/**
+ * Récupère le dinosaure associé à un utilisateur par son userId.
+ * @param {number} userId - ID de l'utilisateur.
+ * @returns {Promise<Object|null>} Le dinosaure ou null.
+ */
+const getDinosaurByUserId = async (userId) => {
+  return await dinosaurModel.findByUserId(userId);
+};
+
 module.exports = {
   getAllDinosaurs,
   getDinosaurById,
   createDinosaur,
   updateDinosaur,
-  deleteDinosaur
+  deleteDinosaur,
+  getDinosaurByUserId,
 };

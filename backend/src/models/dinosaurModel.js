@@ -29,6 +29,17 @@ const findById = async (dinosaurId) => {
   }
 };
 
+// Modèle pour récupérer un dinosaure par l'ID de l'utilisateur
+const findByUserId = async (userId) => {
+  try {
+    const [results] = await db.query('SELECT * FROM dinosaur WHERE user_id = ?', [userId]);
+    return results.length > 0 ? results[0] : null;
+  } catch (err) {
+    console.error('Erreur lors de la récupération du dinosaure par userId:', err);
+    throw err;
+  }
+};
+
 /**
  * Crée un nouveau dinosaure.
  * @param {string} name - Le nom du dinosaure.
@@ -100,5 +111,6 @@ module.exports = {
   findById,
   createDinosaur,
   updateDinosaur,
-  deleteDinosaur
+  deleteDinosaur,
+  findByUserId
 };

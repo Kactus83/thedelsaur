@@ -1,5 +1,6 @@
 const express = require('express');
 const dinosaurController = require('../controllers/dinosaurController');
+const authenticateJWT = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -17,5 +18,8 @@ router.put('/:id', dinosaurController.updateDinosaur);
 
 // Route pour supprimer un dinosaure
 router.delete('/:id', dinosaurController.deleteDinosaur);
+
+// Route pour récupérer le dinosaure de l'utilisateur connecté
+router.get('/my-dinosaur', authenticateJWT, dinosaurController.getMyDinosaur);
 
 module.exports = router;
