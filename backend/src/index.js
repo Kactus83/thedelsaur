@@ -22,6 +22,9 @@ app.use('/admin', adminRoutes);
 // Route Users Management
 app.use('/users', usersRoutes);
 
+// Route Dinosaurs
+app.use('/dinosaurs', dinosaurRoutes);
+
 // Route pour renvoyer un dinosaure statique
 router.get('/static', (req, res) => {
   const staticDinosaur = {
