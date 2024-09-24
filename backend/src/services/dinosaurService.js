@@ -1,26 +1,59 @@
 const dinosaurModel = require('../models/dinosaurModel');
 
-// Service pour récupérer tous les dinosaures
-exports.getAllDinosaurs = async () => {
+/**
+ * Récupère tous les dinosaures.
+ * @returns {Promise<Array>} Liste de dinosaures.
+ */
+const getAllDinosaurs = async () => {
   return await dinosaurModel.findAll();
 };
 
-// Service pour récupérer un dinosaure par son ID
-exports.getDinosaurById = async (dinosaurId) => {
+/**
+ * Récupère un dinosaure par son ID.
+ * @param {number} dinosaurId - ID du dinosaure.
+ * @returns {Promise<Object|null>} Le dinosaure ou null.
+ */
+const getDinosaurById = async (dinosaurId) => {
   return await dinosaurModel.findById(dinosaurId);
 };
 
-// Service pour créer un dinosaure
-exports.createDinosaur = async (name, userId, diet) => {
-  return await dinosaurModel.createDinosaur(name, userId, diet);
+/**
+ * Crée un nouveau dinosaure avec des valeurs par défaut.
+ * @param {string} name - Nom du dinosaure.
+ * @param {number} userId - ID de l'utilisateur propriétaire.
+ * @param {string} diet - Régime alimentaire.
+ * @param {number} [energy=10000] - Énergie initiale.
+ * @param {number} [food=10000] - Nourriture initiale.
+ * @param {number} [experience=0] - Expérience initiale.
+ * @returns {Promise<number>} ID du dinosaure créé.
+ */
+const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0) => {
+  return await dinosaurModel.createDinosaur(name, userId, diet, energy, food, experience);
 };
 
-// Service pour mettre à jour un dinosaure
-exports.updateDinosaur = async (dinosaurId, updates) => {
+/**
+ * Met à jour un dinosaure.
+ * @param {number} dinosaurId - ID du dinosaure.
+ * @param {Object} updates - Champs à mettre à jour.
+ * @returns {Promise<boolean>} Vrai si mis à jour, sinon faux.
+ */
+const updateDinosaur = async (dinosaurId, updates) => {
   return await dinosaurModel.updateDinosaur(dinosaurId, updates);
 };
 
-// Service pour supprimer un dinosaure
-exports.deleteDinosaur = async (dinosaurId) => {
+/**
+ * Supprime un dinosaure.
+ * @param {number} dinosaurId - ID du dinosaure.
+ * @returns {Promise<boolean>} Vrai si supprimé, sinon faux.
+ */
+const deleteDinosaur = async (dinosaurId) => {
   return await dinosaurModel.deleteDinosaur(dinosaurId);
+};
+
+module.exports = {
+  getAllDinosaurs,
+  getDinosaurById,
+  createDinosaur,
+  updateDinosaur,
+  deleteDinosaur
 };
