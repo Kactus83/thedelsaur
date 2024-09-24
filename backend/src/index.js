@@ -26,7 +26,7 @@ app.use('/users', usersRoutes);
 app.use('/dinosaurs', dinosaurRoutes);
 
 // Route pour renvoyer un dinosaure statique
-router.get('/static', (req, res) => {
+app.get('/static', (req, res) => {
   const staticDinosaur = {
     id: 1,
     name: 'Rex',
