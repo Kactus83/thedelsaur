@@ -17,6 +17,7 @@ const signup = async (req, res) => {
 
     const { user, dinosaur } = await authService.signup(username, email, password);
     res.status(201).json({ message: 'Utilisateur créé avec succès', user, dinosaur });
+    console.log('Utilisateur créé:', user);
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);
     res.status(400).json({ message: error.message });
