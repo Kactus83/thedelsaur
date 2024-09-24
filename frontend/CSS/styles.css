@@ -123,6 +123,7 @@ body {
     display: flex;
 }
 
+/* Transition pour les formulaires */
 .form-container {
     background: var(--form-background);
     padding: 30px;
@@ -132,6 +133,14 @@ body {
     max-width: 400px;
     width: 100%;
     position: relative;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.form-container.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .form-container h2 {
@@ -190,12 +199,20 @@ body {
     }
 }
 
+
 /* Styles pour les messages d'erreur et de succès */
 .message {
     margin-bottom: 15px;
     padding: 10px;
     border-radius: 5px;
     display: none; /* Caché par défaut */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.message.show {
+    display: block;
+    opacity: 1;
 }
 
 .message.success {
@@ -209,3 +226,4 @@ body {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+

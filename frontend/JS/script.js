@@ -29,6 +29,7 @@ document.getElementById('btn-login').addEventListener('click', () => {
     loginFormContainer.style.display = 'block';
     signupFormContainer.style.display = 'none';
     clearMessages();
+    showFormAnimation(loginFormContainer);
 });
 
 document.getElementById('btn-signup').addEventListener('click', () => {
@@ -36,6 +37,7 @@ document.getElementById('btn-signup').addEventListener('click', () => {
     signupFormContainer.style.display = 'block';
     loginFormContainer.style.display = 'none';
     clearMessages();
+    showFormAnimation(signupFormContainer);
 });
 
 // Boutons pour fermer les formulaires
@@ -59,6 +61,18 @@ function clearMessages() {
     signupMessage.textContent = '';
     loginMessage.classList.remove('success', 'error');
     signupMessage.classList.remove('success', 'error');
+}
+
+// Fonction pour afficher les messages avec animation
+function showMessage(element, message, type) {
+    element.textContent = message;
+    element.classList.add(type);
+    element.classList.add('show'); // Ajoute la classe 'show' pour l'animation
+}
+
+// Fonction pour afficher les formulaires avec animation
+function showFormAnimation(formContainer) {
+    formContainer.classList.add('show');
 }
 
 // Gestion du formulaire de login
@@ -117,14 +131,23 @@ signupForm.addEventListener('submit', async (e) => {
         // Affichage du message de succès
         showMessage(signupMessage, 'Inscription réussie ! Vous pouvez maintenant vous connecter.', 'success');
 
+        // Effacement des champs du formulaire d'inscription
+        signupForm.reset();
+
         // Affichage du formulaire de connexion après un délai
         setTimeout(() => {
-            overlay.classList.add('show');
-            loginFormContainer.style.display = 'block';
+            // Masquer le formulaire d'inscription
             signupFormContainer.style.display = 'none';
+
+            // Afficher le formulaire de connexion
+            loginFormContainer.style.display = 'block';
+
+            // Effacer tous les messages précédents
             clearMessages();
+
+            // Afficher le message de succès dans le formulaire de connexion
             showMessage(loginMessage, 'Inscription réussie ! Veuillez vous connecter.', 'success');
-        }, 2000);
+        }, 2000); // Attendre 2 secondes avant de basculer
 
     } catch (error) {
         // Affichage des messages d'erreur
@@ -136,10 +159,3 @@ signupForm.addEventListener('submit', async (e) => {
         }
     }
 });
-
-// Fonction pour afficher les messages
-function showMessage(element, message, type) {
-    element.textContent = message;
-    element.classList.add(type);
-    element.style.display = 'block';
-}
