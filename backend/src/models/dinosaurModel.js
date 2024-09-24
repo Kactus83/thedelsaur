@@ -39,13 +39,13 @@ const findById = async (dinosaurId) => {
  * @param {number} experience - L'expérience initiale du dinosaure.
  * @returns {Promise<number>} Une promesse résolvant en ID du dinosaure créé.
  */
-const createDinosaur = async (name, userId, diet, energy, food, experience) => {
+const createDinosaur = async (name, userId, diet, energy, food, experience, epoch) => {
   try {
     const query = `
-      INSERT INTO dinosaur (name, user_id, diet, energy, food, experience)
+      INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch)
       VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const [result] = await db.query(query, [name, userId, diet, energy, food, experience]);
+    const [result] = await db.query(query, [name, userId, diet, energy, food, experience, epoch]);
     return result.insertId;
   } catch (err) {
     console.error('Erreur lors de la création du dinosaure:', err);

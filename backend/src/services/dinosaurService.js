@@ -27,8 +27,8 @@ const getDinosaurById = async (dinosaurId) => {
  * @param {number} [experience=0] - Expérience initiale.
  * @returns {Promise<number>} ID du dinosaure créé.
  */
-const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0) => {
-  return await dinosaurModel.createDinosaur(name, userId, diet, energy, food, experience);
+const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
+  return await dinosaurModel.createDinosaur(name, userId, diet, energy, food, experience, epoch);
 };
 
 /**
