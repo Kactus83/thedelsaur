@@ -1,9 +1,11 @@
+/* Pas de changement pour le body et #main */
 body, html {
     text-align: center;
     height: 100%;
     overflow: hidden;
     margin: 0;
 }
+
 #main {
     height: 100vh;
     width: 100%;
@@ -18,20 +20,22 @@ body, html {
     align-content: stretch;
     align-items: stretch;
 }
+
+/* Pas de changement pour #Left */
 #Left {
     margin: 2px;
-    flex-grow: 2;
+    flex-grow: 1;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(0, 149, 255);
 
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: normal;
+    justify-content: space-between;
     align-items: stretch;
-    align-content: stretch;
 }
+
+/* Modification pour #Middle pour séparer topMiddle et bottomMiddle */
 #Middle {
     margin: 2px;
     flex-grow: 5;
@@ -41,102 +45,82 @@ body, html {
 
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: stretch;
-    align-content: stretch;
 }
+
 #Right {
     margin: 2px;
-    flex-grow: 2;
+    flex-grow: 1;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(0, 149, 255);
 
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: stretch;
-    align-content: stretch;
 }
 
-#topLeft {
+/* Adaptation pour topLeft et bottomLeft */
+.topLeft{
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 0;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: auto;
-    order: 0;
+    flex-grow: 1; /* Chaque section prend 50% de la hauteur */
+    flex-shrink: 0;
+    justify-content: center;
 }
-#bottomLeft {
+.bottomLeft {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: stretch;
-    order: 0;
+    flex-grow: 6; /* Chaque section prend 50% de la hauteur */
+    flex-shrink: 0;
+    justify-content: center;
 }
 
-#topMiddle {
+/* Modification pour topMiddle et bottomMiddle */
+.topMiddle {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: stretch;
-    order: 0;
+    flex-grow: 1; /* occupe 50% de la hauteur de #Middle */
+    flex-shrink: 0;
+    justify-content: center;
 }
-#bottomMiddle {
+
+.bottomMiddle {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: stretch;
-    order: 0;
+    flex-grow: 6; /* occupe 50% de la hauteur de #Middle */
+    flex-shrink: 0;
+    justify-content: center;
 }
-#topRight {
+
+.InRight {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
     background-color: rgb(255, 242, 0);
 
     display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: stretch;
-    order: 0;
+    flex-grow: 6; /* Chaque section prend 50% de la hauteur */
+    flex-shrink: 0;
+    justify-content: center;
 }
-#bottomRight {
-    margin: 2px;
-    border: 2px solid black;
-    border-radius: 10px;
-    background-color: rgb(255, 242, 0);
 
-    display: flex;
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: auto;
-    align-self: stretch;
-    order: 0;
-}
+/* Modification pour topMiddle et bottomMiddle */
