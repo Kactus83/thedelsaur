@@ -12,10 +12,10 @@ const dbConfig = {
   queueLimit: 0 // Pas de limite pour les connexions en attente
 };
 
-// Créer un pool de connexions
+// Créer un pool de connexions avec le support des promesses
 const pool = mysql.createPool(dbConfig);
 
-// Promisify pool.query pour éviter l'utilisation des callbacks
+// Utiliser les promesses
 const db = pool.promise();
 
 module.exports = db;

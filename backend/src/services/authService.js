@@ -67,30 +67,43 @@ const generateToken = (user) => {
  */
 const signup = async (username, email, password) => {
   try {
+    console.log('Début de la fonction signup');
+
     // Vérifier si l'utilisateur existe déjà
+    console.log('Vérification de l\'existence de l\'utilisateur avec l\'email:', email);
     const existingUser = await userModel.findByEmail(email);
     if (existingUser) {
+      console.log('Utilisateur déjà existant avec l\'email:', email);
       throw new Error('Email déjà utilisé');
     }
 
     // Hasher le mot de passe
+    console.log('Hashage du mot de passe pour l\'utilisateur:', username);
     const passwordHash = await hashPassword(password);
 
     // Créer un nouvel utilisateur dans la base de données
+    console.log('Création de l\'utilisateur dans la base de données');
     const userId = await userModel.createUser(username, email, passwordHash);
+    console.log('Nouvel utilisateur créé avec l\'ID:', userId);
     const newUser = await userModel.findById(userId);
+    console.log('Utilisateur récupéré avec succès');
 
     // Générer un nom aléatoire pour le dinosaure
+    console.log('Génération d\'un nom aléatoire pour le dinosaure');
     const randomName = generateRandomName();
 
     // Sélectionner un régime alimentaire aléatoire
+    console.log('Sélection d\'un régime alimentaire aléatoire pour le dinosaure');
     const randomDiet = getRandomDiet();
 
     // Créer le dinosaure associé à l'utilisateur avec les caractéristiques par défaut
+    console.log('Création du dinosaure associé à l\'utilisateur avec l\'ID:', userId);
     const dinosaurId = await dinosaurService.createDinosaur(randomName, userId, randomDiet);
     const newDinosaur = await dinosaurService.getDinosaurById(dinosaurId);
+    console.log('Nouveau dinosaure créé avec l\'ID:', dinosaurId);
 
     // Retourner l'utilisateur et le dinosaure
+    console.log('Inscription réussie pour l\'utilisateur:', username);
     return { user: newUser, dinosaur: newDinosaur };
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);

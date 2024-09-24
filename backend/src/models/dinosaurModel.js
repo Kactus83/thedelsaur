@@ -1,10 +1,7 @@
 const db = require('../config/db');
 
-/**
- * Récupère tous les dinosaures.
- * @returns {Promise<Array>} Une promesse résolvant en liste de dinosaures.
- */
-const findAll = async () => {
+// Modèle pour récupérer tous les dinosaures
+exports.findAll = async () => {
   try {
     const [results] = await db.query('SELECT * FROM dinosaur');
     return results;
@@ -14,12 +11,8 @@ const findAll = async () => {
   }
 };
 
-/**
- * Récupère un dinosaure par son ID.
- * @param {number} dinosaurId - L'ID du dinosaure.
- * @returns {Promise<Object|null>} Une promesse résolvant en dinosaure ou null.
- */
-const findById = async (dinosaurId) => {
+// Modèle pour récupérer un dinosaure par son ID
+exports.findById = async (dinosaurId) => {
   try {
     const [results] = await db.query('SELECT * FROM dinosaur WHERE id = ?', [dinosaurId]);
     return results.length > 0 ? results[0] : null;
@@ -29,8 +22,8 @@ const findById = async (dinosaurId) => {
   }
 };
 
-// Modèle pour récupérer un dinosaure par l'ID de l'utilisateur
-const findByUserId = async (userId) => {
+// Modèle pour récupérer un dinosaure par userId
+exports.findByUserId = async (userId) => {
   try {
     const [results] = await db.query('SELECT * FROM dinosaur WHERE user_id = ?', [userId]);
     return results.length > 0 ? results[0] : null;
@@ -40,48 +33,32 @@ const findByUserId = async (userId) => {
   }
 };
 
-/**
- * Crée un nouveau dinosaure.
- * @param {string} name - Le nom du dinosaure.
- * @param {number} userId - L'ID de l'utilisateur propriétaire.
- * @param {string} diet - Le régime alimentaire du dinosaure.
- * @param {number} energy - L'énergie initiale du dinosaure.
- * @param {number} food - La nourriture initiale du dinosaure.
- * @param {number} experience - L'expérience initiale du dinosaure.
- * @returns {Promise<number>} Une promesse résolvant en ID du dinosaure créé.
- */
-const createDinosaur = async (name, userId, diet, energy, food, experience, epoch) => {
+// Modèle pour créer un dinosaure
+exports.createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
   try {
-    const query = `
-      INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
+    const query = 'INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    console.log('Executing query:', query);
+    console.log('With values:', [name, userId, diet, energy, food, experience, epoch]);
+
     const [result] = await db.query(query, [name, userId, diet, energy, food, experience, epoch]);
-    return result.insertId;
+    console.log('Dinosaur created with ID:', result.insertId);
+    return result.insertId; // Renvoie l'ID du dinosaure créé
   } catch (err) {
     console.error('Erreur lors de la création du dinosaure:', err);
     throw err;
   }
 };
 
-/**
- * Met à jour un dinosaure.
- * @param {number} dinosaurId - L'ID du dinosaure à mettre à jour.
- * @param {Object} updates - Les champs à mettre à jour.
- * @returns {Promise<boolean>} Une promesse résolvant en vrai si mis à jour, sinon faux.
- */
-const updateDinosaur = async (dinosaurId, updates) => {
+// Modèle pour mettre à jour un dinosaure
+exports.updateDinosaur = async (dinosaurId, updates) => {
   try {
-    const fields = [];
-    const values = [];
-
-    for (const key in updates) {
-      fields.push(`${key} = ?`);
-      values.push(updates[key]);
-    }
-
-    const query = `UPDATE dinosaur SET ${fields.join(', ')} WHERE id = ?`;
+    const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+    const values = Object.values(updates);
+    const query = `UPDATE dinosaur SET ${fields} WHERE id = ?`;
     values.push(dinosaurId);
+
+    console.log('Executing query:', query);
+    console.log('With values:', values);
 
     const [result] = await db.query(query, values);
     return result.affectedRows > 0;
@@ -91,26 +68,17 @@ const updateDinosaur = async (dinosaurId, updates) => {
   }
 };
 
-/**
- * Supprime un dinosaure par son ID.
- * @param {number} dinosaurId - L'ID du dinosaure à supprimer.
- * @returns {Promise<boolean>} Une promesse résolvant en vrai si supprimé, sinon faux.
- */
-const deleteDinosaur = async (dinosaurId) => {
+// Modèle pour supprimer un dinosaure
+exports.deleteDinosaur = async (dinosaurId) => {
   try {
-    const [result] = await db.query('DELETE FROM dinosaur WHERE id = ?', [dinosaurId]);
+    const query = 'DELETE FROM dinosaur WHERE id = ?';
+    console.log('Executing query:', query);
+    console.log('With values:', [dinosaurId]);
+
+    const [result] = await db.query(query, [dinosaurId]);
     return result.affectedRows > 0;
   } catch (err) {
     console.error('Erreur lors de la suppression du dinosaure:', err);
     throw err;
   }
-};
-
-module.exports = {
-  findAll,
-  findById,
-  createDinosaur,
-  updateDinosaur,
-  deleteDinosaur,
-  findByUserId
 };
