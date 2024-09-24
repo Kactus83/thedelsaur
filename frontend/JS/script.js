@@ -9,12 +9,15 @@ const signupForm = document.getElementById('signupForm');
 const loginMessage = document.getElementById('login-message');
 const signupMessage = document.getElementById('signup-message');
 
-// Configuration d'Axios pour inclure automatiquement le token JWT
+/**
+ * Configuration d'Axios pour inclure automatiquement le token JWT dans les en-têtes des requêtes.
+ */
 axios.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
+            console.log('Token ajouté aux headers:', token);
         }
         return config;
     },
@@ -23,139 +26,189 @@ axios.interceptors.request.use(
     }
 );
 
-// Boutons pour ouvrir les formulaires
-document.getElementById('btn-login').addEventListener('click', () => {
-    overlay.classList.add('show');
-    loginFormContainer.style.display = 'block';
-    signupFormContainer.style.display = 'none';
-    clearMessages();
-    showFormAnimation(loginFormContainer);
-});
-
-document.getElementById('btn-signup').addEventListener('click', () => {
-    overlay.classList.add('show');
-    signupFormContainer.style.display = 'block';
-    loginFormContainer.style.display = 'none';
-    clearMessages();
-    showFormAnimation(signupFormContainer);
-});
-
-// Boutons pour fermer les formulaires
-document.getElementById('close-login').addEventListener('click', () => {
-    overlay.classList.remove('show');
-    loginFormContainer.style.display = 'none';
-    clearMessages();
-});
-
-document.getElementById('close-signup').addEventListener('click', () => {
-    overlay.classList.remove('show');
-    signupFormContainer.style.display = 'none';
-    clearMessages();
-});
-
-// Fonction pour effacer les messages
-function clearMessages() {
-    loginMessage.style.display = 'none';
-    signupMessage.style.display = 'none';
-    loginMessage.textContent = '';
-    signupMessage.textContent = '';
-    loginMessage.classList.remove('success', 'error');
-    signupMessage.classList.remove('success', 'error');
+/**
+ * Fonction pour afficher un formulaire avec une animation.
+ * @param {HTMLElement} formContainer - Le conteneur du formulaire à afficher.
+ */
+function showForm(formContainer) {
+    formContainer.style.display = 'block';
+    setTimeout(() => {
+        formContainer.classList.add('show');
+    }, 10); // Petit délai pour permettre l'animation CSS
 }
 
-// Fonction pour afficher les messages avec animation
+/**
+ * Fonction pour masquer un formulaire avec une animation.
+ * @param {HTMLElement} formContainer - Le conteneur du formulaire à masquer.
+ */
+function hideForm(formContainer) {
+    formContainer.classList.remove('show');
+    setTimeout(() => {
+        formContainer.style.display = 'none';
+    }, 500); // Correspond à la durée de la transition CSS
+}
+
+/**
+ * Fonction pour effacer les messages d'erreur et de succès.
+ */
+function clearMessages() {
+    [loginMessage, signupMessage].forEach(message => {
+        message.style.display = 'none';
+        message.textContent = '';
+        message.classList.remove('success', 'error');
+    });
+}
+
+/**
+ * Fonction pour afficher un message avec une animation.
+ * @param {HTMLElement} element - L'élément où afficher le message.
+ * @param {string} message - Le texte du message.
+ * @param {string} type - Le type du message ('success' ou 'error').
+ */
 function showMessage(element, message, type) {
     element.textContent = message;
     element.classList.add(type);
-    element.classList.add('show'); // Ajoute la classe 'show' pour l'animation
+    element.style.display = 'block';
+    setTimeout(() => {
+        element.classList.add('show');
+    }, 10); // Petit délai pour permettre l'animation CSS
 }
 
-// Fonction pour afficher les formulaires avec animation
-function showFormAnimation(formContainer) {
-    formContainer.classList.add('show');
+/**
+ * Fonction pour afficher les formulaires avec les animations appropriées.
+ */
+function setupFormToggle() {
+    // Ouvrir le formulaire de connexion
+    document.getElementById('btn-login').addEventListener('click', () => {
+        overlay.classList.add('show');
+        hideForm(signupFormContainer);
+        showForm(loginFormContainer);
+        clearMessages();
+    });
+
+    // Ouvrir le formulaire d'inscription
+    document.getElementById('btn-signup').addEventListener('click', () => {
+        overlay.classList.add('show');
+        hideForm(loginFormContainer);
+        showForm(signupFormContainer);
+        clearMessages();
+    });
+
+    // Fermer le formulaire de connexion
+    document.getElementById('close-login').addEventListener('click', () => {
+        overlay.classList.remove('show');
+        hideForm(loginFormContainer);
+        clearMessages();
+    });
+
+    // Fermer le formulaire d'inscription
+    document.getElementById('close-signup').addEventListener('click', () => {
+        overlay.classList.remove('show');
+        hideForm(signupFormContainer);
+        clearMessages();
+    });
 }
 
-// Gestion du formulaire de login
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const email = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value.trim();
+/**
+ * Gestion du formulaire de connexion.
+ */
+function handleLogin() {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    try {
-        // Envoi de la requête de connexion
-        const response = await axios.post('http://localhost:3000/auth/login', {
-            email,
-            password
-        });
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
 
-        const data = response.data;
-        console.log('Token:', data.token);
+        try {
+            // Envoi de la requête de connexion
+            const response = await axios.post('http://localhost:3000/auth/login', {
+                email,
+                password
+            });
 
-        // Stockage du token JWT
-        localStorage.setItem('token', data.token);
+            const data = response.data;
+            console.log('Token:', data.token);
 
-        // Redirection vers la page principale
-        window.location.href = './pages/Idlesaur.html'; 
+            // Stockage du token JWT
+            localStorage.setItem('token', data.token);
+            console.log('Token stocké dans localStorage:', localStorage.getItem('token'));
 
-    } catch (error) {
-        // Affichage des messages d'erreur
-        if (error.response) {
-            showMessage(loginMessage, 'Erreur de connexion : ' + error.response.data.message, 'error');
-        } else {
-            console.error('Erreur:', error);
-            showMessage(loginMessage, 'Erreur de connexion : Veuillez réessayer plus tard.', 'error');
+            // Redirection vers la page principale
+            window.location.href = './pages/Idlesaur.html';
+
+        } catch (error) {
+            // Affichage des messages d'erreur
+            if (error.response) {
+                showMessage(loginMessage, 'Erreur de connexion : ' + error.response.data.message, 'error');
+            } else {
+                console.error('Erreur:', error);
+                showMessage(loginMessage, 'Erreur de connexion : Veuillez réessayer plus tard.', 'error');
+            }
         }
-    }
-});
+    });
+}
 
-// Gestion du formulaire d'inscription
-signupForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+/**
+ * Gestion du formulaire d'inscription.
+ */
+function handleSignup() {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    const username = document.getElementById('signup-username').value.trim();
-    const email = document.getElementById('signup-email').value.trim();
-    const password = document.getElementById('signup-password').value.trim();
+        const username = document.getElementById('signup-username').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value.trim();
 
-    try {
-        // Envoi de la requête d'inscription
-        const response = await axios.post('http://localhost:3000/auth/signup', {
-            username,
-            email,
-            password
-        });
+        try {
+            // Envoi de la requête d'inscription
+            const response = await axios.post('http://localhost:3000/auth/signup', {
+                username,
+                email,
+                password
+            });
 
-        const data = response.data;
-        console.log('User:', data.user);
+            const data = response.data;
+            console.log('User:', data.user);
 
-        // Affichage du message de succès
-        showMessage(signupMessage, 'Inscription réussie ! Vous pouvez maintenant vous connecter.', 'success');
+            // Affichage du message de succès
+            showMessage(signupMessage, 'Inscription réussie ! Vous pouvez maintenant vous connecter.', 'success');
 
-        // Effacement des champs du formulaire d'inscription
-        signupForm.reset();
+            // Effacement des champs du formulaire d'inscription
+            signupForm.reset();
 
-        // Affichage du formulaire de connexion après un délai
-        setTimeout(() => {
-            // Masquer le formulaire d'inscription
-            signupFormContainer.style.display = 'none';
+            // Transition vers le formulaire de connexion après un délai
+            setTimeout(() => {
+                hideForm(signupFormContainer);
+                showForm(loginFormContainer);
+                clearMessages();
 
-            // Afficher le formulaire de connexion
-            loginFormContainer.style.display = 'block';
+                // Pré-remplir l'email dans le formulaire de connexion
+                document.getElementById('login-email').value = email;
 
-            // Effacer tous les messages précédents
-            clearMessages();
+                // Afficher le message de succès dans le formulaire de connexion
+                showMessage(loginMessage, 'Inscription réussie ! Veuillez vous connecter.', 'success');
+            }, 2000); // Attendre 2 secondes avant de basculer
 
-            // Afficher le message de succès dans le formulaire de connexion
-            showMessage(loginMessage, 'Inscription réussie ! Veuillez vous connecter.', 'success');
-        }, 2000); // Attendre 2 secondes avant de basculer
-
-    } catch (error) {
-        // Affichage des messages d'erreur
-        if (error.response) {
-            showMessage(signupMessage, 'Erreur d\'inscription : ' + error.response.data.message, 'error');
-        } else {
-            console.error('Erreur:', error);
-            showMessage(signupMessage, 'Erreur d\'inscription : Veuillez réessayer plus tard.', 'error');
+        } catch (error) {
+            // Affichage des messages d'erreur
+            if (error.response) {
+                showMessage(signupMessage, 'Erreur d\'inscription : ' + error.response.data.message, 'error');
+            } else {
+                console.error('Erreur:', error);
+                showMessage(signupMessage, 'Erreur d\'inscription : Veuillez réessayer plus tard.', 'error');
+            }
         }
-    }
-});
+    });
+}
+
+/**
+ * Initialisation de l'application frontend.
+ */
+function init() {
+    setupFormToggle();
+    handleLogin();
+    handleSignup();
+}
+
+// Appel de la fonction d'initialisation lorsque la page est chargée
+document.addEventListener('DOMContentLoaded', init);
