@@ -77,9 +77,10 @@ exports.deleteUser = async (req, res) => {
 exports.getMyProfile = async (req, res) => {
   try {
     const userId = req.user.id; // ID de l'utilisateur depuis le token JWT
+    console.log('ID de l\'utilisateur connecté:', userId);
     const user = await usersService.getUserById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      return res.status(404).json({ message: 'Utilisateur non trouvé pour l id', userId });
     }
     res.status(200).json(user);
   } catch (error) {
