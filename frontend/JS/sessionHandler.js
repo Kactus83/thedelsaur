@@ -1,59 +1,41 @@
+// // Configuration d'Axios pour inclure automatiquement le token JWT
+// axios.interceptors.request.use(
+//     (config) => {
+//         const token = localStorage.getItem('token');
+//         if (token) {
+//             config.headers['Authorization'] = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => {
+//         return Promise.reject(error);
+//     }
+// );
 
-const Display = document.getElementsByClassName('usersDiplay');
-// Gestion du formulaire de login
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
+// Fonction pour récupérer le profil utilisateur et afficher le nom dans usersDisplay
+async function afficherUtilisateur() {
+    try {
+        // Envoi de la requête à l'API pour récupérer le profil utilisateur
+        const response = await axios.get('http://localhost:3000/users/myprofile');
+        
+        // Récupération des données utilisateur
+        const data = response.data;
+        
+        // Sélection de la div usersDisplay
+        const usersDisplay = document.querySelector('.usersDisplay');
+        
+        // Affichage du nom d'utilisateur
+        usersDisplay.innerHTML = `Connecté en tant que : ${data.username}`;
+    } 
+    catch (error) {
+        // Gestion des erreurs avec Axios
+        if (error.response) {
+            alert('Erreur de connexion: ' + error.response.data.message);
+        } else {
+            console.error('Erreur:', error);
+        }
+    }
+}
 
-  try {
-      // Utilisation de Axios pour envoyer la requête de login
-      const response = await axios.post('http://localhost:3000/auth/login', {
-          email,
-          password
-      });
-
-      // Axios renvoie les données de réponse dans 'response.data'
-      const data = response.data;
-      alert('Connexion réussie !');
-      console.log('Token:', data.token);
-  } catch (error) {
-      // Gestion des erreurs avec Axios
-      if (error.response) {
-          alert('Erreur de connexion: ' + error.response.data.message);
-      } else {
-          console.error('Erreur:', error);
-      }
-  }
-});
-
-// Gestion du formulaire d'inscription
-document.getElementById('signupForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const username = document.getElementById('signup-username').value;
-  const email = document.getElementById('signup-email').value;
-  const password = document.getElementById('signup-password').value;
-
-  try {
-      // Utilisation de Axios pour envoyer la requête d'inscription
-      const response = await axios.post('http://localhost:3000/auth/signup', {
-          username,
-          email,
-          password
-      });
-
-      // Axios renvoie les données de réponse dans 'response.data'
-      const data = response.data;
-      alert('Inscription réussie !');
-      console.log('User:', data.user);
-  } catch (error) {
-      // Gestion des erreurs avec Axios
-      if (error.response) {
-          alert('Erreur d\'inscription: ' + error.response.data.message);
-      } else {
-          console.error('Erreur:', error);
-      }
-  }
-});
+// Appel de la fonction lorsque la page est chargée
+document.addEventListener('DOMContentLoaded', afficherUtilisateur);
