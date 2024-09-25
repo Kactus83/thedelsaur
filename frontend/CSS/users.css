@@ -1,3 +1,5 @@
+/* CSS/users.css */
+
 /* Styles de base pour la gestion des utilisateurs */
 body {
     font-family: Arial, sans-serif;
@@ -20,7 +22,7 @@ header h1 {
 
 .back-btn {
     text-decoration: none;
-    background-color: var(--primary-color, #0275d8);
+    background-color: #0275d8;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -28,7 +30,7 @@ header h1 {
 }
 
 .back-btn:hover {
-    background-color: var(--primary-hover-color, #025aa5);
+    background-color: #025aa5;
 }
 
 /* Table de gestion des utilisateurs */
@@ -50,7 +52,7 @@ header h1 {
 }
 
 #user-table th {
-    background-color: var(--primary-color, #0275d8);
+    background-color: #0275d8;
     color: white;
 }
 
@@ -67,6 +69,7 @@ header h1 {
     cursor: pointer;
     border-radius: 3px;
     transition: background-color 0.3s;
+    margin-right: 5px;
 }
 
 .action-btn:hover {
@@ -77,10 +80,75 @@ header h1 {
     background-color: #dc3545;
 }
 
+.action-btn.delete:hover {
+    background-color: #c82333;
+}
+
 .action-btn.update {
     background-color: #28a745;
 }
 
 .action-btn.update:hover {
     background-color: #218838;
+}
+
+.action-btn.view-dino {
+    background-color: #17a2b8;
+}
+
+.action-btn.view-dino:hover {
+    background-color: #117a8b;
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Caché par défaut */
+    position: fixed; /* Reste en place */
+    z-index: 1000; /* Au-dessus de tout */
+    left: 0;
+    top: 0;
+    width: 100%; /* Pleine largeur */
+    height: 100%; /* Pleine hauteur */
+    overflow: auto; /* Active le scroll si nécessaire */
+    background-color: rgba(0,0,0,0.4); /* Fond semi-transparent */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% du haut et centré */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Largeur de la modal */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+}
+
+.modal-content p {
+    margin: 10px 0;
+    color: #555;
+    font-size: 1em;
 }
