@@ -24,10 +24,10 @@ async function afficherUtilisateur() {
         console.log(data);
         
         // Sélection de la div usersDisplay
-        const usersDisplay = document.querySelector('.usersDisplay');
+        const usersDisplay = document.querySelector('#username');
         
         // Affichage du nom d'utilisateur
-        usersDisplay.innerHTML = `Connecté en tant que : ${data.username}`;
+        usersDisplay.innerHTML = `${data.username}`;
     } 
     catch (error) {
         // Gestion des erreurs avec Axios

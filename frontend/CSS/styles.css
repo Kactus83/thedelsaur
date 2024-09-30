@@ -37,7 +37,8 @@
 
 html, body {
     height: 100%;
-    font-family: Arial, sans-serif;
+    font-family: 'Peanut';
+    font-size: 1.2rem;
 }
 
 /* Image de fond couvrant toute la page */
@@ -68,8 +69,17 @@ body {
     background-color: #212121;
     border: 0.08em solid #fff;
     border-radius: 0.3em;
-    font-size: 12px;
+    
+    font-family: 'Peanut';
+    font-size: 1.05rem;
     cursor: pointer;
+    
+}
+#login-email::placeholder, #login-password::placeholder, #signup-username::placeholder, #signup-email::placeholder, #signup-password::placeholder, .btn-submit {
+
+    font-family: 'Peanut';
+    font-size: 1.5rem;
+    
 }
 
 .btn-login span, .btn-signup span {
@@ -225,3 +235,7 @@ body {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+@font-face {
+    font-family:"Peanut";
+    src: url("../assets/font/PeanutMoney.ttf") format("truetype");
+  }
