@@ -4,6 +4,8 @@ axios.interceptors.request.use(
         const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
+        }else{
+            window.location.href = '../../index.html';
         }
         return config;
     },
