@@ -1,11 +1,27 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
-const dinosaurService = require('./dinosaurService');
+const dinosaurModel = require('../models/dinosaurModel');
 const { generateRandomName, getRandomDiet } = require('../utils/dinosaurUtils');
 
 // Charger les variables d'environnement pour JWT secret
 require('dotenv').config();
+
+/**
+ * Crée un nouveau dinosaure avec des valeurs par défaut.
+ * @param {string} name - Nom du dinosaure.
+ * @param {number} userId - ID de l'utilisateur propriétaire.
+ * @param {string} diet - Régime alimentaire.
+ * @param {number} [energy=10000] - Énergie initiale.
+ * @param {number} [food=10000] - Nourriture initiale.
+ * @param {number} [experience=0] - Expérience initiale.
+ * @param {string} [epoch='past'] - Époque du dinosaure.
+ * @returns {Promise<number>} ID du dinosaure créé.
+ */
+const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
+  // Crée le dinosaure dans la base de données en incluant `last_update_by_time_service`
+  return await dinosaurModel.createDinosaur(name, userId, diet, energy, food, experience, epoch);
+};
 
 /**
  * Hashage du mot de passe.
@@ -98,9 +114,8 @@ const signup = async (username, email, password) => {
 
     // Créer le dinosaure associé à l'utilisateur avec les caractéristiques par défaut
     console.log('Création du dinosaure associé à l\'utilisateur avec l\'ID:', userId);
-    const dinosaurId = await dinosaurService.createDinosaur(randomName, userId, randomDiet);
-    const newDinosaur = await dinosaurService.getDinosaurById(dinosaurId);
-    console.log('Nouveau dinosaure créé avec l\'ID:', dinosaurId);
+    const newDinosaur = await createDinosaur(randomName, userId, randomDiet);
+    console.log('Nouveau dinosaure créé avec le nom :', newDinosaur.name);
 
     // Retourner l'utilisateur et le dinosaure
     console.log('Inscription réussie pour l\'utilisateur:', username);

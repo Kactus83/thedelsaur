@@ -8,9 +8,6 @@ const names = [
   // Liste des régimes alimentaires possibles
   const diets = ['herbivore', 'carnivore', 'omnivore'];
   
-  // Liste des époques possibles
-  const epochs = ['past', 'present', 'future'];
-  
   // Fonction pour générer un nom aléatoire
   exports.generateRandomName = () => {
     const randomIndex = Math.floor(Math.random() * names.length);

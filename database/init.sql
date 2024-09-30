@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS user (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Création de la table `dinosaur`
 CREATE TABLE IF NOT EXISTS dinosaur (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -17,5 +18,6 @@ CREATE TABLE IF NOT EXISTS dinosaur (
   experience INT NOT NULL,
   epoch ENUM('past', 'present', 'future') NOT NULL DEFAULT 'past',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_update_by_time_service TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
