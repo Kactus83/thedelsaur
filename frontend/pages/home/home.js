@@ -134,7 +134,7 @@ function handleLogin() {
             console.log('Token stocké dans localStorage:', localStorage.getItem('token'));
 
             // Redirection vers la page principale
-            window.location.href = './pages/Idlesaur.html';
+            window.location.href = '../dashboard/dashboard.html';
 
         } catch (error) {
             // Affichage des messages d'erreur
