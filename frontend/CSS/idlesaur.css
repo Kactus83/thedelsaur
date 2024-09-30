@@ -1,9 +1,11 @@
-
+    
 body, html {
     text-align: center;
     height: 100%;
     overflow: hidden;
     margin: 0;
+    font-family: 'Peanut';
+    font-size: 1.2rem;
 }
 
 #main {
@@ -12,6 +14,8 @@ body, html {
     overflow-y: hidden;
     z-index: 0;
     background-image: url('../assets/img/FirstTime.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 
     display: flex;
     flex-wrap: wrap;
@@ -89,11 +93,14 @@ body, html {
     border: 2px solid black;
     border-radius: 10px;
     background: rgba(255, 0, 0, 0);
+  
+
 
     display: flex;
     flex-grow: 6;
     flex-shrink: 0;
-    justify-content: center;
+    justify-content: center; 
+    flex-direction: column;
 }
 .usersAccess {
     margin: 2px;
@@ -104,7 +111,8 @@ body, html {
     display: flex;
     flex-grow: 6;
     flex-shrink: 0;
-    justify-content: center;
+    justify-content: center; 
+    flex-direction: column;
 }
 
 
@@ -165,3 +173,7 @@ body, html {
     justify-content: center;
 }
 
+@font-face {
+    font-family:"Peanut";
+    src: url("../assets/font/PeanutMoney.ttf") format("truetype");
+  }
