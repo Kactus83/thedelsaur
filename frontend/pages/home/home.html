@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Landing Page</title>
+        <link rel="stylesheet" href="../../common/styles.css">
+        <!-- Intégration d'une bibliothèque d'icônes comme FontAwesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+
+    <body>
+        <!-- Icône d'accès gestion utilisateurs -->
+        <a href="../admin/admin.html" class="user-management-icon" title="Gestion des utilisateurs">
+            <i class="fas fa-user-cog"></i>
+        </a>
+
+        <div class="central-block">
+            <h1>🦖The IdleSaur🦖</h1>
+            <br>
+            <button class="btn-login" id="btn-login"><span>Se Connecter</span></button>
+            <button class="btn-signup" id="btn-signup"><span>S'inscrire</span></button>
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay">
+            <!-- Formulaire de Connexion -->
+            <div class="form-container" id="login-form">
+                <button class="close-btn" id="close-login">&times;</button>
+                <h2>Se Connecter</h2>
+
+                <!-- Conteneur pour les messages -->
+                <div id="login-message" class="message"></div>
+
+                <form id="loginForm">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Mot de passe" required>
+                    <button type="submit" class="btn-submit">Connexion</button>
+                </form>
+            </div>
+
+            <!-- Formulaire d'Inscription -->
+            <div class="form-container" id="signup-form">
+                <button class="close-btn" id="close-signup">&times;</button>
+                <h2>S'inscrire</h2>
+
+                <!-- Conteneur pour les messages -->
+                <div id="signup-message" class="message"></div>
+
+                <form id="signupForm">
+                    <input type="text" id="signup-username" placeholder="Nom d'utilisateur" required>
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <input type="password" id="signup-password" placeholder="Mot de passe" required>
+                    <button type="submit" class="btn-submit">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="home.js"></script>
+    </body>
+
+</html>
