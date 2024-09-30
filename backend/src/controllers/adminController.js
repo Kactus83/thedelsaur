@@ -1,5 +1,4 @@
-const userService = require('../services/usersService');
-const dinosaurService = require('../services/dinosaurService');
+const adminService = require('../services/adminService');
 
 /**
  * Contrôleur pour récupérer tous les utilisateurs (Admin).
@@ -8,7 +7,7 @@ const dinosaurService = require('../services/dinosaurService');
  */
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await userService.getAllUsers();
+    const users = await adminService.getAllUsers();
     res.status(200).json(users);
   } catch (error) {
     console.error('Erreur dans getAllUsers:', error);
@@ -24,7 +23,7 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
-    const user = await userService.getUserByUsername(username);
+    const user = await adminService.getUserByUsername(username);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -43,7 +42,7 @@ exports.getUserByUsername = async (req, res) => {
 exports.getUserByEmail = async (req, res) => {
   try {
     const { email } = req.params;
-    const user = await userService.getUserByEmail(email);
+    const user = await adminService.getUserByEmail(email);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -62,7 +61,7 @@ exports.getUserByEmail = async (req, res) => {
 exports.getUserById = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await userService.getUserById(id);
+    const user = await adminService.getUserById(id);
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -81,7 +80,7 @@ exports.getUserById = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await userService.deleteUser(id);
+    const result = await adminService.deleteUser(id);
     if (!result) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
@@ -99,7 +98,7 @@ exports.deleteUser = async (req, res) => {
  */
 exports.getAllDinosaurs = async (req, res) => {
   try {
-    const dinosaurs = await dinosaurService.getAllDinosaurs();
+    const dinosaurs = await adminService.getAllDinosaurs();
     res.status(200).json(dinosaurs);
   } catch (error) {
     console.error('Erreur dans getAllDinosaurs:', error);
@@ -115,7 +114,7 @@ exports.getAllDinosaurs = async (req, res) => {
 exports.getDinosaurById = async (req, res) => {
   try {
     const { id } = req.params;
-    const dinosaur = await dinosaurService.getDinosaurById(id);
+    const dinosaur = await adminService.getDinosaurById(id);
     if (!dinosaur) {
       return res.status(404).json({ message: 'Dinosaure non trouvé' });
     }
@@ -140,8 +139,8 @@ exports.createDinosaur = async (req, res) => {
       return res.status(400).json({ message: 'Nom, userId et régime alimentaire sont requis' });
     }
 
-    const newDinosaurId = await dinosaurService.createDinosaur(name, userId, diet, energy, food, experience, epoch);
-    const newDinosaur = await dinosaurService.getDinosaurById(newDinosaurId);
+    const newDinosaurId = await adminService.createDinosaur(name, userId, diet, energy, food, experience, epoch);
+    const newDinosaur = await adminService.getDinosaurById(newDinosaurId);
 
     res.status(201).json(newDinosaur);
   } catch (error) {
@@ -160,12 +159,12 @@ exports.updateDinosaur = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    const success = await dinosaurService.updateDinosaur(id, updates);
+    const success = await adminService.updateDinosaur(id, updates);
     if (!success) {
       return res.status(404).json({ message: 'Dinosaure non trouvé' });
     }
 
-    const updatedDinosaur = await dinosaurService.getDinosaurById(id);
+    const updatedDinosaur = await adminService.getDinosaurById(id);
     res.status(200).json(updatedDinosaur);
   } catch (error) {
     console.error('Erreur dans updateDinosaur:', error);
@@ -181,7 +180,7 @@ exports.updateDinosaur = async (req, res) => {
 exports.deleteDinosaur = async (req, res) => {
   try {
     const { id } = req.params;
-    const success = await dinosaurService.deleteDinosaur(id);
+    const success = await adminService.deleteDinosaur(id);
     if (!success) {
       return res.status(404).json({ message: 'Dinosaure non trouvé' });
     }
