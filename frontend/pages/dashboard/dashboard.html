@@ -47,7 +47,22 @@
         <div id="Actions">
 
             <div class="InRight">
-                Action
+                <p>Actions</p>
+                <!-- Bouton pour ouvrir l'overlay en mode mobile -->
+                <button id="openDinoStats" class="overlay-button" aria-label="Voir les Stats Dino">
+                    🦖
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay pour les stats du dinosaure en mode mobile -->
+    <div id="dinoOverlay" class="overlay">
+        <div class="overlay-content">
+            <span id="closeDinoOverlay" class="close-button">&times;</span>
+            <div class="dino-infos-overlay">
+                <!-- Les informations du dinosaure seront affichées ici par JavaScript -->
+                <p>Chargement des statistiques du dinosaure...</p>
             </div>
         </div>
     </div>
