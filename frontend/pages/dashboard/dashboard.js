@@ -1,6 +1,3 @@
-
-
-
 /**
  * Fonction principale appelée lorsque la page est chargée.
  * Elle gère l'affichage des informations utilisateur et dinosaure.
@@ -40,9 +37,6 @@ function displayUserInfo(user) {
             <h3>Utilisateur :</h3>
             <p>Nom d'utilisateur : ${user.username}</p>
         `;
-             // <p>Email : ${user.email}</p>
-            // <p>Administrateur : ${user.isAdmin ? 'Oui' : 'Non'}</p>
-            // <p>Créé le : ${new Date(user.created_at).toLocaleDateString()}</p>
         // Mettre à jour le span du nom d'utilisateur
         usernameSpan.textContent = user.username;
     } else {
@@ -157,8 +151,37 @@ function setupOverlay() {
     }
 }
 
+
+
+/**
+ * Lie les boutons aux actions du dinosaure.
+ */
+function setupDinosaurActions() {
+    const eatButton = document.getElementById('eatButton');
+    const sleepButton = document.getElementById('sleepButton');
+    const wakeButton = document.getElementById('wakeButton');
+    const resurrectButton = document.getElementById('resurrectButton');
+
+    if (eatButton) {
+        eatButton.addEventListener('click', eatDinosaur);
+    }
+
+    if (sleepButton) {
+        sleepButton.addEventListener('click', sleepDinosaur);
+    }
+
+    if (wakeButton) {
+        wakeButton.addEventListener('click', wakeDinosaur);
+    }
+
+    if (resurrectButton) {
+        resurrectButton.addEventListener('click', resurrectDinosaur);
+    }
+}
+
 // Lancer l'initialisation de la page et configurer l'overlay lorsque le DOM est chargé
 document.addEventListener('DOMContentLoaded', () => {
     initializePage();
     setupOverlay();
+    setupDinosaurActions();
 });
