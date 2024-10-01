@@ -25,7 +25,7 @@ body, html {
     align-items: stretch;
 }
 
-#Left {
+#Infos {
     margin: 2px;
     flex-grow: 1;
     background-color: rgba(0, 149, 255, 0);
@@ -47,7 +47,7 @@ body, html {
     align-items: stretch;
 }
 
-#Right {
+#Actions {
     margin: 2px;
     flex-grow: 1;
     background-color: rgba(0, 149, 255, 0);
@@ -191,12 +191,12 @@ body, html {
         flex-direction: column;
     }
 
-    #Left {
+    #Infos {
         width: 100%;
         flex-grow: 1;
     }
 
-    #Right {
+    #Actions {
         width: 100%;
         flex-grow: 3;
     }
