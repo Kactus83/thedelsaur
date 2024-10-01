@@ -16,6 +16,9 @@ function renderDinosaurStats(dinosaur) {
     const MIN_ENERGY_TO_WAKE_UP = 7500;
 
     // Mise à jour des éléments principaux
+    const middleContentDiv = document.querySelector('.middleContent');
+    const dinoImage = middleContentDiv.querySelector('img.dino-svg');
+    
     const nameElement = document.getElementById('name');
     const dietElement = document.getElementById('diet');
     const energyElement = document.getElementById('energy');
@@ -48,6 +51,54 @@ function renderDinosaurStats(dinosaur) {
         isDeadElement.textContent = dinosaur.isDead ? 'Oui' : 'Non';
     } else {
         console.warn("Certains éléments DOM pour les statistiques du dinosaure sont manquants.");
+    }
+
+    
+    const o_nameElement = document.getElementById('o_name');
+    const o_dietElement = document.getElementById('o_diet');
+    const o_energyElement = document.getElementById('o_energy');
+    const o_maxEnergyElement = document.getElementById('o_max_energy');
+    const o_foodElement = document.getElementById('o_food');
+    const o_maxFoodElement = document.getElementById('o_max_food');
+    const o_experienceElement = document.getElementById('o_experience');
+    const o_epochElement = document.getElementById('o_epoch');
+    const o_createdAtElement = document.getElementById('o_created_at');
+    const o_lastUpdateElement = document.getElementById('o_last_update_by_time_service');
+    const o_isSleepingElement = document.getElementById('o_isSleeping');
+    const o_isDeadElement = document.getElementById('o_isDead');
+
+    if (
+        o_nameElement && o_dietElement && o_energyElement && o_maxEnergyElement &&
+        o_foodElement && o_maxFoodElement && o_experienceElement && o_epochElement &&
+        o_createdAtElement && o_lastUpdateElement && o_isSleepingElement && o_isDeadElement
+    ) {
+        o_nameElement.textContent = dinosaur.name;
+        o_dietElement.textContent = dinosaur.diet;
+        o_energyElement.textContent = dinosaur.energy;
+        o_maxEnergyElement.textContent = dinosaur.max_energy;
+        o_foodElement.textContent = dinosaur.food;
+        o_maxFoodElement.textContent = dinosaur.max_food;
+        o_experienceElement.textContent = dinosaur.experience;
+        o_epochElement.textContent = dinosaur.epoch;
+        o_createdAtElement.textContent = new Date(dinosaur.created_at).toLocaleDateString();
+        o_lastUpdateElement.textContent = new Date(dinosaur.last_update_by_time_service).toLocaleDateString();
+        o_isSleepingElement.textContent = dinosaur.isSleeping ? 'Oui' : 'Non';
+        o_isDeadElement.textContent = dinosaur.isDead ? 'Oui' : 'Non';
+    } else {
+        console.warn("Certains éléments DOM pour les statistiques du dinosaure en mobile sont manquants.");
+    }
+
+    // Mettre à jour l'image SVG du dinosaure
+    if (dinoImage) {
+        dinoImage.src = `../../assets/dino/dino_${dinosaur.diet}.svg`; // Ex: dino_herbivore.svg
+        dinoImage.alt = `Image de ${dinosaur.name}`;
+    } else {
+        // Si l'image n'existe pas, la créer et l'ajouter
+        const newDinoImage = document.createElement('img');
+        newDinoImage.src = `../../assets/dino/dino_${dinosaur.diet}.svg`; // Ex: dino_herbivore.svg
+        newDinoImage.alt = `Image de ${dinosaur.name}`;
+        newDinoImage.classList.add('dino-svg');
+        middleContentDiv.appendChild(newDinoImage);
     }
 
     // Gestion des boutons d'actions

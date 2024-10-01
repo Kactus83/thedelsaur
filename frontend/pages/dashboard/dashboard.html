@@ -57,7 +57,7 @@
             <div class="InRight">
                 <p>Actions</p>
                 <div class="div-button">
-                    <button id="openDinoStats" class="overlay-button" aria-label="Voir les Stats Dino">
+                    <button id="openDinoStats" class="overlay-button action-button" aria-label="Voir les Stats Dino">
                         🦖
                     </button>
                     <!-- Ajout des boutons d'actions -->
@@ -76,8 +76,16 @@
         <div class="overlay-content">
             <span id="closeDinoOverlay" class="close-button">&times;</span>
             <div class="dino-infos-overlay">
-                <!-- Les informations du dinosaure seront affichées ici par JavaScript -->
-                <p>Chargement des statistiques du dinosaure...</p>
+                <h3>Dinosaure : <span id="o_name">Chargement...</span></h3>
+                <p>Régime alimentaire : <span id="o_diet">Chargement...</span></p>
+                <p>Énergie : <span id="o_energy">Chargement...</span> / <span id="o_max_energy">10000</span></p>
+                <p>Nourriture : <span id="o_food">Chargement...</span> / <span id="o_max_food">10000</span></p>
+                <p>Expérience : <span id="o_experience">Chargement...</span></p>
+                <p>Époque : <span id="o_epoch">Chargement...</span></p>
+                <p>Créé le : <span id="o_created_at">Chargement...</span></p>
+                <p>Dernière mise à jour : <span id="o_last_update_by_time_service">Chargement...</span></p>
+                <p>En Sommeil : <span id="o_isSleeping">Chargement...</span></p>
+                <p>Mort : <span id="o_isDead">Chargement...</span></p>
             </div>
         </div>
     </div>

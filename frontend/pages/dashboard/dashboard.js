@@ -51,12 +51,11 @@ function displayUserInfo(user) {
  */
 function displayDinosaurInfo(dinosaur) {
     const dinoInfoDiv = document.querySelector('.dino-infos');
-    const middleContentDiv = document.querySelector('.middleContent');
-    const dinoImage = middleContentDiv.querySelector('img.dino-svg');
 
     // Vérifier si les informations dinosaure sont présentes
     if (dinosaur) {
         renderDinosaurStats(dinosaur);
+        
     } else {
         console.log("No dinosaur data found.");
         // Si aucune information dinosaure n'est trouvée, afficher un message d'erreur

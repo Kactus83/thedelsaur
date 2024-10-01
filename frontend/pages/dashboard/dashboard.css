@@ -249,26 +249,8 @@ body, html {
 /* Styles pour les boutons de l'overlay */
 .overlay-button {
     display: none; /* Affiché uniquement en mode mobile */
-    margin: 10px;
-    padding: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #0095ff;
-    color: white;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
 }
-
-.overlay-button:hover {
-    background-color: #007acc;
-}
-
 
 /* Styles de l'overlay */
 .overlay {
@@ -366,14 +348,6 @@ body, html {
     /* Affichage du bouton de l'overlay */
     .overlay-button {
         display: flex; /* Affiché uniquement en mode mobile */
-        /* position: absolute; */
-        top: 10px;
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        border-radius: 50%;
-        font-size: 1.5rem;
     }
 .div-button{
     display: flex;
