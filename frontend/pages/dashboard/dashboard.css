@@ -1,10 +1,9 @@
-    
 body, html {
     text-align: center;
     height: 100%;
     overflow: hidden;
     margin: 0;
-    font-family: 'Peanut';
+    font-family: 'Peanut', sans-serif;
     font-size: 1.2rem;
 }
 
@@ -58,9 +57,6 @@ body, html {
     align-items: stretch;
 }
 
-
-
-
 .user-infos{
     margin: 2px;
     border: 2px solid black;
@@ -72,9 +68,8 @@ body, html {
     flex-grow: 1;
     justify-content: center;
     align-items: stretch;
+    padding: 10px;
 }
-
-
 
 .dino-infos {
     margin: 2px;
@@ -83,39 +78,62 @@ body, html {
     background: rgba(255, 255, 255, 0.8);
 
     display: flex;
+    flex-direction: column;
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
 .usersDisplay {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
-    background: rgba(255, 0, 0, 0);
-  
-
+    background: rgba(255, 0, 0, 0.0);
 
     display: flex;
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center; 
     flex-direction: column;
+    padding: 10px;
 }
+
+.usersDisplay h3, .usersDisplay p {
+    margin: 5px 0;
+    text-align: left;
+    padding: 0 10px;
+}
+
 .usersAccess {
     margin: 2px;
     border: 2px solid black;
     border-radius: 10px;
-    background: rgba(255, 0, 0, 0);
+    background: rgba(255, 0, 0, 0.0);
 
     display: flex;
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center; 
     flex-direction: column;
+    padding: 10px;
 }
 
+.usersAccess a {
+    display: block;
+    margin: 10px;
+    padding: 10px;
+    text-decoration: none;
+    background-color: #0095ff;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+}
 
+.usersAccess a:hover {
+    background-color: #007acc;
+}
 
 .topMiddle {
     margin: 2px;
@@ -127,6 +145,8 @@ body, html {
     flex-grow: 0.5; 
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
 .bottomMiddle {
@@ -137,7 +157,9 @@ body, html {
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
 }
+
 .Title {
     margin: 2px;
     border: 2px solid black;
@@ -148,24 +170,30 @@ body, html {
     flex-grow: 0;
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
-
 .mobile-title {
-    display:none;
+    display: none;
 }
 
 .middleContent {
     margin: 2px;
-    background: rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.0);
 
     display: flex;
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
 }
 
-
+.middleContent img.dino-svg {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+}
 
 .InRight {
     margin: 2px;
@@ -177,13 +205,23 @@ body, html {
     flex-grow: 6;
     flex-shrink: 0;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
 
+/* Styles pour l'image du dinosaure */
+.dino-image {
+    width: 100%;
+    max-width: 200px;
+    margin: 10px auto;
+    display: block;
+}
+
+/* Font-face pour Peanut */
 @font-face {
     font-family:"Peanut";
     src: url("../../assets/font/PeanutMoney.ttf") format("truetype");
-  }
-
+}
 
 /* Mobile layout */
 @media only screen and (max-width: 768px) {
@@ -212,7 +250,7 @@ body, html {
     }
 
     .dino-infos {
-        display :none;
+        display: none;
     }
 
     .usersDisplay {
@@ -223,6 +261,11 @@ body, html {
         display: none;
     }
     .mobile-title {
-        display:block;
+        display: block;
+    }
+
+    /* Ajustement de l'image du dinosaure */
+    .middleContent img.dino-svg {
+        max-width: 200px;
     }
 }
