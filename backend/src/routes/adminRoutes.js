@@ -1,40 +1,21 @@
 const express = require('express');
 const adminController = require('../controllers/adminController');
-
+const authenticateJWT = require('../middlewares/authMiddleware'); 
+const authorizeAdmin = require('../middlewares/authorizeAdmin'); 
 const router = express.Router();
 
 // Routes pour la gestion des utilisateurs
-
-// Récupérer tous les utilisateurs
-router.get('/users', adminController.getAllUsers);
-
-// Récupérer un utilisateur par username
-router.get('/users/username/:username', adminController.getUserByUsername);
-
-// Récupérer un utilisateur par email
-router.get('/users/email/:email', adminController.getUserByEmail);
-
-// Récupérer un utilisateur par ID
-router.get('/users/:id', adminController.getUserById);
-
-// Supprimer un utilisateur par ID
-router.delete('/users/:id', adminController.deleteUser);
+router.get('/users', authenticateJWT, authorizeAdmin, adminController.getAllUsers);
+router.get('/users/username/:username', authenticateJWT, authorizeAdmin, adminController.getUserByUsername);
+router.get('/users/email/:email', authenticateJWT, authorizeAdmin, adminController.getUserByEmail);
+router.get('/users/:id', authenticateJWT, authorizeAdmin, adminController.getUserById);
+router.delete('/users/:id', authenticateJWT, authorizeAdmin, adminController.deleteUser);
 
 // Routes pour la gestion des dinosaures
-
-// Récupérer tous les dinosaures
-router.get('/dinosaurs', adminController.getAllDinosaurs);
-
-// Récupérer un dinosaure par ID
-router.get('/dinosaurs/:id', adminController.getDinosaurById);
-
-// Créer un dinosaure
-router.post('/dinosaurs', adminController.createDinosaur);
-
-// Mettre à jour un dinosaure
-router.put('/dinosaurs/:id', adminController.updateDinosaur);
-
-// Supprimer un dinosaure
-router.delete('/dinosaurs/:id', adminController.deleteDinosaur);
+router.get('/dinosaurs', authenticateJWT, authorizeAdmin, adminController.getAllDinosaurs);
+router.get('/dinosaurs/:id', authenticateJWT, authorizeAdmin, adminController.getDinosaurById);
+router.post('/dinosaurs', authenticateJWT, authorizeAdmin, adminController.createDinosaur);
+router.put('/dinosaurs/:id', authenticateJWT, authorizeAdmin, adminController.updateDinosaur);
+router.delete('/dinosaurs/:id', authenticateJWT, authorizeAdmin, adminController.deleteDinosaur);
 
 module.exports = router;

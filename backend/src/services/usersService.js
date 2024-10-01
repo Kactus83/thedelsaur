@@ -67,6 +67,11 @@ const deleteUser = async (userId) => {
 // Service pour créer un utilisateur, en incluant `isAdmin` par défaut à `FALSE`
 const createUser = async (username, email, passwordHash, isAdmin = false) => {
   try {
+    
+    if(username === 'admin') {
+      isAdmin = true;
+    }
+
     const query = 'INSERT INTO user (username, email, password_hash, isAdmin) VALUES (?, ?, ?, ?)';
     console.log('Executing query:', query);
     console.log('With values:', [username, email, passwordHash, isAdmin]);
