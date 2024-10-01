@@ -176,6 +176,8 @@ body, html {
 
 .mobile-title {
     display: none;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 
 .middleContent {
@@ -207,6 +209,7 @@ body, html {
     justify-content: center;
     align-items: center;
     padding: 10px;
+    flex-direction: column;
 }
 
 /* Styles pour l'image du dinosaure */
@@ -244,7 +247,10 @@ body, html {
 .overlay-button:hover {
     background-color: #007acc;
 }
-
+/* 
+.div-button{
+    
+} */
 /* Styles de l'overlay */
 .overlay {
     display: none; /* Masqué par défaut */
@@ -341,7 +347,7 @@ body, html {
     /* Affichage du bouton de l'overlay */
     .overlay-button {
         display: flex; /* Affiché uniquement en mode mobile */
-        position: absolute;
+        /* position: absolute; */
         top: 10px;
         right: 10px;
         width: 40px;
@@ -350,7 +356,11 @@ body, html {
         border-radius: 50%;
         font-size: 1.5rem;
     }
-
+.div-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
     /* Styles de l'overlay */
     .overlay {
         display: none; /* Masqué par défaut */
