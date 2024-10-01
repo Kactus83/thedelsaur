@@ -15,7 +15,8 @@ const signup = async (req, res) => {
       return res.status(400).json({ message: 'Username, email et password sont requis' });
     }
 
-    const { user, dinosaur } = await authService.signup(username, email, password);
+    let { user, dinosaur } = await authService.signup(username, email, password);
+    user.password_hash = "";
     res.status(201).json({ message: 'Utilisateur créé avec succès', user, dinosaur });
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);
