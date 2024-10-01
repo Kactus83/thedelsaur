@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
-const { generateRandomName, getRandomDiet } = require('../utils/dinosaurUtils');
+const { generateRandomName, getRandomDiet } = require('../utils/dinosaurUtils');const { 
+  BASE_ENERGY,
+  BASE_FOOD
+} = require('../config/constants');
 
 // Charger les variables d'environnement pour JWT secret
 require('dotenv').config();
@@ -19,7 +22,7 @@ require('dotenv').config();
  * @param {string} [epoch='past'] - Époque du dinosaure.
  * @returns {Promise<number>} ID du dinosaure créé.
  */
-const createDinosaur = async (name, userId, diet, energy = 10000, max_energy = 10000, food = 10000, max_food = 10000, experience = 0, epoch = 'past') => {
+const createDinosaur = async (name, userId, diet, energy = BASE_ENERGY, max_energy = BASE_ENERGY, food = BASE_FOOD, max_food = BASE_FOOD, experience = 0, epoch = 'past') => {
   try {
     // Correction: ajout de la virgule manquante entre max_food et experience
     const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, experience, epoch)
