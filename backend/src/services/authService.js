@@ -13,15 +13,18 @@ require('dotenv').config();
  * @param {string} diet - Régime alimentaire.
  * @param {number} [energy=10000] - Énergie initiale.
  * @param {number} [food=10000] - Nourriture initiale.
+ * @param {number} [max_energy=10000] - Énergie maximale.
+ * @param {number} [max_food=10000] - Nourriture maximale.
  * @param {number} [experience=0] - Expérience initiale.
  * @param {string} [epoch='past'] - Époque du dinosaure.
  * @returns {Promise<number>} ID du dinosaure créé.
  */
-const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
+const createDinosaur = async (name, userId, diet, energy = 10000, max_energy = 10000, food = 10000, max_food = 10000, experience = 0, epoch = 'past') => {
   try {
-    const query = `INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const [result] = await db.query(query, [name, userId, diet, energy, food, experience, epoch]);
+    // Correction: ajout de la virgule manquante entre max_food et experience
+    const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, experience, epoch)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const [result] = await db.query(query, [name, userId, diet, energy, max_energy, food, max_food, experience, epoch]);
     console.log('Dinosaur created with ID:', result.insertId);
     return result.insertId;
   } catch (err) {
@@ -29,6 +32,7 @@ const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, 
     throw err;
   }
 };
+
 
 /**
  * Hashage du mot de passe.
