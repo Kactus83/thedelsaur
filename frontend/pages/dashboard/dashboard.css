@@ -149,6 +149,12 @@ body, html {
     flex-shrink: 0;
     justify-content: center;
 }
+
+
+.mobile-title {
+    display:none;
+}
+
 .middleContent {
     margin: 2px;
     background: rgba(255, 255, 255, 0);
@@ -177,3 +183,41 @@ body, html {
     font-family:"Peanut";
     src: url("../../assets/font/PeanutMoney.ttf") format("truetype");
   }
+
+
+/* Mobile layout */
+@media only screen and (max-width: 768px) {
+    #main {
+        flex-direction: column;
+    }
+
+    #Left, #Right {
+        width: 100%;
+        flex-grow: 1;
+    }
+
+    #Middle {
+        width: 100%;
+        flex-grow: 1;
+    }
+
+    .topLeft, .bottomLeft, .topMiddle, .bottomMiddle, .InRight, .Title {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .bottomLeft {
+        display :none;
+    }
+
+    .usersDisplay {
+        flex-grow: 0.5;
+    }
+
+    .Title {
+        display: none;
+    }
+    .mobile-title {
+        display:block;
+    }
+}
