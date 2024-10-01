@@ -193,7 +193,7 @@ body, html {
 
     #Left {
         width: 100%;
-        flex-grow: 1;
+        flex-grow: 0.2;
     }
 
     #Right {
@@ -218,7 +218,9 @@ body, html {
     .usersDisplay {
         flex-grow: 0.5;
     }
-
+    .usersAccess{
+        display: none;
+    }
     .Title {
         display: none;
     }
