@@ -9,63 +9,53 @@
 </head>
     
 <body>
-<div id="main">
-    <div id="Infos">
+    <div id="main">
+        <div id="Infos">
 
-        <div class="user-infos">
-            <div class="mobile-title">
+            <div class="user-infos">
+                <div class="mobile-title">
+                    IdleSaur🦖
+                </div>
+                <div class="usersDisplay">
+                    <p>Connecté en tant que :</p> 
+                    <span id="username"></span> 
+                </div>
+                <div class="usersAccess">
+                    <a href="../user-profile/user_profile.html">User Management</a>
+                </div>
+            </div>
+            <div class="dino-infos">
+                <!-- Les informations du dinosaure seront affichées ici -->
+                <p>Chargement des statistiques du dinosaure...</p>
+            </div>
+        
+        </div>
+        <div id="Middle">
+            <div class="Title">
                 IdleSaur🦖
-                  
-             </div>
-           <div class="usersDisplay">
-            <p> Connecté en tant que : </p> 
-            <span id="username"></span> 
-           </div>
-            <div class="usersAccess">
-            <a href="../user-profile/user_profile.html">User Management</a>
-           </div>
+            </div>
+            <div class="topMiddle">
+                XP BAR
+            </div>
+            <div class="bottomMiddle">
+                <div class="middleContent">
+                    <!-- Image du dinosaure -->
+                    <img src="../../assets/dino/default_dino.svg" alt="Dinosaur SVG" class="dino-svg">
+                </div>
+            </div>
+        </div>
+        <div id="Actions">
 
+            <div class="InRight">
+                Action
+            </div>
         </div>
-        <div class="dino-infos">
-           Dino Stat
-             
-        </div>
-    
     </div>
-    <div id="Middle">
-        <div class="Title">
-            IdleSaur🦖
-              
-         </div>
-        <div class="topMiddle">
-           XP BAR
-             
-        </div>
-        <div class="bottomMiddle">
-           <div class="middleContent">
-            SVG DINO
-         </div>
-        </div>
-       
-    
-    </div>
-    <div id="Actions">
 
-        <div class="InRight">
-           Action
-             
-        </div>
-       
-    
-    </div>
-    
-
-</div>
-
-
+    <!-- Inclusion d'Axios et des scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+    <script src="../../common/sessionHandlerAndDataRetriever.js" defer></script>
+    <script src="./dashboard.js" defer></script>
 </body>
-<!-- Inclusion d'Axios et des scripts -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
-<script src="../../common/sessionHandlerAndDataRetriever.js" defer></script>
-<script src="./dashboard.js" defer></script>
+
 </html>
