@@ -37,7 +37,7 @@ body, html {
 
 #Middle {
     margin: 2px;
-    flex-grow: 5;
+    flex-grow: 500;
     background-color: rgba(0, 149, 255, 0);
 
     display: flex;
@@ -176,6 +176,8 @@ body, html {
 
 .mobile-title {
     display: none;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 
 .middleContent {
@@ -194,21 +196,6 @@ body, html {
     max-width: 300px;
     height: auto;
 }
-
-.InRight {
-    margin: 2px;
-    border: 2px solid black;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.8);
-
-    display: flex;
-    flex-grow: 6;
-    flex-shrink: 0;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-}
-
 /* Styles pour l'image du dinosaure */
 .dino-image {
     width: 100%;
@@ -217,11 +204,28 @@ body, html {
     display: block;
 }
 
-/* Font-face pour Peanut */
-@font-face {
-    font-family:"Peanut";
-    src: url("../../assets/font/PeanutMoney.ttf") format("truetype");
+.InRight {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+    flex-grow: 5;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 20rem;
 }
+
+.div-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
 
 /* Styles pour les boutons de l'overlay */
 .overlay-button {
@@ -239,11 +243,13 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 .overlay-button:hover {
     background-color: #007acc;
 }
+
 
 /* Styles de l'overlay */
 .overlay {
@@ -341,7 +347,7 @@ body, html {
     /* Affichage du bouton de l'overlay */
     .overlay-button {
         display: flex; /* Affiché uniquement en mode mobile */
-        position: absolute;
+        /* position: absolute; */
         top: 10px;
         right: 10px;
         width: 40px;
@@ -350,7 +356,11 @@ body, html {
         border-radius: 50%;
         font-size: 1.5rem;
     }
-
+.div-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
     /* Styles de l'overlay */
     .overlay {
         display: none; /* Masqué par défaut */
@@ -397,4 +407,10 @@ body, html {
         text-align: left;
         padding: 0 10px;
     }
+}
+
+/* Font-face pour Peanut */
+@font-face {
+    font-family:"Peanut";
+    src: url("../../assets/font/PeanutMoney.ttf") format("truetype");
 }

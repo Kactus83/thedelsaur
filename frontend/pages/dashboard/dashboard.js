@@ -1,3 +1,6 @@
+
+
+
 /**
  * Fonction principale appelée lorsque la page est chargée.
  * Elle gère l'affichage des informations utilisateur et dinosaure.
@@ -36,10 +39,10 @@ function displayUserInfo(user) {
         userInfoDiv.innerHTML = `
             <h3>Utilisateur :</h3>
             <p>Nom d'utilisateur : ${user.username}</p>
-            <p>Email : ${user.email}</p>
-            <p>Administrateur : ${user.isAdmin ? 'Oui' : 'Non'}</p>
-            <p>Créé le : ${new Date(user.created_at).toLocaleDateString()}</p>
         `;
+             // <p>Email : ${user.email}</p>
+            // <p>Administrateur : ${user.isAdmin ? 'Oui' : 'Non'}</p>
+            // <p>Créé le : ${new Date(user.created_at).toLocaleDateString()}</p>
         // Mettre à jour le span du nom d'utilisateur
         usernameSpan.textContent = user.username;
     } else {
