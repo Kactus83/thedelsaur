@@ -85,12 +85,77 @@ function displayDinosaurInfo(dinosaur) {
             newDinoImage.classList.add('dino-svg');
             middleContentDiv.appendChild(newDinoImage);
         }
+
+        // Mettre à jour l'overlay dino-infos en mode mobile
+        const overlayDinoInfoDiv = document.querySelector('.dino-infos-overlay');
+        if (overlayDinoInfoDiv) {
+            overlayDinoInfoDiv.innerHTML = `
+                <h3>Dinosaure : ${dinosaur.name}</h3>
+                <p>Régime alimentaire : ${dinosaur.diet}</p>
+                <p>Énergie : ${dinosaur.energy} / ${dinosaur.max_energy}</p>
+                <p>Nourriture : ${dinosaur.food} / ${dinosaur.max_food}</p>
+                <p>Expérience : ${dinosaur.experience}</p>
+                <p>Époque : ${dinosaur.epoch}</p>
+                <p>Créé le : ${new Date(dinosaur.created_at).toLocaleDateString()}</p>
+                <p>Dernière mise à jour : ${new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
+            `;
+        }
     } else {
         console.log("No dinosaur data found.");
         // Si aucune information dinosaure n'est trouvée, afficher un message d'erreur
         dinoInfoDiv.innerHTML = '<p>Aucun dinosaure trouvé.</p>';
+
+        // Mettre à jour l'overlay dino-infos en mode mobile
+        const overlayDinoInfoDiv = document.querySelector('.dino-infos-overlay');
+        if (overlayDinoInfoDiv) {
+            overlayDinoInfoDiv.innerHTML = '<p>Aucun dinosaure trouvé.</p>';
+        }
     }
 }
 
-// Lancer l'initialisation de la page lorsque le DOM est chargé
-document.addEventListener('DOMContentLoaded', initializePage);
+/**
+ * Initialise et gère le système d'overlay pour le mode mobile.
+ */
+function setupOverlay() {
+    const openBtn = document.getElementById('openDinoStats');
+    const closeBtn = document.getElementById('closeDinoOverlay');
+    const overlay = document.getElementById('dinoOverlay');
+
+    console.log("Setting up overlay:", { openBtn, closeBtn, overlay });
+
+    // Fonction pour ouvrir l'overlay
+    function openOverlay() {
+        console.log("Opening overlay");
+        overlay.classList.add('active');
+    }
+
+    // Fonction pour fermer l'overlay
+    function closeOverlayFunc() {
+        console.log("Closing overlay");
+        overlay.classList.remove('active');
+    }
+
+    // Vérifier si les éléments existent avant d'ajouter les écouteurs
+    if (openBtn && closeBtn && overlay) {
+        openBtn.addEventListener('click', openOverlay);
+        closeBtn.addEventListener('click', closeOverlayFunc);
+
+        // Fermer l'overlay en cliquant en dehors du contenu
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                console.log("Clicked outside overlay content, closing overlay");
+                closeOverlayFunc();
+            }
+        });
+
+        console.log("Overlay event listeners attached successfully.");
+    } else {
+        console.error("Les éléments de l'overlay ne sont pas correctement définis:", { openBtn, closeBtn, overlay });
+    }
+}
+
+// Lancer l'initialisation de la page et configurer l'overlay lorsque le DOM est chargé
+document.addEventListener('DOMContentLoaded', () => {
+    initializePage();
+    setupOverlay();
+});
