@@ -67,13 +67,13 @@ const updateDinosaur = async (dinosaurId, updates) => {
  * @param {string} [epoch='past'] - Époque du dinosaure.
  * @returns {Promise<number>} L'ID du dinosaure créé.
  */
-const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, max_energy = 10000, max_food = 10000, experience = 0, epoch = 'past') => {
+const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, max_energy = 10000, max_food = 10000, experience = 0, epoch = 'past', isSleeping = false, isDead = false) => {
   try {
-    const query = 'INSERT INTO dinosaur (name, user_id, diet, energy, food, max_energy, max_food, experience, epoch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO dinosaur (name, user_id, diet, energy, food, max_energy, max_food, experience, epoch, isSleeping, isDead) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     console.log('Executing query:', query);
-    console.log('With values:', [name, userId, diet, energy, food, max_energy, max_food, experience, epoch]);
+    console.log('With values:', [name, userId, diet, energy, food, max_energy, max_food, experience, epoch, isSleeping, isDead]);
 
-    const [result] = await db.query(query, [name, userId, diet, energy, food, max_energy, max_food, experience, epoch]);
+    const [result] = await db.query(query, [name, userId, diet, energy, food, max_energy, max_food, experience, epoch, isSleeping, isDead]);
     console.log('Dinosaur created with ID:', result.insertId);
     return result.insertId; // Renvoie l'ID du dinosaure créé
   } catch (err) {

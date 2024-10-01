@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS dinosaur (
   max_food INT NOT NULL,
   experience INT NOT NULL,
   epoch ENUM('past', 'present', 'future') NOT NULL DEFAULT 'past',
+  isSleeping BOOLEAN DEFAULT FALSE,
+  isDead BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_update_by_time_service TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
