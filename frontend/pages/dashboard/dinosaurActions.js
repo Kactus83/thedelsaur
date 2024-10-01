@@ -1,3 +1,5 @@
+
+
 /**
  * Met à jour les données du dinosaure dans le localStorage et l'interface utilisateur.
  * @param {Object} dinosaur - Les données du dinosaure.
@@ -48,10 +50,10 @@ function renderDinosaurStats(dinosaur) {
         eatButton.disabled = dinosaur.isDead || dinosaur.isSleeping;
     }
     if (sleepButton) {
-        sleepButton.disabled = dinosaur.isDead || dinosaur.isSleeping === true || dinosaur.energy > MAX_ENERGY_NO_SLEEP;
+        sleepButton.disabled = dinosaur.isDead || dinosaur.isSleeping === true;
     }
     if (wakeButton) {
-        wakeButton.disabled = dinosaur.isDead || dinosaur.isSleeping === false || dinosaur.energy < MIN_ENERGY_TO_WAKE_UP;
+        wakeButton.disabled = dinosaur.isDead || dinosaur.isSleeping === false;
     }
     if (resurrectButton) {
         resurrectButton.disabled = dinosaur.isDead === false;

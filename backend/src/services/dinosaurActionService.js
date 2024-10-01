@@ -4,7 +4,8 @@ const {
     MIN_FOOD_PER_MEAL,
     MAX_FOOD_PER_MEAL,
     MAX_ENERGY_NO_SLEEP,
-    MIN_ENERGY_TO_WAKE_UP
+    MIN_ENERGY_TO_WAKE_UP,
+    ENERGY_COST_TO_EAT
 } = require('../config/constants');
 
 /**
@@ -19,7 +20,8 @@ const getRandomInt = (min, max) => {
 
 /**
  * Action : Manger
- * Augmente la nourriture du dinosaure d'une quantité aléatoire entre MIN_FOOD_PER_MEAL et MAX_FOOD_PER_MEAL, sans dépasser max_food.
+ * Augmente la nourriture du dinosaure d'une quantité aléatoire entre MIN_FOOD_PER_MEAL et MAX_FOOD_PER_MEAL, sans dépasser max_food,
+ * et réduit son énergie d'un coût fixe (ENERGY_COST_TO_EAT).
  * @param {Object} dinosaur - Le dinosaure à modifier.
  * @returns {Object} Le dinosaure mis à jour.
  */
@@ -32,11 +34,20 @@ const eatDinosaur = (dinosaur) => {
         throw new Error('Le dinosaure est endormi et ne peut pas manger.');
     }
 
+    if (dinosaur.energy < ENERGY_COST_TO_EAT) {
+        throw new Error('Le dinosaure n\'a pas assez d\'énergie pour manger.');
+    }
+
     // Générer une quantité aléatoire de nourriture à ajouter
     const amount = getRandomInt(MIN_FOOD_PER_MEAL, MAX_FOOD_PER_MEAL);
     const newFood = Math.min(dinosaur.food + amount, dinosaur.max_food);
-    console.log(`Le dinosaure mange. Nourriture passée de ${dinosaur.food} à ${newFood}.`);
     dinosaur.food = newFood;
+
+    // Réduire l'énergie du dinosaure après avoir mangé
+    dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_EAT, 0);
+
+    console.log(`Le dinosaure mange. Nourriture passée de ${dinosaur.food - amount} à ${newFood}, énergie réduite à ${dinosaur.energy}.`);
+    
     return dinosaur;
 };
 
