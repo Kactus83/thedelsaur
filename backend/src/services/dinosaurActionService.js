@@ -1,9 +1,6 @@
 const { 
     BASE_FOOD,
     BASE_ENERGY,
-    FOOD_DECAY_RATE_PER_SECOND, 
-    ENERGY_DECAY_RATE_PER_SECOND,
-    ENERGY_RECOVERY_RATE_PER_SECOND,
     MIN_FOOD_PER_MEAL,
     MAX_FOOD_PER_MEAL,
     MAX_ENERGY_NO_SLEEP,
@@ -59,7 +56,7 @@ const sleepDinosaur = (dinosaur) => {
     }
 
     if (dinosaur.energy > MAX_ENERGY_NO_SLEEP) {
-        throw new Error(`L'énergie (${dinosaur.energy}) est supérieure à la limite (${MAX_ENERGY_NO_SLEEP}) pour se mettre en sommeil.`);
+        throw new Error(`L'énergie (${dinosaur.energy}) est supérieure à la limite (${BASE_ENERGY}) pour se mettre en sommeil.`);
     }
 
     dinosaur.isSleeping = true;
