@@ -191,14 +191,19 @@ body, html {
         flex-direction: column;
     }
 
-    #Left, #Right {
+    #Left {
+        width: 100%;
+        flex-grow: 3;
+    }
+
+    #Right {
         width: 100%;
         flex-grow: 1;
     }
 
     #Middle {
         width: 100%;
-        flex-grow: 1;
+        flex-grow: 10;
     }
 
     .topLeft, .bottomLeft, .topMiddle, .bottomMiddle, .InRight, .Title {
