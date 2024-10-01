@@ -1,10 +1,20 @@
-
-
 /**
  * Met à jour les données du dinosaure dans le localStorage et l'interface utilisateur.
  * @param {Object} dinosaur - Les données du dinosaure.
  */
 function renderDinosaurStats(dinosaur) {
+    // Définition des constantes directement dans la fonction ( a copier depuis le backend en cas de bug)
+    const BASE_FOOD = 10000;
+    const BASE_ENERGY = 10000;
+    const FOOD_DECAY_RATE_PER_SECOND = 5; 
+    const ENERGY_COST_TO_EAT = 1000;
+    const ENERGY_DECAY_RATE_PER_SECOND = 5; 
+    const ENERGY_RECOVERY_RATE_PER_SECOND = 10;
+    const MIN_FOOD_PER_MEAL = 500;
+    const MAX_FOOD_PER_MEAL = 1000;
+    const MAX_ENERGY_NO_SLEEP = 2500;
+    const MIN_ENERGY_TO_WAKE_UP = 7500;
+
     // Mise à jour des éléments principaux
     const nameElement = document.getElementById('name');
     const dietElement = document.getElementById('diet');
@@ -47,19 +57,22 @@ function renderDinosaurStats(dinosaur) {
     const resurrectButton = document.getElementById('resurrectButton');
 
     if (eatButton) {
-        eatButton.disabled = dinosaur.isDead || dinosaur.isSleeping;
+        // Le bouton "Manger" est désactivé si le dinosaure est mort, en sommeil, ou si la nourriture est insuffisante
+        eatButton.disabled = dinosaur.isDead || dinosaur.isSleeping || dinosaur.food <= MIN_FOOD_PER_MEAL;
     }
     if (sleepButton) {
-        sleepButton.disabled = dinosaur.isDead || dinosaur.isSleeping === true;
+        // Le bouton "Se Mettre en Sommeil" est désactivé si le dinosaure est mort, déjà en sommeil, ou si l'énergie est trop élevée
+        sleepButton.disabled = dinosaur.isDead || dinosaur.isSleeping || dinosaur.energy > MAX_ENERGY_NO_SLEEP;
     }
     if (wakeButton) {
-        wakeButton.disabled = dinosaur.isDead || dinosaur.isSleeping === false;
+        // Le bouton "Se Réveiller" est désactivé si le dinosaure est mort, pas en sommeil, ou si l'énergie est insuffisante
+        wakeButton.disabled = dinosaur.isDead || !dinosaur.isSleeping || dinosaur.energy < MIN_ENERGY_TO_WAKE_UP;
     }
     if (resurrectButton) {
-        resurrectButton.disabled = dinosaur.isDead === false;
+        // Le bouton "Ressusciter" est désactivé si le dinosaure n'est pas mort
+        resurrectButton.disabled = !dinosaur.isDead;
     }
 }
-
 
 /**
  * Met à jour les données du dinosaure dans le localStorage.

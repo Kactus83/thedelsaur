@@ -242,7 +242,9 @@ body, html {
     flex-wrap: wrap;
 }
 
-
+.action-button:disabled {
+    display: none;
+}
 
 /* Styles pour les boutons de l'overlay */
 .overlay-button {
