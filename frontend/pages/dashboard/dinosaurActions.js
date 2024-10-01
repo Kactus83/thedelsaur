@@ -1,4 +1,65 @@
 /**
+ * Met à jour les données du dinosaure dans le localStorage et l'interface utilisateur.
+ * @param {Object} dinosaur - Les données du dinosaure.
+ */
+function renderDinosaurStats(dinosaur) {
+    // Mise à jour des éléments principaux
+    const nameElement = document.getElementById('name');
+    const dietElement = document.getElementById('diet');
+    const energyElement = document.getElementById('energy');
+    const maxEnergyElement = document.getElementById('max_energy');
+    const foodElement = document.getElementById('food');
+    const maxFoodElement = document.getElementById('max_food');
+    const experienceElement = document.getElementById('experience');
+    const epochElement = document.getElementById('epoch');
+    const createdAtElement = document.getElementById('created_at');
+    const lastUpdateElement = document.getElementById('last_update_by_time_service');
+    const isSleepingElement = document.getElementById('isSleeping');
+    const isDeadElement = document.getElementById('isDead');
+
+    if (
+        nameElement && dietElement && energyElement && maxEnergyElement &&
+        foodElement && maxFoodElement && experienceElement && epochElement &&
+        createdAtElement && lastUpdateElement && isSleepingElement && isDeadElement
+    ) {
+        nameElement.textContent = dinosaur.name;
+        dietElement.textContent = dinosaur.diet;
+        energyElement.textContent = dinosaur.energy;
+        maxEnergyElement.textContent = dinosaur.max_energy;
+        foodElement.textContent = dinosaur.food;
+        maxFoodElement.textContent = dinosaur.max_food;
+        experienceElement.textContent = dinosaur.experience;
+        epochElement.textContent = dinosaur.epoch;
+        createdAtElement.textContent = new Date(dinosaur.created_at).toLocaleDateString();
+        lastUpdateElement.textContent = new Date(dinosaur.last_update_by_time_service).toLocaleDateString();
+        isSleepingElement.textContent = dinosaur.isSleeping ? 'Oui' : 'Non';
+        isDeadElement.textContent = dinosaur.isDead ? 'Oui' : 'Non';
+    } else {
+        console.warn("Certains éléments DOM pour les statistiques du dinosaure sont manquants.");
+    }
+
+    // Gestion des boutons d'actions
+    const eatButton = document.getElementById('eatButton');
+    const sleepButton = document.getElementById('sleepButton');
+    const wakeButton = document.getElementById('wakeButton');
+    const resurrectButton = document.getElementById('resurrectButton');
+
+    if (eatButton) {
+        eatButton.disabled = dinosaur.isDead || dinosaur.isSleeping;
+    }
+    if (sleepButton) {
+        sleepButton.disabled = dinosaur.isDead || dinosaur.isSleeping === true || dinosaur.energy > MAX_ENERGY_NO_SLEEP;
+    }
+    if (wakeButton) {
+        wakeButton.disabled = dinosaur.isDead || dinosaur.isSleeping === false || dinosaur.energy < MIN_ENERGY_TO_WAKE_UP;
+    }
+    if (resurrectButton) {
+        resurrectButton.disabled = dinosaur.isDead === false;
+    }
+}
+
+
+/**
  * Met à jour les données du dinosaure dans le localStorage.
  * @param {Object} dinosaur - Les données du dinosaure.
  */
@@ -6,18 +67,6 @@ function updateDinosaurInLocalStorage(dinosaur) {
     localStorage.setItem('dinosaur', JSON.stringify(dinosaur));
     // Optionnel : Mettre à jour l'interface utilisateur ici
     renderDinosaurStats(dinosaur);
-}
-
-/**
- * Affiche les statistiques du dinosaure dans l'interface utilisateur.
- * @param {Object} dinosaur - Les données du dinosaure.
- */
-function renderDinosaurStats(dinosaur) {
-    // Exemple de mise à jour des éléments du DOM
-    document.getElementById('food').textContent = dinosaur.food;
-    document.getElementById('energy').textContent = dinosaur.energy;
-    document.getElementById('isSleeping').textContent = dinosaur.isSleeping ? 'Oui' : 'Non';
-    document.getElementById('isDead').textContent = dinosaur.isDead ? 'Oui' : 'Non';
 }
 
 /**
