@@ -1,5 +1,7 @@
 const db = require('../config/db');
 
+// -------- FONCTIONS RELATIVES AUX UTILISATEURS -------- //
+
 // Modèle pour récupérer tous les utilisateurs
 exports.findAllUsers = async () => {
   try {
@@ -17,7 +19,7 @@ exports.findUserById = async (userId) => {
     const [results] = await db.query('SELECT * FROM user WHERE id = ?', [userId]);
     return results.length > 0 ? results[0] : null;
   } catch (err) {
-    console.error('Erreur lors de la récupération de l\'utilisateur:', err);
+    console.error('Erreur lors de la récupération de l\'utilisateur par ID:', err);
     throw err;
   }
 };
@@ -55,14 +57,14 @@ exports.deleteUser = async (userId) => {
   }
 };
 
-// Requête pour créer un utilisateur
-exports.createUser = async (username, email, passwordHash) => {
+// Requête pour créer un utilisateur, avec gestion du champ isAdmin
+exports.createUser = async (username, email, passwordHash, isAdmin = false) => {
   try {
-    const query = 'INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO user (username, email, password_hash, isAdmin) VALUES (?, ?, ?, ?)';
     console.log('Executing query:', query);
-    console.log('With values:', [username, email, passwordHash]);
+    console.log('With values:', [username, email, passwordHash, isAdmin]);
 
-    const [result] = await db.query(query, [username, email, passwordHash]);
+    const [result] = await db.query(query, [username, email, passwordHash, isAdmin]);
     console.log('User created with ID:', result.insertId);
     return result.insertId; // Renvoie l'ID de l'utilisateur créé
   } catch (err) {
@@ -106,11 +108,11 @@ exports.deleteDinosaurById = async (dinosaurId) => {
   }
 };
 
-// Modèle pour créer un dinosaure
-exports.createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
+// Modèle pour créer un dinosaure, avec `max_food` et `max_energy`
+exports.createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, max_energy = 10000, max_food = 10000, experience = 0, epoch = 'past') => {
   try {
-    const query = 'INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const [result] = await db.query(query, [name, userId, diet, energy, food, experience, epoch]);
+    const query = 'INSERT INTO dinosaur (name, user_id, diet, energy, food, max_energy, max_food, experience, epoch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const [result] = await db.query(query, [name, userId, diet, energy, food, max_energy, max_food, experience, epoch]);
     return result.insertId; // Renvoie l'ID du dinosaure créé
   } catch (err) {
     console.error('Erreur lors de la création du dinosaure:', err);
@@ -118,7 +120,7 @@ exports.createDinosaur = async (name, userId, diet, energy = 10000, food = 10000
   }
 };
 
-// Modèle pour mettre à jour un dinosaure par son ID
+// Modèle pour mettre à jour un dinosaure par son ID, avec `max_food` et `max_energy`
 exports.updateDinosaurById = async (dinosaurId, updates) => {
   try {
     const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');

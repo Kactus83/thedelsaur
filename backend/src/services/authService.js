@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const userModel = require('../models/userModel');
-const dinosaurModel = require('../models/dinosaurModel');
+const db = require('../config/db');
 const { generateRandomName, getRandomDiet } = require('../utils/dinosaurUtils');
 
 // Charger les variables d'environnement pour JWT secret
@@ -19,8 +18,16 @@ require('dotenv').config();
  * @returns {Promise<number>} ID du dinosaure créé.
  */
 const createDinosaur = async (name, userId, diet, energy = 10000, food = 10000, experience = 0, epoch = 'past') => {
-  // Crée le dinosaure dans la base de données en incluant `last_update_by_time_service`
-  return await dinosaurModel.createDinosaur(name, userId, diet, energy, food, experience, epoch);
+  try {
+    const query = `INSERT INTO dinosaur (name, user_id, diet, energy, food, experience, epoch)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const [result] = await db.query(query, [name, userId, diet, energy, food, experience, epoch]);
+    console.log('Dinosaur created with ID:', result.insertId);
+    return result.insertId;
+  } catch (err) {
+    console.error('Erreur lors de la création du dinosaure:', err);
+    throw err;
+  }
 };
 
 /**
@@ -86,39 +93,26 @@ const signup = async (username, email, password) => {
     console.log('Début de la fonction signup');
 
     // Vérifier si l'utilisateur existe déjà
-    console.log('Vérification de l\'existence de l\'utilisateur avec l\'email:', email);
-    const existingUser = await userModel.findByEmail(email);
+    const existingUser = await findUserByEmail(email);
     if (existingUser) {
-      console.log('Utilisateur déjà existant avec l\'email:', email);
       throw new Error('Email déjà utilisé');
     }
 
     // Hasher le mot de passe
-    console.log('Hashage du mot de passe pour l\'utilisateur:', username);
     const passwordHash = await hashPassword(password);
 
     // Créer un nouvel utilisateur dans la base de données
-    console.log('Création de l\'utilisateur dans la base de données');
-    const userId = await userModel.createUser(username, email, passwordHash);
-    console.log('Nouvel utilisateur créé avec l\'ID:', userId);
-    const newUser = await userModel.findById(userId);
-    console.log('Utilisateur récupéré avec succès');
+    const userId = await createUser(username, email, passwordHash);
+    const newUser = await findUserById(userId);
 
-    // Générer un nom aléatoire pour le dinosaure
-    console.log('Génération d\'un nom aléatoire pour le dinosaure');
+    // Générer un nom et régime aléatoires pour le dinosaure
     const randomName = generateRandomName();
-
-    // Sélectionner un régime alimentaire aléatoire
-    console.log('Sélection d\'un régime alimentaire aléatoire pour le dinosaure');
     const randomDiet = getRandomDiet();
 
-    // Créer le dinosaure associé à l'utilisateur avec les caractéristiques par défaut
-    console.log('Création du dinosaure associé à l\'utilisateur avec l\'ID:', userId);
-    const newDinosaur = await createDinosaur(randomName, userId, randomDiet);
-    console.log('Nouveau dinosaure créé avec le nom :', newDinosaur.name);
+    // Créer le dinosaure associé à l'utilisateur
+    const dinosaurId = await createDinosaur(randomName, userId, randomDiet);
+    const newDinosaur = await findDinosaurById(dinosaurId);
 
-    // Retourner l'utilisateur et le dinosaure
-    console.log('Inscription réussie pour l\'utilisateur:', username);
     return { user: newUser, dinosaur: newDinosaur };
   } catch (error) {
     console.error('Erreur lors de l\'inscription:', error);
@@ -135,7 +129,7 @@ const signup = async (username, email, password) => {
 const login = async (email, password) => {
   try {
     // Vérifier si l'utilisateur existe
-    const user = await userModel.findByEmail(email);
+    const user = await findUserByEmail(email);
     if (!user) {
       throw new Error('Utilisateur non trouvé');
     }
@@ -149,11 +143,78 @@ const login = async (email, password) => {
     // Générer un token JWT pour l'utilisateur connecté
     const token = generateToken(user);
 
-    // Retourner le token et les informations de l'utilisateur
-    return { token, user };
+    return { token };
   } catch (error) {
     console.error('Erreur lors de la connexion:', error);
     throw error;
+  }
+};
+
+// --------- FONCTIONS RELATIVES AUX UTILISATEURS ---------
+
+/**
+ * Crée un nouvel utilisateur dans la base de données.
+ * @param {string} username - Nom d'utilisateur.
+ * @param {string} email - Email de l'utilisateur.
+ * @param {string} passwordHash - Le mot de passe hashé.
+ * @param {boolean} [isAdmin=false] - Indique si l'utilisateur est administrateur.
+ * @returns {Promise<number>} ID de l'utilisateur créé.
+ */
+const createUser = async (username, email, passwordHash, isAdmin = false) => {
+  try {
+    const query = 'INSERT INTO user (username, email, password_hash, isAdmin) VALUES (?, ?, ?, ?)';
+    const [result] = await db.query(query, [username, email, passwordHash, isAdmin]);
+    return result.insertId;
+  } catch (err) {
+    console.error('Erreur lors de la création de l\'utilisateur:', err);
+    throw err;
+  }
+};
+
+/**
+ * Récupère un utilisateur par son ID.
+ * @param {number} userId - L'ID de l'utilisateur.
+ * @returns {Promise<Object|null>} L'utilisateur ou null.
+ */
+const findUserById = async (userId) => {
+  try {
+    const [results] = await db.query('SELECT * FROM user WHERE id = ?', [userId]);
+    return results.length > 0 ? results[0] : null;
+  } catch (err) {
+    console.error('Erreur lors de la récupération de l\'utilisateur par ID:', err);
+    throw err;
+  }
+};
+
+/**
+ * Récupère un utilisateur par son email.
+ * @param {string} email - L'email de l'utilisateur.
+ * @returns {Promise<Object|null>} L'utilisateur ou null.
+ */
+const findUserByEmail = async (email) => {
+  try {
+    const [results] = await db.query('SELECT * FROM user WHERE email = ?', [email]);
+    return results.length > 0 ? results[0] : null;
+  } catch (err) {
+    console.error('Erreur lors de la récupération de l\'utilisateur par email:', err);
+    throw err;
+  }
+};
+
+// --------- FONCTIONS RELATIVES AUX DINOSAURES ---------
+
+/**
+ * Récupère un dinosaure par son ID.
+ * @param {number} dinosaurId - L'ID du dinosaure.
+ * @returns {Promise<Object|null>} Le dinosaure ou null.
+ */
+const findDinosaurById = async (dinosaurId) => {
+  try {
+    const [results] = await db.query('SELECT * FROM dinosaur WHERE id = ?', [dinosaurId]);
+    return results.length > 0 ? results[0] : null;
+  } catch (err) {
+    console.error('Erreur lors de la récupération du dinosaure par ID:', err);
+    throw err;
   }
 };
 
@@ -162,5 +223,9 @@ module.exports = {
   checkPassword,
   generateToken,
   signup,
-  login
+  login,
+  createUser,
+  findUserById,
+  findUserByEmail,
+  findDinosaurById,
 };

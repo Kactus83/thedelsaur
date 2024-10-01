@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS user (
   username VARCHAR(255) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  isAdmin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -14,7 +15,9 @@ CREATE TABLE IF NOT EXISTS dinosaur (
   user_id INT NOT NULL,
   diet ENUM('herbivore', 'carnivore', 'omnivore') NOT NULL,
   energy INT NOT NULL,
+  max_energy INT NOT NULL,
   food INT NOT NULL,
+  max_food INT NOT NULL,
   experience INT NOT NULL,
   epoch ENUM('past', 'present', 'future') NOT NULL DEFAULT 'past',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
