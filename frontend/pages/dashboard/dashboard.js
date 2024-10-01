@@ -56,47 +56,7 @@ function displayDinosaurInfo(dinosaur) {
 
     // Vérifier si les informations dinosaure sont présentes
     if (dinosaur) {
-        console.log("Displaying dinosaur data:", dinosaur);
-
-        // Remplir la div avec les informations du dinosaure
-        dinoInfoDiv.innerHTML = `
-            <h3>Dinosaure : ${dinosaur.name}</h3>
-            <p>Régime alimentaire : ${dinosaur.diet}</p>
-            <p>Énergie : ${dinosaur.energy} / ${dinosaur.max_energy}</p>
-            <p>Nourriture : ${dinosaur.food} / ${dinosaur.max_food}</p>
-            <p>Expérience : ${dinosaur.experience}</p>
-            <p>Époque : ${dinosaur.epoch}</p>
-            <p>Créé le : ${new Date(dinosaur.created_at).toLocaleDateString()}</p>
-            <p>Dernière mise à jour : ${new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
-        `;
-
-        // Mettre à jour l'image SVG du dinosaure
-        if (dinoImage) {
-            dinoImage.src = `../../assets/dino/dino_${dinosaur.diet}.svg`; // Ex: dino_herbivore.svg
-            dinoImage.alt = `Image de ${dinosaur.name}`;
-        } else {
-            // Si l'image n'existe pas, la créer et l'ajouter
-            const newDinoImage = document.createElement('img');
-            newDinoImage.src = `../../assets/dino/dino_${dinosaur.diet}.svg`; // Ex: dino_herbivore.svg
-            newDinoImage.alt = `Image de ${dinosaur.name}`;
-            newDinoImage.classList.add('dino-svg');
-            middleContentDiv.appendChild(newDinoImage);
-        }
-
-        // Mettre à jour l'overlay dino-infos en mode mobile
-        const overlayDinoInfoDiv = document.querySelector('.dino-infos-overlay');
-        if (overlayDinoInfoDiv) {
-            overlayDinoInfoDiv.innerHTML = `
-                <h3>Dinosaure : ${dinosaur.name}</h3>
-                <p>Régime alimentaire : ${dinosaur.diet}</p>
-                <p>Énergie : ${dinosaur.energy} / ${dinosaur.max_energy}</p>
-                <p>Nourriture : ${dinosaur.food} / ${dinosaur.max_food}</p>
-                <p>Expérience : ${dinosaur.experience}</p>
-                <p>Époque : ${dinosaur.epoch}</p>
-                <p>Créé le : ${new Date(dinosaur.created_at).toLocaleDateString()}</p>
-                <p>Dernière mise à jour : ${new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
-            `;
-        }
+        renderDinosaurStats(dinosaur);
     } else {
         console.log("No dinosaur data found.");
         // Si aucune information dinosaure n'est trouvée, afficher un message d'erreur
