@@ -193,12 +193,12 @@ body, html {
 
     #Left {
         width: 100%;
-        flex-grow: 3;
+        flex-grow: 1;
     }
 
     #Right {
         width: 100%;
-        flex-grow: 1;
+        flex-grow: 3;
     }
 
     #Middle {
