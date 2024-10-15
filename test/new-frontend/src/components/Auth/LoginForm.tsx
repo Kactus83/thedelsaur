@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { login } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
-import './LoginForm.css'; // Créez ce fichier si nécessaire
+import './LoginForm.css'; 
 
 const LoginForm: React.FC = () => {
     const [email, setEmail] = useState<string>('');
@@ -12,7 +12,7 @@ const LoginForm: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const data = await login({ email, password });
+            const data = await login({ email, password }) as { token: string };
             localStorage.setItem('token', data.token);
             setMessage({ type: 'success', text: 'Connexion réussie !' });
             navigate('/dashboard');

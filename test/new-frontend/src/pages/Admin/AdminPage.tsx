@@ -5,6 +5,7 @@ import './AdminPage.css';
 
 import { User } from '../../types/User';
 import api from '../../services/api';
+import { Dinosaur } from '../../types/Dinosaur';
 
 const AdminPage: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -14,7 +15,7 @@ const AdminPage: React.FC = () => {
     const fetchUsers = async () => {
         try {
             const response = await api.get('/admin/users');
-            setUsers(response.data);
+            setUsers(response.data as User[]);
         } catch (error: any) {
             console.error('Erreur lors de la récupération des utilisateurs.', error);
             alert('Erreur lors de la récupération des utilisateurs.');
@@ -36,7 +37,7 @@ const AdminPage: React.FC = () => {
     const viewDinosaur = async (userId: number) => {
         try {
             const response = await api.get('/admin/dinosaurs');
-            const dinosaurs = response.data;
+            const dinosaurs: Dinosaur[] = response.data as Dinosaur[];
             const dinosaur = dinosaurs.find((dino: any) => dino.user_id === userId);
             if (dinosaur) {
                 setSelectedDinosaur(dinosaur);

@@ -3,7 +3,7 @@ import Header from '../../components/Common/Header';
 import Footer from '../../components/Common/Footer';
 import { fetchUserFromBackend } from '../../services/authService';
 import { User } from '../../types/User';
-import './UserProfilePage.css'; // Créez ce fichier si nécessaire
+import './UserProfilePage.css'; 
 
 const UserProfilePage: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
