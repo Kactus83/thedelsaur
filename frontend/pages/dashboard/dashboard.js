@@ -138,6 +138,13 @@ function setupDinosaurActions() {
     }
 }
 
+// Fonction logout
+function logout() {
+    console.log("Logging out...");
+    localStorage.removeItem('token');
+    window.location.replace('../../index.html');
+}
+
 // Lancer l'initialisation de la page et configurer l'overlay lorsque le DOM est chargé
 document.addEventListener('DOMContentLoaded', () => {
     initializePage();
