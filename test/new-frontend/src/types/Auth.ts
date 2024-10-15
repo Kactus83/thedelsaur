@@ -1,3 +1,4 @@
+import { Dinosaur } from "./Dinosaur";
 import { User } from "./User";
 
 export interface LoginResponse {
@@ -6,4 +7,5 @@ export interface LoginResponse {
 
 export interface SignupResponse {
     user: User;
+    dinausor: Dinosaur;
 }
