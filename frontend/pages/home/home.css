@@ -13,6 +13,10 @@
     color: var(--icon-hover-color);
 }
 
+body {
+    background-image: url('../assets/img/Cybercity.jpg');
+}
+
 /* Bloc central avec un fond semi-transparent */
 .central-block {
     background: rgba(255, 255, 255, 0.8);
