@@ -5,7 +5,7 @@ import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions from '../../components/Dashboard/Actions';
 import Header from '../../components/Common/Header';
 import Footer from '../../components/Common/Footer';
-import './DashboardPage.css'; // Créez ce fichier si nécessaire
+import './DashboardPage.css'; 
 
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';

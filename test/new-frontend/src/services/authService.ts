@@ -1,5 +1,6 @@
 import api from './api';
 import { User } from '../types/User';
+import { Dinosaur } from '../types/Dinosaur';
 
 interface LoginData {
     email: string;
@@ -14,15 +15,20 @@ interface SignupData {
 
 export const login = async (data: LoginData) => {
     const response = await api.post('/auth/login', data);
-    return response.data;
+    return response.data as User;
 };
 
 export const signup = async (data: SignupData) => {
     const response = await api.post('/auth/signup', data);
-    return response.data;
+    return response.data as User;
 };
 
 export const fetchUserFromBackend = async (): Promise<User> => {
     const response = await api.get('/users/my-profile');
-    return response.data;
+    return response.data as User;
+};
+
+export const fetchDinosaurFromBackend = async (): Promise<Dinosaur> => {
+    const response = await api.get('/dinosaur/my-dinosaur');
+    return response.data as Dinosaur;
 };
