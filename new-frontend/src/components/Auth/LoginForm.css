@@ -1,3 +1,4 @@
+/* Formulaire de Connexion */
 .form-container {
     background: var(--form-background, rgba(255, 255, 255, 0.95));
     padding: 30px;
@@ -38,21 +39,23 @@
     color: #333;
 }
 
+/* Champs de saisie */
 .form-container input {
     width: 100%;
-    padding: 10px;
+    padding: var(--input-padding, 10px);
     margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid var(--input-border-color, #ccc);
+    border-radius: var(--input-border-radius, 5px);
     font-size: 1em;
 }
 
+/* Bouton de soumission */
 .form-container .btn-submit {
     background-color: var(--primary-color, #0275d8);
     color: #fff;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--input-border-radius, 5px);
     width: 100%;
     cursor: pointer;
     font-size: 1.2em;
@@ -63,6 +66,7 @@
     background-color: var(--primary-hover-color, #025aa5);
 }
 
+/* Styles pour les messages d'erreur et de succès */
 .message {
     margin-bottom: 15px;
     padding: 10px;
