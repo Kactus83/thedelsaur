@@ -28,7 +28,6 @@ html, body {
 
 /* Image de fond couvrant toute la page */
 body {
-    background-image: url('../assets/img/Cybercity.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
