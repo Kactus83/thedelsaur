@@ -1,16 +1,15 @@
-html, body {
-    height: 100%;
-    font-family: 'Peanut';
-    font-size: 1.2rem;
-}
-body {
-    background-image: url('../../assets/img/Cybercity.jpg');
+/* Fond de la page */
+.home-page {
+    background-image: url('../../assets/img/Cybercity.jpg'); /* Chemin relatif à partir de HomePage.css */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
 }
 
 /* Icône de gestion des utilisateurs en haut à droite */
@@ -46,16 +45,15 @@ body {
     border: 0.08em solid #fff;
     border-radius: 0.3em;
     
-    font-family: 'Peanut';
+    font-family: 'Peanut', sans-serif;
     font-size: 1.05rem;
     cursor: pointer;
-    
+    margin: 10px;
 }
-#login-email::placeholder, #login-password::placeholder, #signup-username::placeholder, #signup-email::placeholder, #signup-password::placeholder, .btn-submit {
 
-    font-family: 'Peanut';
+#login-email::placeholder, #login-password::placeholder, #signup-username::placeholder, #signup-email::placeholder, #signup-password::placeholder, .btn-submit {
+    font-family: 'Peanut', sans-serif;
     font-size: 1.5rem;
-    
 }
 
 .btn-login span, .btn-signup span {
@@ -91,7 +89,7 @@ body {
     }
 }
 
-/* Style des formulaires (login et signup) */
+/* Overlay */
 .overlay {
     position: fixed;
     top: 0;
@@ -102,7 +100,7 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 999;
 }
 
 .overlay.show {
@@ -129,85 +127,10 @@ body {
     transform: translateY(0);
 }
 
-.form-container h2 {
-    margin-bottom: 20px;
-    font-size: 1.8em;
-    color: #333;
-}
-
-/* Champs de saisie */
-.form-container input {
-    width: 100%;
-    padding: var(--input-padding);
-    margin: 10px 0;
-    border: 1px solid var(--input-border-color);
-    border-radius: var(--input-border-radius);
-    font-size: 1em;
-}
-
-/* Bouton de soumission */
-.form-container .btn-submit {
-    background-color: var(--primary-color);
-    color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: var(--input-border-radius);
-    width: 100%;
-    cursor: pointer;
-    font-size: 1.2em;
-}
-
-.form-container .btn-submit:hover {
-    background-color: var(--primary-hover-color);
-}
-
-/* Bouton de fermeture (croix) */
-.form-container .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: none;
-    border: none;
-    font-size: 1.5em;
-    cursor: pointer;
-    color: #333;
-}
-
-.form-container .close-btn:hover {
-    color: #000;
-}
-
 /* Adaptabilité pour les petits écrans */
 @media (max-width: 600px) {
     .form-container {
         width: 90%;
         padding: 20px;
     }
-}
-
-/* Styles pour les messages d'erreur et de succès */
-.message {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    display: none; /* Caché par défaut */
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.message.show {
-    display: block;
-    opacity: 1;
-}
-
-.message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-
-.message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
 }
