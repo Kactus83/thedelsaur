@@ -1,4 +1,5 @@
 import api from './api';
+import { User } from '../types/User';
 
 interface LoginData {
     email: string;
@@ -18,5 +19,10 @@ export const login = async (data: LoginData) => {
 
 export const signup = async (data: SignupData) => {
     const response = await api.post('/auth/signup', data);
+    return response.data;
+};
+
+export const fetchUserFromBackend = async (): Promise<User> => {
+    const response = await api.get('/users/my-profile');
     return response.data;
 };
