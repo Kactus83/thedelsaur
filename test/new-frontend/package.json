@@ -9,8 +9,6 @@
     "@types/axios": "^0.9.36",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.113",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.1",
     "axios": "^1.7.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -44,6 +42,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
     "@types/react-router-dom": "^5.3.3"
   }
 }
