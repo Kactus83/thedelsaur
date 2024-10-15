@@ -1,6 +1,7 @@
 import api from './api';
 import { User } from '../types/User';
 import { Dinosaur } from '../types/Dinosaur';
+import { LoginResponse } from '../types/Auth';
 
 interface LoginData {
     email: string;
@@ -15,7 +16,7 @@ interface SignupData {
 
 export const login = async (data: LoginData) => {
     const response = await api.post('/auth/login', data);
-    return response.data as User;
+    return response.data as LoginResponse;
 };
 
 export const signup = async (data: SignupData) => {
