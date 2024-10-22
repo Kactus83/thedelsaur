@@ -9,6 +9,8 @@ const authService = require('../services/authService');
 const signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    console.log('Sign up:', username, email);
     
     // Vérifier que tous les champs sont fournis
     if (!username || !email || !password) {
@@ -33,6 +35,8 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    console.log('Sign in:', email);
 
     // Vérifier que tous les champs sont fournis
     if (!email || !password) {
