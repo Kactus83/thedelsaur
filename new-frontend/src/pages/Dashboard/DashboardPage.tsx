@@ -1,27 +1,25 @@
 import React, { useEffect, useState } from 'react';
-// Importation des services pour récupérer les données utilisateur et dinosaure depuis le backend
-import { fetchUserFromBackend, fetchDinosaurFromBackend } from '../../services/authService';
-// Importation des composants utilisés dans la page Dashboard
+import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 import UserInfo from '../../components/Dashboard/UserInfo';
 import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions from '../../components/Dashboard/Actions';
 import Header from '../../components/Common/Header';
 import Footer from '../../components/Common/Footer';
-// Importation du fichier CSS spécifique à la page Dashboard
 import './DashboardPage.css'; 
-
-// Importation des types TypeScript pour assurer la typage des données
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
 
-// Définition du composant fonctionnel DashboardPage
+/**
+ * Composant fonctionnel représentant la page Dashboard.
+ * Affiche les informations de l'utilisateur, les informations du dinosaure, et les actions possibles.
+ */
 const DashboardPage: React.FC = () => {
     // États pour stocker les informations de l'utilisateur et du dinosaure
     const [user, setUser] = useState<User | null>(null);
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
 
     /**
-     * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur et dinosaure
+     * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur et dinosaure.
      */
     const initializePage = async () => {
         try {
@@ -38,13 +36,8 @@ const DashboardPage: React.FC = () => {
         }
     };
 
-    // Hook useEffect pour appeler initializePage au montage du composant
-    useEffect(() => {
-        initializePage();
-    }, []);
-
     /**
-     * Fonction asynchrone pour rafraîchir les données du dinosaure
+     * Fonction asynchrone pour rafraîchir les données du dinosaure.
      */
     const refreshDinosaur = async () => {
         try {
@@ -58,10 +51,35 @@ const DashboardPage: React.FC = () => {
         }
     };
 
+    /**
+     * Hook useEffect pour initialiser la page au montage du composant.
+     */
+    useEffect(() => {
+        initializePage();
+    }, []);
+
+    /**
+     * Hook useEffect pour mettre en place un intervalle qui rafraîchit les données du dinosaure toutes les 1.1 secondes.
+     * Nettoie l'intervalle lors du démontage du composant.
+     */
+    useEffect(() => {
+        // Définition de l'intervalle en millisecondes (1100 ms = 1.1 secondes)
+        const interval = setInterval(() => {
+            refreshDinosaur();
+        }, 1100);
+
+        // Fonction de nettoyage pour supprimer l'intervalle lors du démontage
+        return () => clearInterval(interval);
+    }, []);
+
+    // Calcul de la largeur de la barre XP avec une limite à 100%
+    const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
+
     return (
         <>
             {/* Composant Header commun à toutes les pages */}
             <Header />
+            {/* Conteneur principal de la page Dashboard */}
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
                 <div id="Infos">
@@ -72,12 +90,12 @@ const DashboardPage: React.FC = () => {
                 </div>
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
-                    
+                    {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
                         <div className="xp-bar">
                             {/* Barre de progression dont la largeur est proportionnelle à l'expérience */}
-                            <div className="xp-progress" style={{ width: `${(dinosaur?.experience || 0) / 100}%` }}></div>
+                            <div className="xp-progress" style={{ width: `${xpWidth}%` }}></div>
                         </div>
                     </div>
                     {/* Partie inférieure de la section Middle */}
@@ -100,6 +118,7 @@ const DashboardPage: React.FC = () => {
                     {dinosaur && <Actions dinosaur={dinosaur} refreshDinosaur={refreshDinosaur} />}
                 </div>
             </div>
+            {/* Décommenter le Footer si nécessaire */}
             {/* <Footer /> */}
         </>
     );
