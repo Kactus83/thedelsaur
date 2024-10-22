@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Création d'une instance Axios avec une configuration de base
 const api = axios.create({
@@ -9,63 +9,53 @@ const api = axios.create({
     timeout: 10000, // Temps d'attente maximal pour une requête (en ms)
 });
 
-/**
- * Fonction pour vérifier la validité du token JWT.
- * Appelle la route `/auth/verify-token` du backend.
- * @param token - Le token JWT à vérifier.
- * @returns {Promise<boolean>} - Vrai si le token est valide, sinon faux.
- */
-const verifyToken = async (token: string): Promise<boolean> => {
-    try {
-        // Appeler la route de vérification du token sans passer par l'intercepteur
-        const response = await axios.post('http://localhost:3000/auth/verify-token', {}, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.status === 200; // Si le backend renvoie 200, le token est valide
-    } catch (error) {
-        console.error('Token invalide ou expiré:', error);
-        return false;
-    }
-};
+// Liste des routes à exclure de l'intercepteur
+const excludedRoutes = [
+    '/auth/login',
+    '/auth/signup',
+    '/auth/verify-token'
+];
 
-// Intercepteur de requête pour ajouter le token JWT et vérifier sa validité à chaque requête
+// Intercepteur de requête pour ajouter le token JWT
 api.interceptors.request.use(
-    async (config: InternalAxiosRequestConfig) => {
-
-        console.log("check token");
+    (config: InternalAxiosRequestConfig) => {
         const token = localStorage.getItem('token'); // Récupération du token depuis le localStorage
 
-        // Ignorer la vérification pour la route de vérification du token elle-même pour éviter les boucles infinies
-        if (config.url?.includes('/auth/verify-token')) {
-            console.log('-- skip token checking --')
+        // Vérifier si l'URL de la requête doit être exclue de l'intercepteur
+        const isExcluded = excludedRoutes.some(route => config.url?.startsWith(route));
+
+        if (isExcluded) {
+            // Ignorer l'ajout du token pour les routes d'authentification
             return config;
         }
 
         if (token) {
-            // Vérifier la validité du token avant d'envoyer la requête
-            const isValidToken = await verifyToken(token);
-            console.log('is valid token : ', isValidToken);
-            if (isValidToken) {
-                // Ajout du token JWT dans l'en-tête Authorization si valide
-                if (config.headers) {
-                    config.headers['Authorization'] = `Bearer ${token}`;
-                }
-            } else {
-                // Si le token est invalide, le supprimer et rediriger vers la page de connexion
-                localStorage.removeItem('token');
-                window.location.href = '/login';
-                return Promise.reject(new AxiosError('Token invalide ou expiré'));
-            }
+            // Ajout du token JWT dans l'en-tête Authorization si présent
+            config.headers = config.headers || {};
+            config.headers['Authorization'] = `Bearer ${token}`;
         } else {
             // Si le token est absent, redirection vers la page de connexion
             window.location.href = '/login';
         }
+
         return config;
     },
     (error: AxiosError) => {
         // Gestion des erreurs de requête
+        return Promise.reject(error);
+    }
+);
+
+// Intercepteur de réponse pour gérer les erreurs 401 (token invalide ou expiré)
+api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            // Supprimer le token
+            localStorage.removeItem('token');
+            // Rediriger vers la page de connexion
+            window.location.href = '/login';
+        }
         return Promise.reject(error);
     }
 );
