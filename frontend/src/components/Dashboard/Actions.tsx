@@ -1,29 +1,50 @@
 import * as React from 'react';
-// Importation des services pour effectuer les actions sur le dinosaure
-import { eatDinosaur, sleepDinosaur, wakeDinosaur, resurrectDinosaur } from '../../services/dinosaurService';
-// Importation du type Dinosaur pour la typage des propriétés
+import {
+    eatDinosaur,
+    sleepDinosaur,
+    wakeDinosaur,
+    resurrectDinosaur,
+    fetchDinosaurActions,
+} from '../../services/dinosaurService';
 import { Dinosaur } from '../../types/Dinosaur';
-// Importation du fichier CSS spécifique au composant Actions
-import './Actions.css'; 
+import './Actions.css';
 
-// Interface définissant les propriétés attendues par le composant Actions
 interface ActionsProps {
-    dinosaur: Dinosaur; // Objet dinosaure sur lequel effectuer les actions
-    refreshDinosaur: () => void; // Fonction pour rafraîchir les données du dinosaure après une action
+    dinosaur: Dinosaur;
+    refreshDinosaur: () => void;
 }
 
-// Définition du composant fonctionnel Actions
 const Actions: React.FC<ActionsProps> = ({ dinosaur, refreshDinosaur }) => {
+    const [availableActions, setAvailableActions] = React.useState<string[]>([]);
+
+    /**
+     * Fonction pour récupérer les actions disponibles depuis le backend
+     */
+    const fetchActions = async () => {
+        try {
+            const data = await fetchDinosaurActions(); // Récupère les actions disponibles
+            setAvailableActions(data.availableActions); // Met à jour les actions disponibles
+            console.log(data.availableActions);
+        } catch (error: any) {
+            alert(`Erreur lors de la récupération des actions: ${error.response?.data?.message || 'Erreur interne du serveur.'}`);
+        }
+    };
+
+    // Récupérer les actions dès le montage du composant
+    React.useEffect(() => {
+        fetchActions();
+    }, [dinosaur]);
+
     /**
      * Fonction pour gérer l'action de manger
      */
     const handleEat = async () => {
         try {
-            await eatDinosaur(); // Appel au service eatDinosaur pour effectuer l'action
-            alert('Le dinosaure a mangé avec succès !'); // Notification de succès
-            refreshDinosaur(); // Rafraîchissement des données du dinosaure
+            await eatDinosaur();
+            alert('Le dinosaure a mangé avec succès !');
+            refreshDinosaur();
+            fetchActions(); // Rafraîchir les actions après l'action
         } catch (error: any) {
-            // Affichage d'un message d'erreur en cas de problème
             alert(`Erreur: ${error.response?.data?.message || 'Erreur interne du serveur.'}`);
         }
     };
@@ -33,11 +54,11 @@ const Actions: React.FC<ActionsProps> = ({ dinosaur, refreshDinosaur }) => {
      */
     const handleSleep = async () => {
         try {
-            await sleepDinosaur(); // Appel au service sleepDinosaur pour effectuer l'action
-            alert('Le dinosaure est maintenant en sommeil.'); // Notification de succès
-            refreshDinosaur(); // Rafraîchissement des données du dinosaure
+            await sleepDinosaur();
+            alert('Le dinosaure est maintenant en sommeil.');
+            refreshDinosaur();
+            fetchActions();
         } catch (error: any) {
-            // Affichage d'un message d'erreur en cas de problème
             alert(`Erreur: ${error.response?.data?.message || 'Erreur interne du serveur.'}`);
         }
     };
@@ -47,11 +68,11 @@ const Actions: React.FC<ActionsProps> = ({ dinosaur, refreshDinosaur }) => {
      */
     const handleWake = async () => {
         try {
-            await wakeDinosaur(); // Appel au service wakeDinosaur pour effectuer l'action
-            alert('Le dinosaure s\'est réveillé.'); // Notification de succès
-            refreshDinosaur(); // Rafraîchissement des données du dinosaure
+            await wakeDinosaur();
+            alert('Le dinosaure s\'est réveillé.');
+            refreshDinosaur();
+            fetchActions();
         } catch (error: any) {
-            // Affichage d'un message d'erreur en cas de problème
             alert(`Erreur: ${error.response?.data?.message || 'Erreur interne du serveur.'}`);
         }
     };
@@ -61,42 +82,42 @@ const Actions: React.FC<ActionsProps> = ({ dinosaur, refreshDinosaur }) => {
      */
     const handleResurrect = async () => {
         try {
-            await resurrectDinosaur(); // Appel au service resurrectDinosaur pour effectuer l'action
-            alert('Le dinosaure a été ressuscité.'); // Notification de succès
-            refreshDinosaur(); // Rafraîchissement des données du dinosaure
+            await resurrectDinosaur();
+            alert('Le dinosaure a été ressuscité.');
+            refreshDinosaur();
+            fetchActions();
         } catch (error: any) {
-            // Affichage d'un message d'erreur en cas de problème
             alert(`Erreur: ${error.response?.data?.message || 'Erreur interne du serveur.'}`);
         }
     };
 
+    // Vérification si une action est disponible
+    const canPerformAction = (action: string) => availableActions.includes(action.toLowerCase());
+
+
     return (
         <div className="actions">
-            {/* Bouton pour l'action de manger */}
             <button
                 onClick={handleEat}
-                disabled={dinosaur.isDead || dinosaur.isSleeping || dinosaur.food <= 500} // Désactivation selon l'état du dinosaure
+                disabled={!canPerformAction('Eat')}
             >
                 Manger
             </button>
-            {/* Bouton pour l'action de dormir */}
             <button
                 onClick={handleSleep}
-                disabled={dinosaur.isDead || dinosaur.isSleeping || dinosaur.energy > 2500} // Désactivation selon l'état du dinosaure
+                disabled={!canPerformAction('Sleep')}
             >
                 Se Mettre en Sommeil
             </button>
-            {/* Bouton pour l'action de réveil */}
             <button
                 onClick={handleWake}
-                disabled={dinosaur.isDead || !dinosaur.isSleeping || dinosaur.energy < 7500} // Désactivation selon l'état du dinosaure
+                disabled={!canPerformAction('WakeUp')}
             >
                 Se Réveiller
             </button>
-            {/* Bouton pour l'action de résurrection */}
             <button
                 onClick={handleResurrect}
-                disabled={!dinosaur.isDead} // Désactivation si le dinosaure n'est pas mort
+                disabled={!canPerformAction('Resurrect')}
             >
                 Ressusciter
             </button>

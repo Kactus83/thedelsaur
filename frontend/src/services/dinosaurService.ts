@@ -5,6 +5,11 @@ export const fetchDinosaur = async () => {
     return response.data;
 };
 
+export const fetchDinosaurActions = async () => {
+    const response = await api.get('/dinosaurs/my-dinosaur/actions'); 
+    return response.data;
+};
+
 export const eatDinosaur = async () => {
     const response = await api.post('/dinosaurs/actions/eat');
     return response.data;
