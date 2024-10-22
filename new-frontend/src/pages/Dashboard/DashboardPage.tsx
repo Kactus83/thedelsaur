@@ -105,7 +105,7 @@ const DashboardPage: React.FC = () => {
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire */}
                             {dinosaur && (
                                 <img
-                                    src={`/assets/dino/dino_${dinosaur.diet}.svg`} // Chemin vers l'image du dinosaure
+                                    src={`../../assets/dino/dino_${dinosaur.diet}.svg`} // Chemin vers l'image du dinosaure
                                     alt={`Dinosaure ${dinosaur.name}`} // Texte alternatif pour l'accessibilité
                                     className="dino-svg" // Classe CSS pour le style de l'image
                                 />
