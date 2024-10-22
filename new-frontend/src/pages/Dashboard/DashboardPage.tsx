@@ -80,6 +80,7 @@ const DashboardPage: React.FC = () => {
             {/* Composant Header commun à toutes les pages */}
             <Header />
             {/* Conteneur principal de la page Dashboard */}
+            {/* Conteneur principal de la page Dashboard */}
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
                 <div id="Infos">
