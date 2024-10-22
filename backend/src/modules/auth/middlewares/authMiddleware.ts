@@ -32,7 +32,6 @@ export const authenticateJWT = async (
       }
 
       req.user = user;
-      console.log('Utilisateur authentifié:', user);
 
       next();
     } catch (err) {
