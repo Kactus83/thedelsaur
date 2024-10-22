@@ -5,15 +5,13 @@ body, html {
     margin: 0;
     font-family: 'Peanut', sans-serif;
     font-size: 1.2rem;
-        background-image: url('../../assets/img/FirstTime.jpg');
+        background-image: url('../../../public/assets/img/FirstTime.jpg');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-
-
 #main {
-    height: 100vh;
+    height: 87vh;
     width: 100%;
     overflow-y: hidden;
     z-index: 0;
@@ -30,7 +28,9 @@ body, html {
 #Infos {
     margin: 2px;
     flex-grow: 1;
-    background-color: rgba(0, 149, 255, 0);
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
 
     display: flex;
     flex-direction: column;
@@ -51,108 +51,15 @@ body, html {
 
 #Actions {
     margin: 2px;
-    flex-grow: 1;
-    background-color: rgba(0, 149, 255, 0);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: stretch;
-}
-
-.user-infos{
-    margin: 2px;
+    flex-grow: 145;
     border: 2px solid black;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.8);
 
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     justify-content: center;
     align-items: stretch;
-    padding: 10px;
-}
-
-.dino-infos {
-    margin: 2px;
-    border: 2px solid black;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.8);
-
-    display: flex;
-    flex-direction: column;
-    flex-grow: 6;
-    flex-shrink: 0;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-}
-
-.usersDisplay {
-    margin: 2px;
-    border: 2px solid black;
-    border-radius: 10px;
-    background: rgba(255, 0, 0, 0.0);
-
-    display: flex;
-    flex-grow: 6;
-    flex-shrink: 0;
-    justify-content: center; 
-    flex-direction: column;
-    padding: 10px;
-}
-
-/* Nouvelle classe pour les boutons d'actions */
-.action-button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    background-color: #0095ff;
-    color: white;
-    transition: background-color 0.3s ease;
-}
-
-.action-button:hover {
-    background-color: #007acc;
-}
-
-.usersDisplay h3, .usersDisplay p {
-    margin: 5px 0;
-    text-align: left;
-    padding: 0 10px;
-}
-
-.usersAccess {
-    margin: 2px;
-    border: 2px solid black;
-    border-radius: 10px;
-    background: rgba(255, 0, 0, 0.0);
-
-    display: flex;
-    flex-grow: 6;
-    flex-shrink: 0;
-    justify-content: center; 
-    flex-direction: column;
-    padding: 10px;
-}
-
-.usersAccess a {
-    display: block;
-    margin: 10px;
-    padding: 10px;
-    text-decoration: none;
-    background-color: #0095ff;
-    color: white;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.usersAccess a:hover {
-    background-color: #007acc;
 }
 
 .topMiddle {
@@ -181,12 +88,6 @@ body, html {
 }
 
 
-.mobile-title {
-    display: none;
-    border: 2px solid black;
-    border-radius: 10px;
-}
-
 .middleContent {
     margin: 2px;
     background: rgba(255, 255, 255, 0.0);
@@ -200,16 +101,11 @@ body, html {
 
 .middleContent img.dino-svg {
     width: 100%;
-    max-width: 300px;
-    height: auto;
-}
-/* Styles pour l'image du dinosaure */
-.dino-image {
-    width: 100%;
     max-width: 200px;
     margin: 10px auto;
     display: block;
 }
+
 
 .InRight {
     margin: 2px;
@@ -226,63 +122,6 @@ body, html {
     width: 20rem;
 }
 
-.div-button{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.action-button:disabled {
-    display: none;
-}
-
-/* Styles pour les boutons de l'overlay */
-.overlay-button {
-    display: none; /* Affiché uniquement en mode mobile */
-
-}
-
-/* Styles de l'overlay */
-.overlay {
-    display: none; /* Masqué par défaut */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Contenu de l'overlay */
-.overlay-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 400px;
-    position: relative;
-    overflow-y: auto;
-    max-height: 80%;
-}
-
-/* Bouton de fermeture */
-.close-button {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 2rem;
-    cursor: pointer;
-}
-
-/* Styles pour les statistiques du dinosaure dans l'overlay */
-.dino-infos-overlay h3, .dino-infos-overlay p {
-    margin: 10px 0;
-    text-align: left;
-    padding: 0 10px;
-}
 
 /* Mobile layout */
 @media only screen and (max-width: 768px) {
@@ -395,5 +234,5 @@ body, html {
 /* Font-face pour Peanut */
 @font-face {
     font-family:"Peanut";
-    src: url("../../assets/fonts/PeanutMoney.ttf") format("truetype");
+    src: url("../../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
 }

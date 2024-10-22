@@ -29,7 +29,7 @@ html, body {
 /* Importation de la police */
 @font-face {
     font-family: "Peanut";
-    src: url("../assets/fonts/PeanutMoney.ttf") format("truetype");
+    src: url("../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
 }
 
 /* Styles globaux */
