@@ -62,11 +62,7 @@ const DashboardPage: React.FC = () => {
         <>
             {/* Composant Header commun à toutes les pages */}
             <Header />
-<<<<<<< Updated upstream
             {/* Conteneur principal de la page Dashboard */}
-=======
-
->>>>>>> Stashed changes
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
                 <div id="Infos">
@@ -77,15 +73,7 @@ const DashboardPage: React.FC = () => {
                 </div>
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
-<<<<<<< Updated upstream
-                    {/* Titre de la page Dashboard */}
-                    <div className="Title">
-                        IdleSaur🦖
-                    </div>
                     {/* Partie supérieure de la section Middle */}
-=======
-                    
->>>>>>> Stashed changes
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
                         <div className="xp-bar">
@@ -113,10 +101,7 @@ const DashboardPage: React.FC = () => {
                     {dinosaur && <Actions dinosaur={dinosaur} refreshDinosaur={refreshDinosaur} />}
                 </div>
             </div>
-<<<<<<< Updated upstream
             {/* Composant Footer commun à toutes les pages */}
-=======
->>>>>>> Stashed changes
             {/* <Footer /> */}
         </>
     );
