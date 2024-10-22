@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import './Header.css'; 
 const HandleLogout= () =>{
     localStorage.removeItem('token');
-    window.location.reload();
 };
 const Header: React.FC = () => {
     return (
@@ -12,11 +11,10 @@ const Header: React.FC = () => {
                         IdleSaur🦖
             </div>
             <nav>
-                            <Link to="/">Accueil</Link>
-                            <Link to="/dashboard">Dashboard</Link>
-                            <Link to="/admin">Admin</Link>
+                            {/* <Link to="/">Accueil</Link>
+                            <Link to="/dashboard">Dashboard</Link> */}
                             <Link to="/user-profile">Profil</Link>
-                            <button onClick={HandleLogout}>disconnect</button>
+                            <Link to="/" onClick={HandleLogout}>disconnect</Link>
             </nav>
         </header>
     );
