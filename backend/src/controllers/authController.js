@@ -51,7 +51,38 @@ const login = async (req, res) => {
   }
 };
 
+
+/**
+ * Contrôleur pour vérifier la validité d'un token JWT.
+ * @param {Object} req - La requête Express.
+ * @param {Object} res - La réponse Express.
+ */
+const verifyToken = async (req, res) => {
+  try {
+    // Récupérer le token depuis l'en-tête Authorization
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Token manquant' });
+    }
+
+    const token = authHeader.split(' ')[1]; // Extraction du token après "Bearer"
+    if (!token) {
+      return res.status(401).json({ message: 'Token manquant' });
+    }
+
+    // Appel au service pour vérifier le token
+    const decoded = await authService.verifyToken(token);
+
+    // Si le token est valide, renvoyer les informations décodées
+    res.status(200).json({ message: 'Token valide', decoded });
+  } catch (error) {
+    console.error('Erreur lors de la vérification du token:', error);
+    res.status(401).json({ message: 'Token invalide ou expiré' });
+  }
+};
+
 module.exports = {
   signup,
-  login
+  login,
+  verifyToken
 };

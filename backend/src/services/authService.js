@@ -89,6 +89,26 @@ const generateToken = (user) => {
 };
 
 /**
+ * Vérifie la validité d'un token JWT.
+ * @param {string} token - Le token JWT à vérifier.
+ * @returns {Promise<Object>} Les informations décodées du token.
+ */
+const verifyToken = async (token) => {
+  try {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET est manquant dans les variables d\'environnement');
+    }
+
+    // Vérifier et décoder le token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded;
+  } catch (error) {
+    console.error('Erreur lors de la vérification du token JWT:', error);
+    throw new Error('Token invalide ou expiré');
+  }
+};
+
+/**
  * Inscrit un nouvel utilisateur et crée un dinosaure associé.
  * @param {string} username - Nom d'utilisateur.
  * @param {string} email - Email de l'utilisateur.
@@ -235,4 +255,5 @@ module.exports = {
   findUserById,
   findUserByEmail,
   findDinosaurById,
+  verifyToken
 };
