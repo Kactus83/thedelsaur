@@ -74,6 +74,7 @@ const DashboardPage: React.FC = () => {
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
                     {/* Partie supérieure de la section Middle */}
+                    
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
                         <div className="xp-bar">
