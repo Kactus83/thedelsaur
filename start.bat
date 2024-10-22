@@ -6,30 +6,58 @@
 :: Function to clean the database folder
 set DB_PATH=".\database\datas"
 
+:: Help Section
+if "%1"=="--help" (
+    echo ========================================
+    echo Usage: start.bat [OPTION]
+    echo OPTIONS:
+    echo   --clean         Clean the database folder only
+    echo   --build         Start Docker Compose without cleaning
+    echo   --clean-build   Clean the database folder and start Docker Compose
+    echo   --help          Show this help message
+    echo ========================================
+    exit /b
+)
+
+:: Quick option handling
+if "%1"=="--clean" goto clean_database_only
+if "%1"=="--build" goto start_docker
+if "%1"=="--clean-build" goto clean_and_build
+
+:: Menu prompt if no parameter is provided
 :menu
 echo ========================================
 echo What would you like to do?
-echo [1] Clean the database folder and start Docker Compose
-echo [2] Clean the database folder only (without starting Docker Compose)
-echo [3] Skip cleaning and start Docker Compose
+echo.
+echo [1] CLEAN ONLY  - Clean the database folder
+echo.
+echo [2] CLEAN AND BUILD - Clean the database folder and start Docker Compose
+echo.
+echo [3] BUILD ONLY - Start Docker Compose without cleaning
+echo.
 echo ========================================
-set /p choice="Enter your choice (1/2/3): "
+echo.
+set /p choice="Enter your choice ( 1 / 2 / 3 ) : "
 
-if "%choice%" == "1" (
-    echo Cleaning the database folder...
-    call :clean_database
-    goto start_docker
-) else if "%choice%" == "2" (
-    echo Cleaning the database folder only...
-    call :clean_database
-    goto end
-) else if "%choice%" == "3" (
-    echo Skipping database cleanup.
-    goto start_docker
-) else (
-    echo Invalid choice. Please select 1, 2, or 3.
-    goto menu
-)
+if "%choice%" == "1" goto clean_database_only
+if "%choice%" == "2" goto clean_and_build
+if "%choice%" == "3" goto start_docker
+
+:: Handle invalid choices
+echo Invalid choice. Please select 1, 2, or 3.
+goto menu
+
+:: Clean the database folder only
+:clean_database_only
+echo Cleaning the database folder...
+call :clean_database
+goto end
+
+:: Clean and build Docker
+:clean_and_build
+echo Cleaning the database folder...
+call :clean_database
+goto start_docker
 
 :: Function to clean the database folder
 :clean_database
@@ -48,6 +76,7 @@ if exist %DB_PATH% (
 )
 exit /b
 
+:: Start Docker Compose
 :start_docker
 echo ========================================
 echo Starting Docker Compose...
