@@ -25,13 +25,15 @@ export class DinosaursController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(400).json({ message: 'Utilisateur non authentifié' });
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
       }
 
       let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       // Ajuster les statistiques du dinosaure en fonction du temps
@@ -48,9 +50,11 @@ export class DinosaursController {
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json(dinosaurDTO);
+      return;
     } catch (error) {
       console.error('Erreur lors de la récupération du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -58,13 +62,15 @@ export class DinosaursController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(400).json({ message: 'Utilisateur non authentifié' });
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
       }
 
       let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       // Effectuer l'action de manger
@@ -84,9 +90,11 @@ export class DinosaursController {
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO });
+      return;
     } catch (error) {
       console.error('Erreur lors de l\'action manger du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -94,13 +102,15 @@ export class DinosaursController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(400).json({ message: 'Utilisateur non authentifié' });
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
       }
 
       let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       // Effectuer l'action de dormir
@@ -120,6 +130,7 @@ export class DinosaursController {
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json({ message: 'Le dinosaure est maintenant en sommeil.', dinosaur: dinosaurDTO });
+      return;
     } catch (error) {
       console.error('Erreur lors de l\'action dormir du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
@@ -130,13 +141,15 @@ export class DinosaursController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(400).json({ message: 'Utilisateur non authentifié' });
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
       }
 
       let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       // Effectuer l'action de se réveiller
@@ -156,6 +169,7 @@ export class DinosaursController {
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json({ message: 'Le dinosaure s\'est réveillé.', dinosaur: dinosaurDTO });
+      return;
     } catch (error) {
       console.error('Erreur lors de l\'action réveiller du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
@@ -166,17 +180,20 @@ export class DinosaursController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        return res.status(400).json({ message: 'Utilisateur non authentifié' });
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
       }
 
       let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       if (!dinosaur.isDead) {
-        return res.status(400).json({ message: 'Le dinosaure n\'est pas mort.' });
+        res.status(400).json({ message: 'Le dinosaure n\'est pas mort.' });
+        return;
       }
 
       // Effectuer l'action de ressusciter
@@ -196,9 +213,11 @@ export class DinosaursController {
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json({ message: 'Le dinosaure a été ressuscité.', dinosaur: dinosaurDTO });
+      return;
     } catch (error) {
       console.error('Erreur lors de l\'action ressusciter du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 }

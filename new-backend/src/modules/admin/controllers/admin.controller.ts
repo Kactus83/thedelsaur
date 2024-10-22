@@ -17,6 +17,7 @@ export class AdminController {
       const users = await this.adminService.getAllUsers();
       const usersDTO = users.map(user => plainToInstance(UserDTO, user));
       res.status(200).json(usersDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getAllUsers:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
@@ -29,13 +30,16 @@ export class AdminController {
       const { username } = req.params;
       const user = await this.adminService.getUserByUsername(username);
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return;
       }
       const userDTO = plainToInstance(UserDTO, user);
       res.status(200).json(userDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getUserByUsername:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -45,13 +49,16 @@ export class AdminController {
       const { email } = req.params;
       const user = await this.adminService.getUserByEmail(email);
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return;
       }
       const userDTO = plainToInstance(UserDTO, user);
       res.status(200).json(userDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getUserByEmail:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -61,13 +68,16 @@ export class AdminController {
       const id = Number(req.params.id);
       const user = await this.adminService.getUserById(id);
       if (!user) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return;
       }
       const userDTO = plainToInstance(UserDTO, user);
       res.status(200).json(userDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getUserById:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -77,12 +87,15 @@ export class AdminController {
       const id = Number(req.params.id);
       const result = await this.adminService.deleteUser(id);
       if (!result) {
-        return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        res.status(404).json({ message: 'Utilisateur non trouvé' });
+        return;
       }
       res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+      return;
     } catch (error) {
       console.error('Erreur dans deleteUser:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -92,9 +105,11 @@ export class AdminController {
       const dinosaurs = await this.adminService.getAllDinosaurs();
       const dinosaursDTO = dinosaurs.map(dino => plainToInstance(DinosaurDTO, dino));
       res.status(200).json(dinosaursDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getAllDinosaurs:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -104,13 +119,16 @@ export class AdminController {
       const id = Number(req.params.id);
       const dinosaur = await this.adminService.getDinosaurById(id);
       if (!dinosaur) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
       res.status(200).json(dinosaurDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans getDinosaurById:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -121,22 +139,26 @@ export class AdminController {
 
       // Validation des champs requis
       if (!name || !userId || !diet) {
-        return res.status(400).json({ message: 'Nom, userId et régime alimentaire sont requis' });
+        res.status(400).json({ message: 'Nom, userId et régime alimentaire sont requis' });
+        return;
       }
 
       const newDinosaurId = await this.adminService.createDinosaur(name, userId, diet, energy, food, experience, epoch);
       const newDinosaur = await this.adminService.getDinosaurById(newDinosaurId);
 
       if (!newDinosaur) {
-        return res.status(500).json({ message: 'Erreur lors de la création du dinosaure' });
+        res.status(500).json({ message: 'Erreur lors de la création du dinosaure' });
+        return;
       }
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, newDinosaur);
 
       res.status(201).json(dinosaurDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans createDinosaur:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -148,19 +170,23 @@ export class AdminController {
 
       const success = await this.adminService.updateDinosaurById(id, updates);
       if (!success) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
 
       const updatedDinosaur = await this.adminService.getDinosaurById(id);
       if (!updatedDinosaur) {
-        return res.status(500).json({ message: 'Erreur lors de la récupération du dinosaure mis à jour' });
+        res.status(500).json({ message: 'Erreur lors de la récupération du dinosaure mis à jour' });
+        return;
       }
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDinosaur);
       res.status(200).json(dinosaurDTO);
+      return;
     } catch (error) {
       console.error('Erreur dans updateDinosaur:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 
@@ -170,12 +196,15 @@ export class AdminController {
       const id = Number(req.params.id);
       const success = await this.adminService.deleteDinosaurById(id);
       if (!success) {
-        return res.status(404).json({ message: 'Dinosaure non trouvé' });
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       res.status(200).json({ message: 'Dinosaure supprimé avec succès' });
+      return;
     } catch (error) {
       console.error('Erreur dans deleteDinosaur:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
+      return;
     }
   };
 }

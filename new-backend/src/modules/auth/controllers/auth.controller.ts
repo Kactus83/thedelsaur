@@ -5,6 +5,7 @@ import { SignupDto } from '../models/sign-up.dto';
 import { UserDTO } from '../../users/models/user.dto';
 import { DinosaurDTO } from '../../dinosaurs/models/dinosaur.dto';
 import { LoginDto } from '../models/login.dto';
+import { AuthService } from '../services/auth.service';
 
 export class AuthController {
   private authService: AuthService;
