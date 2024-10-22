@@ -27,10 +27,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Empêche le comportement par défaut du formulaire
         try {
+            console.log("submit login");
             // Appel au service de connexion avec les données du formulaire
             const data: LoginResponse = await login({ email, password });
             // Stockage du token JWT dans le localStorage
             localStorage.setItem('token', data.token);
+            console.log("token received : ", data.token);
             // Mise à jour du message de succès
             setMessage({ type: 'success', text: 'Connexion réussie !' });
             // Redirection vers la page du tableau de bord
