@@ -16,6 +16,7 @@ const App: React.FC = () => {
             <Route path="/user-profile" element={isAuthenticated ? <UserProfilePage /> : <Navigate to="/" />} />
             {/* Redirection pour les routes non définies */}
             <Route path="*" element={<Navigate to="/" />} />
+            
         </Routes>
     );
 };

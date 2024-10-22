@@ -53,7 +53,6 @@ const adjustDinosaurStats = (dinosaur) => {
                 // L'énergie augmente selon une constante
                 const energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND;
                 dinosaur.energy = Math.min(dinosaur.max_energy, energy + energyRecovery); // L'énergie ne dépasse pas le maximum
-                console.log(`Le dinosaure dort. Énergie récupérée de ${energyRecovery}. Nouvelle énergie: ${dinosaur.energy}`);
             } else {
                 // Si le dinosaure est éveillé :
                 // La nourriture et l'énergie diminuent selon les taux de déclin
@@ -62,20 +61,16 @@ const adjustDinosaurStats = (dinosaur) => {
 
                 dinosaur.food = Math.max(0, food - foodDecay); // La nourriture ne peut pas être négative
                 dinosaur.energy = Math.max(0, energy - energyDecay); // L'énergie ne peut pas être négative
-
-                console.log(`Le dinosaure est éveillé. Nourriture décay de ${foodDecay}, Énergie décay de ${energyDecay}. Nouvelle nourriture: ${dinosaur.food}, Nouvelle énergie: ${dinosaur.energy}`);
             }
 
             // Vérifier les conditions pour changer les états
             if (dinosaur.food === 0 && !dinosaur.isDead) {
                 dinosaur.isDead = true;
                 dinosaur.energy = 0; // Assurer que l'énergie est à zéro
-                console.log('Le dinosaure a manqué de nourriture et est maintenant mort.');
             }
 
             if (dinosaur.energy === 0 && !dinosaur.isSleeping && !dinosaur.isDead) {
                 dinosaur.isSleeping = true;
-                console.log('Le dinosaure est maintenant endormi car son énergie est à zéro.');
             }
 
             // Formater la date pour MySQL (sans millisecondes ni indicateur de fuseau horaire)
