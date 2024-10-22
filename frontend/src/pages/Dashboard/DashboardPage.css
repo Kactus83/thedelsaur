@@ -127,21 +127,22 @@ body, html {
 @media only screen and (max-width: 768px) {
     #main {
         flex-direction: column;
+        margin-top: 6vh;
     }
 
     #Infos {
-        width: 100%;
+        width: 99%;
         flex-grow: 1;
     }
 
     #Actions {
-        width: 100%;
+        width: 99%;
         flex-grow: 3;
         /* position: relative; Pour positionner le bouton correctement */
     }
 
     #Middle {
-        width: 100%;
+        width: 99%;
         flex-grow: 10;
     }
 
