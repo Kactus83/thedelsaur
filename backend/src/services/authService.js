@@ -89,9 +89,9 @@ const generateToken = (user) => {
 };
 
 /**
- * Vérifie la validité d'un token JWT.
+ * Vérifie la validité d'un token JWT et si l'utilisateur existe toujours.
  * @param {string} token - Le token JWT à vérifier.
- * @returns {Promise<Object>} Les informations décodées du token.
+ * @returns {Promise<Object>} Les informations décodées du token si valides et l'utilisateur existe.
  */
 const verifyToken = async (token) => {
   try {
@@ -99,12 +99,21 @@ const verifyToken = async (token) => {
       throw new Error('JWT_SECRET est manquant dans les variables d\'environnement');
     }
 
-    // Vérifier et décoder le token
+    // Vérifier et décoder le token JWT
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded;
+
+    // Rechercher l'utilisateur par l'ID contenu dans le token
+    const user = await findUserById(decoded.id);
+
+    if (!user) {
+      throw new Error('Utilisateur non trouvé ou supprimé');
+    }
+
+    // Si l'utilisateur existe toujours, renvoyer les informations décodées du token
+    return { decoded, user };
   } catch (error) {
     console.error('Erreur lors de la vérification du token JWT:', error);
-    throw new Error('Token invalide ou expiré');
+    throw new Error('Token invalide, expiré ou utilisateur non trouvé');
   }
 };
 
