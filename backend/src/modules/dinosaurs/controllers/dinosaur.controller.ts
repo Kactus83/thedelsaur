@@ -5,6 +5,7 @@ import { DinosaurDTO } from '../models/dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { DinosaurActionService } from '../services/dinosaur-action.service';
+import { getAvailableActions } from '../utils/dinosaur-actions.util';
 
 export class DinosaursController {
   private dinosaursService: DinosaursService;
@@ -20,6 +21,39 @@ export class DinosaursController {
     this.dinosaurTimeService = dinosaurTimeService;
     this.dinosaurActionService = dinosaurActionService;
   }
+
+  // Méthode pour obtenir les actions disponibles pour un dinosaure
+  public getAvailableActionsForDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
+      }
+
+      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+
+      if (!dinosaur) {
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
+      }
+
+      // Ajuster les statistiques du dinosaure en fonction du temps
+      dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
+
+      // Obtenir les actions disponibles
+      const availableActions = getAvailableActions(dinosaur);
+
+      res.status(200).json({
+        dinosaur: plainToInstance(DinosaurDTO, dinosaur),
+        availableActions,
+      });
+      return;
+    } catch (error) {
+      console.error('Erreur lors de la récupération des actions disponibles pour le dinosaure:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
 
   public getMyDinosaur = async (req: AuthenticatedRequest, res: Response) => {
     try {
