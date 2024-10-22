@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { getUserById } = require('../services/userService'); // Import du service pour récupérer l'utilisateur depuis la base de données
+const { getUserById } = require('../services/usersService'); 
 
 /**
  * Middleware pour vérifier l'authentification JWT et la présence de l'utilisateur dans la base de données.
