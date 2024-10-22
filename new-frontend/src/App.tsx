@@ -10,7 +10,7 @@ const App: React.FC = () => {
 
     return (
         <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={!isAuthenticated ? <HomePage /> : <Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={isAuthenticated ? <DashboardPage /> : <Navigate to="/" />} />
             <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/" />} />
             <Route path="/user-profile" element={isAuthenticated ? <UserProfilePage /> : <Navigate to="/" />} />
