@@ -36,6 +36,6 @@ export const fetchUserFromBackend = async (): Promise<User> => {
 
 // Fonction asynchrone pour récupérer les informations des dinosaures depuis le backend
 export const fetchDinosaurFromBackend = async (): Promise<Dinosaur> => {
-    const response = await api.get('/dinosaur/my-dinosaur'); 
+    const response = await api.get('/dinosaurs/my-dinosaur'); 
     return response.data as Dinosaur;
 };
