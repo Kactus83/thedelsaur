@@ -84,8 +84,6 @@ const DashboardPage: React.FC = () => {
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
                 <div id="Infos">
-                    {/* Affichage conditionnel du composant UserInfo si les données utilisateur sont disponibles */}
-                    {user && <UserInfo user={user} />}
                     {/* Affichage conditionnel du composant DinosaurInfo si les données dinosaure sont disponibles */}
                     {dinosaur && <DinosaurInfo dinosaur={dinosaur} />}
                 </div>
