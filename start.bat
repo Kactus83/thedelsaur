@@ -34,12 +34,17 @@ if "%choice%" == "1" (
 :: Function to clean the database folder
 :clean_database
 if exist %DB_PATH% (
-    attrib -h -s %DB_PATH%\* /s /d
+    echo Removing database folder...
     rmdir /s /q %DB_PATH%
+    if exist %DB_PATH% (
+        echo Failed to remove the database folder. Check permissions.
+        exit /b
+    )
     mkdir %DB_PATH%
-    echo Database cleaned successfully!
+    echo Database folder cleaned and recreated successfully!
 ) else (
-    echo Error: Database folder not found. Skipping cleanup.
+    echo Database folder not found. Creating a new one...
+    mkdir %DB_PATH%
 )
 exit /b
 
