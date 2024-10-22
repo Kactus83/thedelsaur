@@ -14,7 +14,7 @@ services:
       - backend-network
 
   backend:
-    build: ./backend
+    build: ./new-backend
     ports:
       - "3000:3000"
     depends_on:
@@ -24,6 +24,7 @@ services:
       DB_USER: myuser
       DB_PASSWORD: mypassword
       DB_NAME: mydatabase
+      JWT_SECRET: mySuperSecretKey
     networks:
       - backend-network
 
