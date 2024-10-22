@@ -9,4 +9,6 @@ router.post('/signup', authController.signup);
 // Route pour la connexion
 router.post('/login', authController.login);
 
+router.post('/verify-token', authController.verifyToken);
+
 module.exports = router;
