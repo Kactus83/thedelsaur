@@ -21,6 +21,8 @@ export default function (dinosaursController: DinosaursController): Router {
   router.post('/actions/sleep', authenticateJWT, (req, res) => dinosaursController.sleepDinosaur(req, res));
   router.post('/actions/wake', authenticateJWT, (req, res) => dinosaursController.wakeDinosaur(req, res));
   router.post('/actions/resurrect', authenticateJWT, (req, res) => dinosaursController.resurrectDinosaur(req, res));
-
+  router.post('/actions/graze', authenticateJWT, (req, res) => dinosaursController.grazeDinosaur(req, res));
+  router.post('/actions/hunt', authenticateJWT, (req, res) => dinosaursController.huntDinosaur(req, res));
+  
   return router;
 }

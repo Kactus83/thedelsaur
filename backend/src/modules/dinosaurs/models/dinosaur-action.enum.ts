@@ -3,5 +3,7 @@ export enum DinosaurAction {
     Sleep = 'sleep',
     WakeUp = 'wakeUp',
     Resurrect = 'resurrect',
+    Graze = 'graze',
+    Hunt = 'hunt',
   }
   
