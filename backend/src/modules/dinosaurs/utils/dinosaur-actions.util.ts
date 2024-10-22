@@ -1,6 +1,8 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import {
   ENERGY_COST_TO_EAT,
+  ENERGY_COST_TO_GRAZE,
+  ENERGY_COST_TO_HUNT,
   MAX_ENERGY_NO_SLEEP,
   MIN_ENERGY_TO_WAKE_UP,
 } from '../../../common/config/constants';
@@ -18,6 +20,10 @@ export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): bo
       return !dinosaur.isSleeping && dinosaur.energy <= MAX_ENERGY_NO_SLEEP;
     case DinosaurAction.WakeUp:
       return dinosaur.isSleeping && dinosaur.energy >= MIN_ENERGY_TO_WAKE_UP;
+    case DinosaurAction.Graze:
+      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_GRAZE && dinosaur.diet !== 'carnivore';
+    case DinosaurAction.Hunt:
+      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_HUNT && dinosaur.diet !== 'herbivore';
     default:
       return false;
   }
