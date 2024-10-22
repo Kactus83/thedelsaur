@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { UsersService } from '../../modules/users/services/users.service';
 import { User } from '../../users/models/user.interface';
+import { UsersService } from '../../users/services/users.service';
 
 dotenv.config();
 
@@ -27,7 +27,8 @@ export const authenticateJWT = async (
       const user = await usersService.getUserById(decoded.id);
 
       if (!user) {
-        return res.status(401).json({ message: 'Utilisateur non trouvé' });
+        res.status(401).json({ message: 'Utilisateur non trouvé' });
+        return;
       }
 
       req.user = user;
@@ -36,9 +37,11 @@ export const authenticateJWT = async (
       next();
     } catch (err) {
       console.error('Erreur lors de la vérification du token ou de la récupération de l\'utilisateur:', err);
-      return res.status(401).json({ message: 'Token invalide ou utilisateur non trouvé' });
+      res.status(401).json({ message: 'Token invalide ou utilisateur non trouvé' });
+      return;
     }
   } else {
     res.status(401).json({ message: 'Token manquant' });
+    return;
   }
 };

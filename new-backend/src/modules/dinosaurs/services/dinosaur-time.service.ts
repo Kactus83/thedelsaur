@@ -1,10 +1,10 @@
 import { Dinosaur } from '../models/dinosaur.interface';
-import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import {
   FOOD_DECAY_RATE_PER_SECOND,
   ENERGY_DECAY_RATE_PER_SECOND,
   ENERGY_RECOVERY_RATE_PER_SECOND
 } from '../../../common/config/constants';
+import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 
 /**
  * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.

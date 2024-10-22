@@ -14,7 +14,7 @@ services:
       - backend-network
 
   backend:
-    build: ./new-backend
+    build: ./backend
     ports:
       - "3000:3000"
     depends_on:
