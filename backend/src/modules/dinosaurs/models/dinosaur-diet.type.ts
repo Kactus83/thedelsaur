@@ -1,0 +1,1 @@
+export type DietType = 'carnivore' | 'herbivore' | 'omnivore';

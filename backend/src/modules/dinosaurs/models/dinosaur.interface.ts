@@ -1,5 +1,6 @@
-export type DietType = 'carnivore' | 'herbivore' | 'omnivore';
-export type EpochType = 'past' | 'present' | 'future';
+import { DietType } from "./dinosaur-diet.type";
+import { EpochType } from "./epoch.type";
+
 
 export interface Dinosaur {
   id: number;
