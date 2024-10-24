@@ -111,10 +111,9 @@ const DashboardPage: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                {/* Section Actions contenant les différentes actions possibles sur le dinosaure */}
                 <div id="Actions">
-                    {/* Affichage conditionnel du composant Actions si les données dinosaure sont disponibles */}
-                    {dinosaur && <Actions dinosaur={dinosaur} refreshDinosaur={refreshDinosaur} />}
+                    {/* Affichage conditionnel du composant Actions */}
+                    {dinosaur && <Actions refreshDinosaur={refreshDinosaur} />}
                 </div>
             </div>
             {/* Décommenter le Footer si nécessaire */}
