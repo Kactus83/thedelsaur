@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { DinosaurActionService } from '../services/dinosaur-action.service';
 import { getAvailableActions } from '../utils/dinosaur-actions.util';
+import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 
 export class DinosaursController {
   private dinosaursService: DinosaursService;
@@ -41,12 +42,12 @@ export class DinosaursController {
       // Ajuster les statistiques du dinosaure en fonction du temps
       dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
 
-      // Obtenir les actions disponibles
+      // Obtenir les actions disponibles avec leurs détails
       const availableActions = getAvailableActions(dinosaur);
 
       res.status(200).json({
         dinosaur: plainToInstance(DinosaurDTO, dinosaur),
-        availableActions,
+        availableActions: plainToInstance(DinosaurActionDTO, availableActions), // Transformation avec class-transformer
       });
       return;
     } catch (error) {

@@ -7,6 +7,8 @@ import {
   MIN_ENERGY_TO_WAKE_UP,
 } from '../../../common/config/constants';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
+import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
+import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 
 export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): boolean {
   if (dinosaur.isDead) {
@@ -29,6 +31,20 @@ export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): bo
   }
 }
 
-export function getAvailableActions(dinosaur: Dinosaur): DinosaurAction[] {
-  return Object.values(DinosaurAction).filter(action => canPerformAction(dinosaur, action));
+/**
+ * Récupère les actions disponibles pour un dinosaure, avec leurs détails pour le frontend.
+ * @param dinosaur Dinosaure pour lequel récupérer les actions disponibles.
+ * @returns Un tableau de DinosaurActionDTO.
+ */
+export function getAvailableActions(dinosaur: Dinosaur): DinosaurActionDTO[] {
+  return Object.values(DinosaurActionsMap).map((actionDetails) => {
+    const canPerform = actionDetails.canPerform(dinosaur);
+    return new DinosaurActionDTO(
+      actionDetails.name,
+      actionDetails.description,
+      canPerform,
+      actionDetails.endpoint,
+      actionDetails.image
+    );
+  });
 }
