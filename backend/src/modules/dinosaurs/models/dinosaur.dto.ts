@@ -1,5 +1,6 @@
-import { DietType, EpochType } from '../models/dinosaur.interface';
 import { Exclude, Expose } from 'class-transformer';
+import { DietType } from './dinosaur-diet.type';
+import { EpochType } from './epoch.type';
 
 @Exclude()
 export class DinosaurDTO {
