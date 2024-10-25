@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { fetchDinosaurActions } from '../../services/dinosaurService';
 import './Actions.css';
+import api from '../../services/api';
 
 interface ActionDetail {
   name: string;
@@ -40,8 +41,8 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur }) => {
    */
   const handleAction = async (action: ActionDetail) => {
     try {
-      const response = await fetch(action.endpoint, { method: 'POST' });
-      if (response.ok) {
+      const response = await api.post(action.endpoint); // Appel à l'API pour effectuer l'action
+      if (response.status === 200) {
         alert(`Action réussie: ${action.name}`);
         refreshDinosaur(); // Rafraîchir les données du dinosaure après l'action
         fetchActions(); // Rafraîchir les actions après l'action
