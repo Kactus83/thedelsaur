@@ -54,7 +54,7 @@ export class DinosaurActionService {
     dinosaur.hunger = 0;
     dinosaur.last_reborn = new Date().toISOString();
     dinosaur.experience = 0;
-    dinosaur.level = 0;
+    dinosaur.level = 1;
     dinosaur.reborn_amount = dinosaur.reborn_amount + 1;
     dinosaur.karma = dinosaur.karma + KARMA_GAIN_AFTER_DEATH;
     applyEventToDinosaur(dinosaur, event);

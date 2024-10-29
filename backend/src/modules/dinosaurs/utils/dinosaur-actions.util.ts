@@ -73,8 +73,14 @@ export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: n
   // Filtrer les événements selon le niveau du dinosaure
   const events = DinosaurEventsMap[action].filter(event => event.minLevel <= dinosaurLevel);
 
+  if (events.length === 0) {
+    throw new Error(`Aucun événement disponible pour l'action ${action} et le niveau ${dinosaurLevel}`);
+  }
+
   // Calculer le poids total des événements disponibles
   const totalWeight = events.reduce((sum, event) => sum + event.weight, 0);
+
+  // Sélectionner un poids aléatoire entre 0 et totalWeight
   let randomWeight = Math.random() * totalWeight;
 
   // Parcourir les événements pour sélectionner celui correspondant au poids aléatoire
@@ -84,9 +90,10 @@ export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: n
     }
     randomWeight -= event.weight;
   }
-  return events[0]; // Retourne le premier événement comme secours
-}
 
+  // Retour de secours si aucun événement n'a été sélectionné
+  return events[events.length - 1];
+}
 
 /**
  * Applique les effets d'un événement au dinosaure en modifiant ses statistiques et son niveau.
