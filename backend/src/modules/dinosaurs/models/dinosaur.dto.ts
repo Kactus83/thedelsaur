@@ -1,6 +1,8 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { DietType } from './dinosaur-diet.type';
 import { EpochType } from './epoch.type';
+import { DinosaurMultiplierDTO } from './dinosaur-multiplier.dto';
+import { DinosaurType } from './dinosaur-type.type';
 
 @Exclude()
 export class DinosaurDTO {
@@ -12,6 +14,9 @@ export class DinosaurDTO {
 
   @Expose()
   diet!: DietType;
+
+  @Expose()
+  type!: DinosaurType;
 
   @Expose()
   energy!: number;
@@ -44,10 +49,16 @@ export class DinosaurDTO {
   created_at!: Date;
 
   @Expose()
-  last_reborn!: Date;
+  last_reborn!: string;
 
   @Expose()
-  last_update_by_time_service!: Date;
+  karma!: number;
+
+  @Expose()
+  reborn_amount!: number;
+
+  @Expose()
+  last_update_by_time_service!: string;
 
   @Expose()
   isSleeping!: boolean;
@@ -57,4 +68,7 @@ export class DinosaurDTO {
 
   @Expose()
   user_id!: number;
+
+  @Expose()
+  multipliers!: DinosaurMultiplierDTO;  
 }

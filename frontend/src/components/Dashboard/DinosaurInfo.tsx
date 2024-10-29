@@ -1,25 +1,17 @@
 import React from 'react';
-// Importation du type Dinosaur pour la typage des propriétés
 import { Dinosaur } from '../../types/Dinosaur';
-// Importation du fichier CSS spécifique au composant DinosaurInfo
-import './DinosaurInfo.css'; 
+import './DinosaurInfo.css';
+import Gauge from './utils/Gauge';
 
-// Interface définissant les propriétés attendues par le composant DinosaurInfo
 interface DinosaurInfoProps {
-    dinosaur: Dinosaur; // Objet dinosaure contenant les informations à afficher
+    dinosaur: Dinosaur;
 }
 
-/**
- * Calcule l'âge d'un dinosaure en jours, heures, minutes et secondes à partir de last_reborn.
- * @param lastReborn Timestamp de la dernière renaissance du dinosaure.
- * @returns Chaîne formatée indiquant l'âge du dinosaure.
- */
 export function calculateDinosaurAge(lastReborn: string): string {
     const lastRebornDate = new Date(lastReborn);
     const now = new Date();
     const diffInMilliseconds = now.getTime() - lastRebornDate.getTime();
 
-    // Convertir le temps écoulé en jours, heures, minutes et secondes
     const days = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diffInMilliseconds / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((diffInMilliseconds / (1000 * 60)) % 60);
@@ -28,19 +20,47 @@ export function calculateDinosaurAge(lastReborn: string): string {
     return `${days} jours, ${hours} heures, ${minutes} minutes, ${seconds} secondes`;
 }
 
-// Définition du composant fonctionnel DinosaurInfo
 const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
     return (
         <div className="dinosaur-info">
             <h3>Dinosaure : {dinosaur.name}</h3>
             <p><strong>Niveau</strong> : {dinosaur.level}</p>
             <p><strong>Régime alimentaire</strong> : {capitalizeFirstLetter(dinosaur.diet)}</p>
-            <p><strong>Énergie</strong> : {dinosaur.energy} / {dinosaur.max_energy}</p>
-            <p><strong>Nourriture</strong> : {dinosaur.food} / {dinosaur.max_food}</p>
-            <p><strong>Faim</strong> : {dinosaur.hunger} / {dinosaur.max_hunger}</p>
+            <p><strong>Type</strong> : {capitalizeFirstLetter(dinosaur.type)}</p>
+
+            {/* Utilisation de Gauge avec les tooltips pour Énergie, Nourriture et Faim */}
+            <Gauge
+                label="Énergie"
+                current={dinosaur.energy}
+                max={dinosaur.max_energy}
+                color="#4CAF50"
+                tooltipText={`Multiplieur : ${dinosaur.multipliers.max_energy_multiplier}x`}
+            />
+            <Gauge
+                label="Nourriture"
+                current={dinosaur.food}
+                max={dinosaur.max_food}
+                color="#FF9800"
+                tooltipText={`Multiplieur : ${dinosaur.multipliers.max_food_multiplier}x`}
+            />
+            <Gauge
+                label="Faim"
+                current={dinosaur.hunger}
+                max={dinosaur.max_hunger}
+                color="#F44336"
+                tooltipText={`Herbi : ${dinosaur.multipliers.earn_herbi_food_multiplier}x, Carni : ${dinosaur.multipliers.earn_carni_food_multiplier}x, Global : ${dinosaur.multipliers.earn_food_multiplier}x`}
+            />
+
             <p><strong>Expérience</strong> : {dinosaur.experience}</p>
-            <p><strong>Âge</strong> : {calculateDinosaurAge(dinosaur.last_reborn)}</p> {/* Nouvelle ligne pour afficher l'âge */}
+            <p className="tooltip">
+                <strong>Âge</strong> : {calculateDinosaurAge(dinosaur.last_reborn)}
+                <span className="tooltip-text">
+                    Multiplieur Expérience : {dinosaur.multipliers.earn_experience_multiplier}x
+                </span>
+            </p>
             <p><strong>Époque</strong> : {dinosaur.epoch}</p>
+            <p><strong>Nombre de renaissances</strong> : {dinosaur.reborn_amount}</p>
+            <p><strong>Karma</strong> : {dinosaur.karma}</p>
             <p><strong>Créé le </strong>: {new Date(dinosaur.created_at).toLocaleDateString()}</p>
             <p><strong>Dernière mise à jour</strong> : {new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
             <p><strong>En Sommeil</strong> : {dinosaur.isSleeping ? 'Oui' : 'Non'}</p>
@@ -49,11 +69,6 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
     );
 };
 
-/**
- * Fonction utilitaire pour capitaliser la première lettre d'une chaîne de caractères
- * @param string Chaîne de caractères à modifier
- * @returns Chaîne de caractères avec la première lettre en majuscule
- */
 const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };

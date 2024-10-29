@@ -5,5 +5,6 @@ export enum DinosaurAction {
     Resurrect = 'resurrect',
     Graze = 'graze',
     Hunt = 'hunt',
+    Discover = 'discover',
   }
   

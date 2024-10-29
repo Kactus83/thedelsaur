@@ -5,7 +5,7 @@ import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
 import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
-import { generateRandomName, getRandomDiet } from '../utils/dinosaurs.util';
+import { generateRandomName, getRandomDiet, getRandomType } from '../utils/dinosaurs.util';
 
 dotenv.config();
 
@@ -55,6 +55,7 @@ export class AuthService {
     name: string,
     userId: number,
     diet: string,
+    type: string,
     energy: number = BASE_ENERGY,
     max_energy: number = BASE_ENERGY,
     food: number = BASE_FOOD,
@@ -62,14 +63,21 @@ export class AuthService {
     hunger: number = 0,
     max_hunger: number = BASE_MAX_HUNGER,
     experience: number = 0,
-    epoch: string = 'past'
+    epoch: string = 'past',
+    reborn_amount: number = 0,
+    karma: number = 0
   ): Promise<number> {
     try {
-      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch]);
-      const res = result as any;
-      return res.insertId;
+      const dinosaurQuery = `INSERT INTO dinosaur (name, user_id, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma]);
+      const dinosaurId = (dinosaurResult as any).insertId;
+
+      // Initialisation des multiplicateurs pour le dinosaure créé
+      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id) VALUES (?)`;
+      await pool.query(multiplierQuery, [dinosaurId]);
+
+      return dinosaurId;
     } catch (err) {
       console.error('Erreur lors de la création du dinosaure:', err);
       throw err;
@@ -171,9 +179,10 @@ export class AuthService {
       // Générer un nom et un régime alimentaire aléatoires pour le dinosaure
       const randomName = generateRandomName();
       const randomDiet = getRandomDiet();
+      const randomType = getRandomType();
 
       // Créer le dinosaure associé à l'utilisateur
-      const dinosaurId = await this.createDinosaur(randomName, userId, randomDiet);
+      const dinosaurId = await this.createDinosaur(randomName, userId, randomDiet, randomType);
       const newDinosaur = await this.findDinosaurById(dinosaurId);
 
       if (!newDinosaur) {
