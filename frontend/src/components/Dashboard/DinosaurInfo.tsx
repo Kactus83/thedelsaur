@@ -14,16 +14,16 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
     return (
         <div className="dinosaur-info">
             <h3>Dinosaure : {dinosaur.name}</h3>
-            <p>Régime alimentaire : {capitalizeFirstLetter(dinosaur.diet)}</p>
-            <p>Énergie : {dinosaur.energy} / {dinosaur.max_energy}</p>
-            <p>Nourriture : {dinosaur.food} / {dinosaur.max_food}</p>
-            <p>Faim : {dinosaur.hunger} / {dinosaur.max_hunger}</p>
-            <p>Expérience : {dinosaur.experience}</p>
-            <p>Époque : {dinosaur.epoch}</p>
-            <p>Créé le : {new Date(dinosaur.created_at).toLocaleDateString()}</p>
-            <p>Dernière mise à jour : {new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
-            <p>En Sommeil : {dinosaur.isSleeping ? 'Oui' : 'Non'}</p>
-            <p>Mort : {dinosaur.isDead ? 'Oui' : 'Non'}</p>
+            <p><strong>Régime alimentaire</strong> : {capitalizeFirstLetter(dinosaur.diet)}</p>
+            <p><strong>Énergie</strong> : {dinosaur.energy} / {dinosaur.max_energy}</p>
+            <p><strong>Nourriture</strong> : {dinosaur.food} / {dinosaur.max_food}</p>
+            <p><strong>Faim</strong> : {dinosaur.hunger} / {dinosaur.max_hunger}</p>
+            <p><strong>Expérience</strong> : {dinosaur.experience}</p>
+            <p><strong>Époque</strong> : {dinosaur.epoch}</p>
+            <p><strong>Créé le </strong>: {new Date(dinosaur.created_at).toLocaleDateString()}</p>
+            <p><strong>Dernière mise à jour</strong> : {new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
+            <p><strong>En Sommeil</strong> : {dinosaur.isSleeping ? 'Oui' : 'Non'}</p>
+            <p><strong>Mort</strong> : {dinosaur.isDead ? 'Oui' : 'Non'}</p>
         </div>
     );
 };
