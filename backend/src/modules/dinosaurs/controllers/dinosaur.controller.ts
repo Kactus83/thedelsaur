@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { DinosaursService } from '../services/dinosaurs.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
 import { DinosaurDTO } from '../models/dinosaur.dto';
@@ -8,6 +8,7 @@ import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { DinosaurActionService } from '../services/dinosaur-action.service';
 import { getAvailableActions } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
+import { ChangeDinosaurNameRequestBody } from '../models/change-dinosaur-name.dto';
 
 export class DinosaursController {
   private dinosaursService: DinosaursService;
@@ -99,6 +100,38 @@ export class DinosaursController {
       res.status(200).json(dinosaurDTO);
     } catch (error) {
       console.error('Erreur lors de la récupération du dinosaure:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
+
+  // Méthode pour changer le nom du dinosaure de l'utilisateur
+  public changeDinosaurName = async (
+    req: AuthenticatedRequest & Request<{}, {}, ChangeDinosaurNameRequestBody>,
+    res: Response
+  ) => {
+    try {
+      const userId = req.user?.id;
+      const newName = req.body.name;
+
+      if (!userId) {
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
+      }
+
+      if (!newName || typeof newName !== 'string' || newName.trim().length === 0) {
+        res.status(400).json({ message: 'Nom invalide' });
+        return;
+      }
+
+      const updated = await this.dinosaursService.updateDinosaurName(userId, newName.trim());
+      if (!updated) {
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
+      }
+
+      res.status(200).json({ message: 'Nom du dinosaure mis à jour avec succès', newName });
+    } catch (error) {
+      console.error('Erreur lors du changement de nom du dinosaure:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
     }
   };

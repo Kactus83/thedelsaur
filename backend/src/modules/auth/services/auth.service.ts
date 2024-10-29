@@ -208,4 +208,32 @@ export class AuthService {
       throw error;
     }
   }
+
+  // Méthode pour réinitialiser le mot de passe
+  public async resetPassword(email: string, currentPassword: string, newPassword: string): Promise<boolean> {
+    try {
+      const user = await this.findUserByEmail(email);
+      if (!user) {
+        throw new Error('Utilisateur non trouvé');
+      }
+
+      // Vérifie si l'ancien mot de passe est correct
+      const isCurrentPasswordValid = await this.checkPassword(currentPassword, user.password_hash);
+      if (!isCurrentPasswordValid) {
+        throw new Error('Mot de passe actuel incorrect');
+      }
+
+      // Hash le nouveau mot de passe
+      const newPasswordHash = await this.hashPassword(newPassword);
+
+      // Met à jour le mot de passe de l'utilisateur
+      const [result] = await pool.query('UPDATE user SET password_hash = ? WHERE id = ?', [newPasswordHash, user.id]);
+      const res = result as any;
+
+      return res.affectedRows > 0;
+    } catch (error) {
+      console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+      throw error;
+    }
+  }
 }

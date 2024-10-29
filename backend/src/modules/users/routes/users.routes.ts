@@ -16,5 +16,11 @@ export default function (usersController: UsersController): Router {
     (req, res) => usersController.getMyProfile(req, res)
   );
 
+  router.patch(
+    '/my-profile/change-name',
+    authenticateJWT,
+    (req, res) => usersController.changeUsername(req, res)
+  );
+
   return router;
 }
