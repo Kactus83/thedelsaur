@@ -60,8 +60,8 @@ export class DinosaursService {
     isDead: boolean = false
   ): Promise<number> {
     try {
-      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger experience, epoch, isSleeping, isDead)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, isSleeping, isDead)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, isSleeping, isDead]);
       const res = result as any;
       return res.insertId;
