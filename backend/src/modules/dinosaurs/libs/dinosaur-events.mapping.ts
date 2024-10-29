@@ -2,7 +2,7 @@
 
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, ENERGY_COST_TO_GRAZE, ENERGY_COST_TO_HUNT } from '../../../common/config/constants';
+import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, ENERGY_COST_TO_DISCOVER, ENERGY_COST_TO_GRAZE, ENERGY_COST_TO_HUNT } from '../../../common/config/constants';
 
 export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
   // Actions avec un seul événement
@@ -74,7 +74,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       experienceChange: 250,
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 500,
-      hungerChange: -300,
+      hungerChange: -100,
       weight: 5,
     },
     {
@@ -84,7 +84,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       experienceChange: 100,
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 200,
-      hungerChange: -100,
+      hungerChange: -50,
       weight: 3,
     },
     {
@@ -94,7 +94,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       experienceChange: 250,
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 100,
-      hungerChange: -50,
+      hungerChange: 0,
       weight: 2,
     },
   ],
@@ -138,6 +138,38 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       foodChange: 0,
       hungerChange: 0,
       weight: 1,
+    },
+  ],
+  [DinosaurAction.Discover]: [
+    {
+      name: 'Découverte majeure',
+      description: 'Le dinosaure fait une découverte majeure.',
+      minLevel: 0,
+      experienceChange: 2500,
+      energyChange: -ENERGY_COST_TO_DISCOVER,
+      foodChange: 0,
+      hungerChange: 0,
+      weight: 2,
+    },
+    {
+      name: 'Découverte moyenne',
+      description: 'Le dinosaure fait une découverte moyenne.',
+      minLevel: 0,
+      experienceChange: 1500,
+      energyChange: -ENERGY_COST_TO_DISCOVER,
+      foodChange: 0,
+      hungerChange: 0,
+      weight: 4,
+    },
+    {
+      name: 'Découverte mineure',
+      description: 'Le dinosaure fait une découverte mineure.',
+      minLevel: 0,
+      experienceChange: 750,
+      energyChange: -ENERGY_COST_TO_DISCOVER,
+      foodChange: 0,
+      hungerChange: 0,
+      weight: 14,
     },
   ],
 };

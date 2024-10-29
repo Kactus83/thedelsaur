@@ -2,6 +2,7 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
+import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
 
 export class DinosaurActionService {
   public eatDinosaur(dinosaur: Dinosaur, amountToEat: number): { dinosaur: Dinosaur, event: DinosaurEvent } {
@@ -48,7 +49,14 @@ export class DinosaurActionService {
 
     dinosaur.isDead = false;
     dinosaur.isSleeping = false;
+    dinosaur.energy = BASE_ENERGY;
+    dinosaur.food = BASE_FOOD;
+    dinosaur.hunger = 0;
     dinosaur.last_reborn = new Date().toISOString();
+    dinosaur.experience = 0;
+    dinosaur.level = 0;
+    dinosaur.reborn_amount = dinosaur.reborn_amount + 1;
+    dinosaur.karma = dinosaur.karma + KARMA_GAIN_AFTER_DEATH;
     applyEventToDinosaur(dinosaur, event);
     return { dinosaur, event };
   }
@@ -70,6 +78,17 @@ export class DinosaurActionService {
     }
 
     const event = getRandomEventForAction(DinosaurAction.Hunt, dinosaur.level);
+    applyEventToDinosaur(dinosaur, event);
+
+    return { dinosaur, event };
+  }
+
+  public discoverDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    if (!canPerformAction(dinosaur, DinosaurAction.Discover)) {
+      throw new Error('Le dinosaure ne peut pas découvrir.');
+    }
+
+    const event = getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
     applyEventToDinosaur(dinosaur, event);
 
     return { dinosaur, event };

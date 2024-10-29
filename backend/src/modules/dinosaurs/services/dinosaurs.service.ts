@@ -18,26 +18,90 @@ export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): 
 }
 
 export class DinosaursService {
-  // Récupérer un dinosaure par son ID
+  // Récupérer un dinosaure par son ID, incluant les multiplicateurs
   public async getDinosaurById(dinosaurId: number): Promise<Dinosaur | null> {
     try {
-      const [results] = await pool.query('SELECT * FROM dinosaur WHERE id = ?', [dinosaurId]);
-      const dinosaurs = results as Dinosaur[];
-      return dinosaurs.length > 0 ? dinosaurs[0] : null;
+      // Requête pour joindre les tables dinosaur et dinosaur_multiplier
+      const [results] = await pool.query(
+        `SELECT d.*, 
+                dm.earn_herbi_food_multiplier, 
+                dm.earn_carni_food_multiplier, 
+                dm.earn_food_multiplier, 
+                dm.earn_energy_multiplier, 
+                dm.earn_experience_multiplier, 
+                dm.max_energy_multiplier, 
+                dm.max_food_multiplier
+        FROM dinosaur d
+        LEFT JOIN dinosaur_multiplier dm ON d.id = dm.dinosaur_id
+        WHERE d.id = ?`,
+        [dinosaurId]
+      );
+
+      const dinosaurs = results as any[];
+      if (dinosaurs.length === 0) return null;
+
+      // Reconstitution de l'objet Dinosaur avec ses multiplicateurs
+      const dinosaurData = dinosaurs[0];
+      const dinosaur: Dinosaur = {
+        ...dinosaurData,
+        multipliers: {
+          earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier,
+          earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier,
+          earn_food_multiplier: dinosaurData.earn_food_multiplier,
+          earn_energy_multiplier: dinosaurData.earn_energy_multiplier,
+          earn_experience_multiplier: dinosaurData.earn_experience_multiplier,
+          max_energy_multiplier: dinosaurData.max_energy_multiplier,
+          max_food_multiplier: dinosaurData.max_food_multiplier,
+        },
+      };
+
+      return dinosaur;
     } catch (err) {
-      console.error('Erreur lors de la récupération du dinosaure:', err);
+      console.error('Erreur lors de la récupération du dinosaure avec multiplicateurs:', err);
       throw err;
     }
   }
-
-  // Récupérer le dinosaure associé à un utilisateur
+  
+  // Récupérer le dinosaure associé à un utilisateur, incluant les multiplicateurs
   public async getDinosaurByUserId(userId: number): Promise<Dinosaur | null> {
     try {
-      const [results] = await pool.query('SELECT * FROM dinosaur WHERE user_id = ?', [userId]);
-      const dinosaurs = results as Dinosaur[];
-      return dinosaurs.length > 0 ? dinosaurs[0] : null;
+      // Requête pour joindre les tables dinosaur et dinosaur_multiplier
+      const [results] = await pool.query(
+        `SELECT d.*, 
+                dm.earn_herbi_food_multiplier, 
+                dm.earn_carni_food_multiplier, 
+                dm.earn_food_multiplier, 
+                dm.earn_energy_multiplier, 
+                dm.earn_experience_multiplier, 
+                dm.max_energy_multiplier, 
+                dm.max_food_multiplier
+         FROM dinosaur d
+         LEFT JOIN dinosaur_multiplier dm ON d.id = dm.dinosaur_id
+         WHERE d.user_id = ?`,
+        [userId]
+      );
+
+      const dinosaurs = results as any[];
+      if (dinosaurs.length === 0) return null;
+
+      // Reconstitution de l'objet Dinosaur avec ses multiplicateurs
+      const dinosaurData = dinosaurs[0];
+      const dinosaur: Dinosaur = {
+        ...dinosaurData,
+        multipliers: {
+          earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier,
+          earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier,
+          earn_food_multiplier: dinosaurData.earn_food_multiplier,
+          earn_energy_multiplier: dinosaurData.earn_energy_multiplier,
+          earn_experience_multiplier: dinosaurData.earn_experience_multiplier,
+          max_energy_multiplier: dinosaurData.max_energy_multiplier,
+          max_food_multiplier: dinosaurData.max_food_multiplier,
+        },
+      };
+
+      return dinosaur;
     } catch (err) {
-      console.error('Erreur lors de la récupération du dinosaure par userId:', err);
+      console.error('Erreur lors de la récupération du dinosaure avec multiplicateurs:', err);
       throw err;
     }
   }
@@ -64,6 +128,7 @@ export class DinosaursService {
     name: string,
     userId: number,
     diet: string,
+    type: string,
     energy: number = BASE_ENERGY,
     max_energy: number = BASE_ENERGY,
     food: number = BASE_FOOD,
@@ -72,15 +137,22 @@ export class DinosaursService {
     max_hunger: number = BASE_MAX_HUNGER,
     experience: number = 0,
     epoch: string = 'past',
+    reborn_amount: number = 0,
+    karma: number = 0,
     isSleeping: boolean = false,
     isDead: boolean = false
   ): Promise<number> {
     try {
-      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, isSleeping, isDead)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, isSleeping, isDead]);
-      const res = result as any;
-      return res.insertId;
+      const dinosaurQuery = `INSERT INTO dinosaur (name, user_id, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, isSleeping, isDead, karma)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, isSleeping, isDead, karma]);
+      const dinosaurId = (dinosaurResult as any).insertId;
+
+      // Initialisation des multiplicateurs pour le dinosaure créé
+      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id) VALUES (?)`;
+      await pool.query(multiplierQuery, [dinosaurId]);
+
+      return dinosaurId;
     } catch (err) {
       console.error('Erreur lors de la création du dinosaure:', err);
       throw err;

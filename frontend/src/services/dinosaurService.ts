@@ -2,6 +2,7 @@ import api from './api';
 
 export const fetchDinosaur = async () => {
     const response = await api.get('/dinosaurs/my-dinosaur');
+    console.log(response.data);
     return response.data;
 };
 

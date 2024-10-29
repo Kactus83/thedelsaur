@@ -5,7 +5,7 @@ import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurEventsMap } from '../libs/dinosaur-events.mapping';
 import {
   BASE_EXP_REQUIRED,
-  ENERGY_COST_TO_EAT,
+  ENERGY_COST_TO_DISCOVER,
   ENERGY_COST_TO_GRAZE,
   ENERGY_COST_TO_HUNT,
   EXP_GROWTH_FACTOR,
@@ -19,13 +19,20 @@ import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
  * Détermine si une action peut être effectuée par le dinosaure en fonction de son état.
  */
 export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): boolean {
+
+  // Vérifier si le dino est mort annuler, sauf si l'action est de le ressusciter
   if (dinosaur.isDead) {
     return action === DinosaurAction.Resurrect;
   }
 
+  // Check si le dino a le niveau requis pour l'action
+  if (dinosaur.level < DinosaurActionsMap[action].levelRequired) {
+    return false;
+  }
+
   switch (action) {
     case DinosaurAction.Eat:
-      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_EAT && dinosaur.food > 0 && dinosaur.hunger > 0;
+      return !dinosaur.isSleeping && dinosaur.food > 0 && dinosaur.hunger > 0;
     case DinosaurAction.Sleep:
       return !dinosaur.isSleeping && dinosaur.energy <= MAX_ENERGY_NO_SLEEP;
     case DinosaurAction.WakeUp:
@@ -34,6 +41,8 @@ export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): bo
       return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_GRAZE && dinosaur.diet !== 'carnivore';
     case DinosaurAction.Hunt:
       return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_HUNT && dinosaur.diet !== 'herbivore';
+    case DinosaurAction.Discover:
+      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_DISCOVER;
     default:
       return false;
   }
@@ -48,6 +57,7 @@ export function getAvailableActions(dinosaur: Dinosaur) {
     return new DinosaurActionDTO(
       actionDetails.name,
       actionDetails.description,
+      actionDetails.levelRequired,
       canPerform,
       actionDetails.endpoint,
       actionDetails.image
