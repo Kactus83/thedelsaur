@@ -26,6 +26,12 @@ export class DinosaurDTO {
   max_food!: number;
 
   @Expose()
+  hunger!: number;
+
+  @Expose()
+  max_hunger!: number;
+
+  @Expose()
   experience!: number;
 
   @Expose()

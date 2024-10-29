@@ -10,6 +10,8 @@ export interface Dinosaur {
   max_energy: number;
   food: number;
   max_food: number;
+  hunger: number;
+  max_hunger: number;
   experience: number;
   epoch: EpochType;
   created_at: Date;

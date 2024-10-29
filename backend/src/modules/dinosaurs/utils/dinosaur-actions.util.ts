@@ -17,7 +17,7 @@ export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): bo
 
   switch (action) {
     case DinosaurAction.Eat:
-      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_EAT;
+      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_EAT && dinosaur.food > 0 && dinosaur.hunger > 0;
     case DinosaurAction.Sleep:
       return !dinosaur.isSleeping && dinosaur.energy <= MAX_ENERGY_NO_SLEEP;
     case DinosaurAction.WakeUp:
