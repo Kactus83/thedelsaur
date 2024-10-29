@@ -24,19 +24,23 @@ const UserProfilePage: React.FC = () => {
     return (
         <>
             <Header />
-            <div className="user-profile-page">
-                <h2>Profil Utilisateur</h2>
-                {user ? (
-                    <div className="user-details">
-                        <p><strong>ID:</strong> {user.id}</p>
-                        <p><strong>Nom d'utilisateur:</strong> {user.username}</p>
-                        <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Date de création:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
-                    </div>
-                ) : (
-                    <p>Chargement des informations...</p>
-                )}
+            <div id='main'>
+                <div className="user-profile-page">
+                    <h2>Profil Utilisateur</h2>
+                    {user ? (
+                        <div className="user-details">
+                            <p><strong>ID:</strong> {user.id}</p>
+                            <p><strong>Nom d'utilisateur:</strong> {user.username}</p>
+                            <p><strong>Email:</strong> {user.email}</p>
+                            <p><strong>Date de création:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
+                        </div>
+                    ) : (
+                        <p>Chargement des informations...</p>
+                    )}
+                </div>
+
             </div>
+            
             <Footer />
         </>
     );
