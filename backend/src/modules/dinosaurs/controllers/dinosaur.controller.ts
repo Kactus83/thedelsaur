@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { DinosaursService } from '../services/dinosaurs.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
 import { DinosaurDTO } from '../models/dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
+import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { DinosaurActionService } from '../services/dinosaur-action.service';
 import { getAvailableActions } from '../utils/dinosaur-actions.util';
@@ -32,7 +33,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -41,6 +42,16 @@ export class DinosaursController {
 
       // Ajuster les statistiques du dinosaure en fonction du temps
       dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
+
+      // Sauvegarder les nouvelles valeurs du dinosaure
+      await this.dinosaursService.updateDinosaur(dinosaur.id, {
+        food: dinosaur.food,
+        energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
+        last_update_by_time_service: dinosaur.last_update_by_time_service,
+        isDead: dinosaur.isDead,
+        isSleeping: dinosaur.isSleeping,
+      });
 
       // Obtenir les actions disponibles avec leurs détails
       const availableActions = getAvailableActions(dinosaur);
@@ -64,7 +75,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -78,6 +89,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -101,7 +113,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -118,6 +130,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -141,7 +154,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -158,6 +171,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -180,7 +194,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -197,6 +211,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -219,7 +234,7 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
 
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -241,6 +256,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -264,7 +280,7 @@ export class DinosaursController {
         return;
       }
   
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
   
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -281,6 +297,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
@@ -304,7 +321,7 @@ export class DinosaursController {
         return;
       }
   
-      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
   
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
@@ -321,6 +338,7 @@ export class DinosaursController {
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
