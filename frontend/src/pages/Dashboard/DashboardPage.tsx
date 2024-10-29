@@ -10,6 +10,13 @@ import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 
+// Définitions des chemins d'images de fond pour chaque époque
+const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
+    past: '../../../public/assets/img/FirstTime.jpg',
+    present: '../../../public/assets/img/MidEpoch.jpg', // Nom provisoire, à corriger si nécessaire
+    future: '../../../public/assets/img/Cybercity.jpg',
+};
+
 /**
  * Composant fonctionnel représentant la page Dashboard.
  * Affiche les informations de l'utilisateur, les informations du dinosaure, et les actions possibles.
@@ -84,6 +91,14 @@ const DashboardPage: React.FC = () => {
 
     // Calcul de la largeur de la barre XP avec une limite à 100%
     const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
+
+    // Utilisation de l'époque pour définir le fond d'écran
+    useEffect(() => {
+        if (dinosaur) {
+            const backgroundImage = EPOCH_BACKGROUND_IMAGES[dinosaur.epoch] || EPOCH_BACKGROUND_IMAGES['past'];
+            document.body.style.backgroundImage = `url(${backgroundImage})`;
+        }
+    }, [dinosaur]);
 
     return (
         <>
