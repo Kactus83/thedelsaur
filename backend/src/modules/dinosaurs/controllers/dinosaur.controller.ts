@@ -109,7 +109,7 @@ export class DinosaursController {
       }
 
       // Effectuer l'action de manger
-      dinosaur = this.dinosaurActionService.eatDinosaur(dinosaur);
+      dinosaur = this.dinosaurActionService.eatDinosaur(dinosaur, 500);
 
       // Ajuster les statistiques du dinosaure en fonction du temps
       dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
