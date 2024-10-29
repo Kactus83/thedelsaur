@@ -3,6 +3,7 @@ import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
+import { getRandomDiet } from '../../auth/utils/dinosaurs.util';
 
 export class DinosaurActionService {
   
@@ -80,6 +81,7 @@ export class DinosaurActionService {
     const event = getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
 
     dinosaur.isDead = false;
+    dinosaur.diet = getRandomDiet();
     dinosaur.isSleeping = false;
     dinosaur.energy = BASE_ENERGY;
     dinosaur.food = BASE_FOOD;
