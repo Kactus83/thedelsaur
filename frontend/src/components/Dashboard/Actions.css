@@ -36,3 +36,26 @@
 .actions button:disabled {
     display: none;
 }
+
+/* Styles pour les écrans mobiles */
+@media (max-width: 768px) {
+    .actions {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .actions button {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        font-size: 0; /* Masquer le texte */
+        justify-content: center;
+    }
+
+    .actions button img.action-image {
+        margin: 0;
+        width: 20px;
+        height: 20px;
+    }
+}
