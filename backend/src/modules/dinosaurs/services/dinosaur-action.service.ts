@@ -5,15 +5,47 @@ import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
 
 export class DinosaurActionService {
-  public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-    if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
-      throw new Error('Le dinosaure ne peut pas manger.');
-    }
+  
+    public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+      if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
+          throw new Error('Le dinosaure ne peut pas manger.');
+      }
 
-    const event = getRandomEventForAction(DinosaurAction.Eat, dinosaur.level);
+      // Calcule la quantité de nourriture à consommer pour réduire la faim autant que possible
+      const foodNeeded = Math.min(dinosaur.hunger, dinosaur.food);
 
-    applyEventToDinosaur(dinosaur, event);
-    return { dinosaur, event };
+      // Si aucune nourriture n'est disponible ou aucune faim n'est présente, renvoie un événement indiquant l'échec
+      if (foodNeeded <= 0) {
+          return {
+              dinosaur,
+              event: {
+                  name: 'Pas de nourriture suffisante',
+                  description: 'Le dinosaure n\'a pas assez de nourriture pour satisfaire sa faim.',
+                  minLevel: 0,
+                  experienceChange: 0,
+                  energyChange: 0,
+                  foodChange: 0,
+                  hungerChange: 0,
+                  weight: 1,
+              },
+          };
+      }
+
+      // Crée l'événement basé sur la consommation réelle de nourriture
+      const event: DinosaurEvent = {
+          name: 'Repas optimisé',
+          description: 'Le dinosaure utilise la nourriture disponible pour réduire sa faim.',
+          minLevel: 0,
+          experienceChange: 0,
+          energyChange: 0,
+          foodChange: -foodNeeded,  // Consomme la quantité calculée de nourriture
+          hungerChange: -foodNeeded, // Réduit la faim par la même quantité
+          weight: 1,
+      };
+
+      // Applique l'événement au dinosaure
+      applyEventToDinosaur(dinosaur, event);
+      return { dinosaur, event };
   }
 
   public sleepDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
