@@ -158,7 +158,7 @@ export class DinosaursController {
         return;
       }
 
-      const { dinosaur: updatedDino, event } = this.dinosaurActionService.eatDinosaur(dinosaur, 500);
+      const { dinosaur: updatedDino, event } = this.dinosaurActionService.eatDinosaur(dinosaur);
       dinosaur = updatedDino;
 
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
