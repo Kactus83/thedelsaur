@@ -5,7 +5,7 @@ import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
 
 export class DinosaurActionService {
-  public eatDinosaur(dinosaur: Dinosaur, amountToEat: number): { dinosaur: Dinosaur, event: DinosaurEvent } {
+  public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
       throw new Error('Le dinosaure ne peut pas manger.');
     }
