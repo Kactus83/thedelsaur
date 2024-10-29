@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
-import UserInfo from '../../components/Dashboard/UserInfo';
+import { fetchDinosaurActions } from '../../services/dinosaurService';
 import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
-import Actions from '../../components/Dashboard/Actions';
+import Actions, { ActionDetail } from '../../components/Dashboard/Actions';
+import EventOverlay from '../../components/Dashboard/EventOverlay'; 
 import Header from '../../components/Common/Header';
-import Footer from '../../components/Common/Footer';
 import './DashboardPage.css'; 
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
+import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -17,9 +17,11 @@ const DashboardPage: React.FC = () => {
     // États pour stocker les informations de l'utilisateur et du dinosaure
     const [user, setUser] = useState<User | null>(null);
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
+    const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
+    const [lastEvent, setLastEvent] = useState<string | null>(null); // État pour l'événement affiché
 
     /**
-     * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur et dinosaure.
+     * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur, dinosaure et actions.
      */
     const initializePage = async () => {
         try {
@@ -27,9 +29,12 @@ const DashboardPage: React.FC = () => {
             const fetchedUser = await fetchUserFromBackend();
             // Récupération des données dinosaure depuis le backend
             const fetchedDinosaur = await fetchDinosaurFromBackend();
+            // Récupération des actions disponibles depuis le backend
+            const fetchedActions = await fetchDinosaurActions();
             // Mise à jour des états avec les données récupérées
             setUser(fetchedUser);
             setDinosaur(fetchedDinosaur);
+            setAvailableActions(fetchedActions.availableActions);
         } catch (error) {
             console.error('Erreur lors de l\'initialisation de la page :', error);
             // Optionnel : Rediriger vers la page d'accueil ou afficher un message d'erreur
@@ -37,14 +42,17 @@ const DashboardPage: React.FC = () => {
     };
 
     /**
-     * Fonction asynchrone pour rafraîchir les données du dinosaure.
+     * Fonction asynchrone pour rafraîchir les données du dinosaure et les actions disponibles.
      */
     const refreshDinosaur = async () => {
         try {
             // Récupération des données dinosaure mises à jour depuis le backend
             const updatedDinosaur = await fetchDinosaurFromBackend();
-            // Mise à jour de l'état avec les nouvelles données
+            // Récupération des actions disponibles mises à jour depuis le backend
+            const updatedActions = await fetchDinosaurActions();
+            // Mise à jour des états avec les nouvelles données
             setDinosaur(updatedDinosaur);
+            setAvailableActions(updatedActions.availableActions);
         } catch (error) {
             console.error('Erreur lors de la mise à jour des données du dinosaure :', error);
             // Optionnel : Afficher un message d'erreur à l'utilisateur
@@ -52,23 +60,24 @@ const DashboardPage: React.FC = () => {
     };
 
     /**
-     * Hook useEffect pour initialiser la page au montage du composant.
+     * Fonction pour gérer l'affichage de l'événement.
+     * @param eventMessage Message de l'événement à afficher.
      */
+    const handleEventDisplay = (eventMessage: string) => {
+        setLastEvent(eventMessage);
+        setTimeout(() => setLastEvent(null), 3000); // Cache l'overlay après 3 secondes
+    };
+
+    // Initialiser les données au montage du composant
     useEffect(() => {
         initializePage();
     }, []);
 
-    /**
-     * Hook useEffect pour mettre en place un intervalle qui rafraîchit les données du dinosaure toutes les 1.1 secondes.
-     * Nettoie l'intervalle lors du démontage du composant.
-     */
+    // Mettre en place un intervalle qui rafraîchit les données toutes les 1,1 secondes
     useEffect(() => {
-        // Définition de l'intervalle en millisecondes (1100 ms = 1.1 secondes)
         const interval = setInterval(() => {
             refreshDinosaur();
         }, 1100);
-
-        // Fonction de nettoyage pour supprimer l'intervalle lors du démontage
         return () => clearInterval(interval);
     }, []);
 
@@ -79,7 +88,6 @@ const DashboardPage: React.FC = () => {
         <>
             {/* Composant Header commun à toutes les pages */}
             <Header />
-            {/* Conteneur principal de la page Dashboard */}
             {/* Conteneur principal de la page Dashboard */}
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
@@ -108,12 +116,21 @@ const DashboardPage: React.FC = () => {
                                     className="dino-svg" // Classe CSS pour le style de l'image
                                 />
                             )}
+                            {/* Affichage de l'overlay si un événement est présent */}
+                            {lastEvent && <EventOverlay eventMessage={lastEvent} />}
                         </div>
                     </div>
                 </div>
+                {/* Section Actions */}
                 <div id="Actions">
                     {/* Affichage conditionnel du composant Actions */}
-                    {dinosaur && <Actions refreshDinosaur={refreshDinosaur} />}
+                    {dinosaur && (
+                        <Actions
+                            refreshDinosaur={refreshDinosaur}
+                            availableActions={availableActions}
+                            onActionEvent={handleEventDisplay}
+                        />
+                    )}
                 </div>
             </div>
             {/* Décommenter le Footer si nécessaire */}

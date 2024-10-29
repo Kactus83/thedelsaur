@@ -7,7 +7,7 @@ import { DinosaursController } from '../controllers/dinosaur.controller';
  * @param dinosaursController Instance de DinosaursController.
  * @returns Router avec les routes des dinosaures.
  */
-export default function (dinosaursController: DinosaursController): Router {
+export default function (dinosaursController: DinosaursController): Router { 
   const router = Router();
 
   // Route pour récupérer le dinosaure de l'utilisateur connecté
