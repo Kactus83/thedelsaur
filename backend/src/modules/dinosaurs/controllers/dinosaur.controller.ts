@@ -52,6 +52,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       // Obtenir les actions disponibles avec leurs détails
@@ -94,6 +96,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -162,6 +166,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -196,6 +202,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -230,6 +238,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -269,6 +279,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -303,6 +315,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -337,6 +351,8 @@ export class DinosaursController {
         last_update_by_time_service: dinosaur.last_update_by_time_service,
         isDead: dinosaur.isDead,
         isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
