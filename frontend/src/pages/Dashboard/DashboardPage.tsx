@@ -9,12 +9,13 @@ import './DashboardPage.css';
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
+import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 
 // Définitions des chemins d'images de fond pour chaque époque
 const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
-    past: '../../../public/assets/img/FirstTime.jpg',
-    present: '../../../public/assets/img/FourthTime.jpg', 
-    future: '../../../public/assets/img/Cybercity.jpg',
+    past: '/assets/img/FirstTime.jpg',
+    present: '/assets/img/FifthTime.jpg', // Nom inventé pour l'époque du milieu
+    future: '/assets/img/Cybercity.jpg',
 };
 
 /**
@@ -92,16 +93,12 @@ const DashboardPage: React.FC = () => {
     // Calcul de la largeur de la barre XP avec une limite à 100%
     const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
 
-    // Utilisation de l'époque pour définir le fond d'écran
-    useEffect(() => {
-        if (dinosaur) {
-            const backgroundImage = EPOCH_BACKGROUND_IMAGES[dinosaur.epoch] || EPOCH_BACKGROUND_IMAGES['past'];
-            document.body.style.backgroundImage = `url(${backgroundImage})`;
-        }
-    }, [dinosaur]);
-
     return (
         <>
+            {/* Overlay d'image dynamique */}
+            {dinosaur && (
+                <BackgroundOverlay epoch={dinosaur.epoch} backgroundImages={EPOCH_BACKGROUND_IMAGES} />
+            )}
             {/* Composant Header commun à toutes les pages */}
             <Header />
             {/* Conteneur principal de la page Dashboard */}
@@ -127,7 +124,7 @@ const DashboardPage: React.FC = () => {
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire */}
                             {dinosaur && (
                                 <img
-                                    src={`../../assets/dino/dino_${dinosaur.diet}.svg`} // Chemin vers l'image du dinosaure
+                                    src={`/assets/dino/dino_${dinosaur.diet}.svg`} // Chemin absolu vers l'image du dinosaure
                                     alt={`Dinosaure ${dinosaur.name}`} // Texte alternatif pour l'accessibilité
                                     className="dino-svg" // Classe CSS pour le style de l'image
                                 />
