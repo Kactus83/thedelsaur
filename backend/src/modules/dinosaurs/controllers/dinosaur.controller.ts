@@ -54,6 +54,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       // Obtenir les actions disponibles avec leurs détails
@@ -98,6 +99,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -168,6 +170,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -204,6 +207,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -240,6 +244,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -281,6 +286,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -317,6 +323,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
@@ -353,6 +360,7 @@ export class DinosaursController {
         isSleeping: dinosaur.isSleeping,
         level: dinosaur.level,
         epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
