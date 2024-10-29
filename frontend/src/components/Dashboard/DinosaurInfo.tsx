@@ -17,6 +17,7 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
             <p>Régime alimentaire : {capitalizeFirstLetter(dinosaur.diet)}</p>
             <p>Énergie : {dinosaur.energy} / {dinosaur.max_energy}</p>
             <p>Nourriture : {dinosaur.food} / {dinosaur.max_food}</p>
+            <p>Faim : {dinosaur.hunger} / {dinosaur.max_hunger}</p>
             <p>Expérience : {dinosaur.experience}</p>
             <p>Époque : {dinosaur.epoch}</p>
             <p>Créé le : {new Date(dinosaur.created_at).toLocaleDateString()}</p>

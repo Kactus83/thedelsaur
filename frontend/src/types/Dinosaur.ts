@@ -7,6 +7,8 @@ export interface Dinosaur {
     food: number;
     max_food: number;
     experience: number;
+    hunger: number;
+    max_hunger: number;
     epoch: string;
     created_at: string;
     last_update_by_time_service: string;
