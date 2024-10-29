@@ -1,0 +1,15 @@
+.user-profile-page{
+    margin: 2px;
+    flex-grow: 1;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    height: 85vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-content: stretch;
+    align-items: stretch;
+}
+
