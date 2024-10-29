@@ -41,13 +41,42 @@ const UserProfilePage: React.FC = () => {
                 <div className="user-profile-page">
                     <div className="user-info">
                         <h2>Profil Utilisateur</h2>
+                        <hr />
                         {user ? (
                             <div className="user-details">
                                 <p><strong>ID:</strong> {user.id}</p>
-                                <p><strong>Nom d'utilisateur:</strong> {user.username}</p>
+                                <p><strong>Nom d'utilisateur:</strong> {user.username}</p> 
                                 <p><strong>Email:</strong> {user.email}</p>
                                 <p><strong>Date de création:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
+                                <hr />
+                                <form className="password-change-form">
+                                    <h3>Changer le mot de passe</h3>
+                                    <label>
+                                    <p>Ancien mot de passe : </p>
+                                    <input 
+                                        type="password" 
+                                        required 
+                                    />
+                                </label>
+                                <label>
+                                    <p>Nouveau mot de passe : </p> 
+                                    <input 
+                                        type="password" 
+                                        required 
+                                    />
+                                </label>
+                                <label>
+                                    <p>Confirmer le nouveau mot de passe : </p> 
+                                    <input 
+                                        type="password" 
+                                        required 
+                                    />
+                                </label> 
+                                <br />
+                                <button type="submit">Modifier le mot de passe</button>
+                            </form>
                             </div>
+                        
                         ) : (
                             <p>Chargement des informations...</p>
                         )}
