@@ -1,20 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Common/Header';
 import Footer from '../../components/Common/Footer';
-import { fetchUserFromBackend } from '../../services/authService';
+import { fetchDinosaurFromBackend,fetchUserFromBackend } from '../../services/authService';
+import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import { User } from '../../types/User';
-import './UserProfilePage.css'; 
+import { Dinosaur } from '../../types/Dinosaur';
+import './UserProfilePage.css';
+
 
 const UserProfilePage: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
+    const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
 
     const initializeUser = async () => {
         try {
             const fetchedUser = await fetchUserFromBackend();
+            const fetchedDinosaur = await fetchDinosaurFromBackend();
             setUser(fetchedUser);
+            setDinosaur(fetchedDinosaur);
         } catch (error) {
             console.error('Erreur lors de la récupération des informations utilisateur :', error);
         }
+
+    };
+
+
+    const handleEditName = () => {
+        console.log("Modifier le nom du dinosaure");
+        // Logique de modification du nom à implémenter
     };
 
     useEffect(() => {
@@ -24,23 +37,28 @@ const UserProfilePage: React.FC = () => {
     return (
         <>
             <Header />
-            <div id='main'>
+            <div id="main">
                 <div className="user-profile-page">
-                    <h2>Profil Utilisateur</h2>
-                    {user ? (
-                        <div className="user-details">
-                            <p><strong>ID:</strong> {user.id}</p>
-                            <p><strong>Nom d'utilisateur:</strong> {user.username}</p>
-                            <p><strong>Email:</strong> {user.email}</p>
-                            <p><strong>Date de création:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
-                        </div>
-                    ) : (
-                        <p>Chargement des informations...</p>
-                    )}
+                    <div className="user-info">
+                        <h2>Profil Utilisateur</h2>
+                        {user ? (
+                            <div className="user-details">
+                                <p><strong>ID:</strong> {user.id}</p>
+                                <p><strong>Nom d'utilisateur:</strong> {user.username}</p>
+                                <p><strong>Email:</strong> {user.email}</p>
+                                <p><strong>Date de création:</strong> {new Date(user.created_at).toLocaleDateString()}</p>
+                            </div>
+                        ) : (
+                            <p>Chargement des informations...</p>
+                        )}
+                    </div>
+                    <div className="dino-info">
+                    <h2>Dinosaure</h2>
+                    <p><strong>Nom du Dinosaure : </strong> {dinosaur?.name}</p>
+                        <button onClick={handleEditName}>Modifier le nom</button>
+                    </div>
                 </div>
-
             </div>
-            
             <Footer />
         </>
     );
