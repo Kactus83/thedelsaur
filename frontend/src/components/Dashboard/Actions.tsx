@@ -24,6 +24,7 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, on
   const handleAction = async (action: ActionDetail) => {
     try {
       const response = await api.post(action.endpoint); // Appel à l'API pour effectuer l'action
+      console.log(response);
       if (response.status === 200) {
         const { event } = response.data;
         onActionEvent(event?.description || `Action réussie: ${action.name}`); // Passe le message d'event à onActionEvent
