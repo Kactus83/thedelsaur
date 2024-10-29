@@ -2,7 +2,6 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import {
   BASE_FOOD,
   BASE_ENERGY,
-  ENERGY_COST_TO_EAT,
   MAX_FOOD_PER_HUNT,
   MIN_FOOD_PER_HUNT,
   ENERGY_COST_TO_HUNT,
@@ -24,7 +23,6 @@ export class DinosaurActionService {
     const amountConsumed = Math.min(amountToEat, dinosaur.food);
     dinosaur.food -= amountConsumed;
     dinosaur.hunger = Math.max(0, dinosaur.hunger - amountConsumed);
-    dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_EAT, 0);
 
     console.log(`Le dinosaure mange ${amountConsumed} de nourriture. Stock restant: ${dinosaur.food}, faim réduite: ${dinosaur.hunger}, énergie : ${dinosaur.energy}`);
     return dinosaur;
