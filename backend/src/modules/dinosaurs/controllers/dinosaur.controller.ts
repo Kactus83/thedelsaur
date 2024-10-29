@@ -66,6 +66,43 @@ export class DinosaursController {
     }
   };
 
+  // Méthode pour obtenir les informations du dinosaure de l'utilisateur
+  public getMyDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
+      }
+
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
+
+      if (!dinosaur) {
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
+      }
+
+      // Ajuster les statistiques du dinosaure en fonction du temps
+      dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
+
+      // Sauvegarder les nouvelles valeurs du dinosaure
+      await this.dinosaursService.updateDinosaur(dinosaur.id, {
+        food: dinosaur.food,
+        energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
+        last_update_by_time_service: dinosaur.last_update_by_time_service,
+        isDead: dinosaur.isDead,
+        isSleeping: dinosaur.isSleeping,
+      });
+
+      const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
+      res.status(200).json(dinosaurDTO);
+    } catch (error) {
+      console.error('Erreur lors de la récupération du dinosaure:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
+
   // Méthodes d'action qui retournent également l'événement exécuté
 
   public eatDinosaur = async (req: AuthenticatedRequest, res: Response) => {
@@ -82,11 +119,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de manger
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.eatDinosaur(dinosaur, 500);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
@@ -118,11 +153,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de dormir
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.sleepDinosaur(dinosaur);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
@@ -154,11 +187,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de se réveiller
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.wakeDinosaur(dinosaur);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
@@ -195,11 +226,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de ressusciter
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.resurrectDinosaur(dinosaur);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
@@ -231,11 +260,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de cueillir
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.grazeDinosaur(dinosaur);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
@@ -267,11 +294,9 @@ export class DinosaursController {
         return;
       }
 
-      // Effectuer l'action de chasser
       const { dinosaur: updatedDino, event } = this.dinosaurActionService.huntDinosaur(dinosaur);
       dinosaur = updatedDino;
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
