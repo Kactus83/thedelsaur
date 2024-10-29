@@ -2,8 +2,6 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import {
   BASE_FOOD,
   BASE_ENERGY,
-  MIN_FOOD_PER_MEAL,
-  MAX_FOOD_PER_MEAL,
   ENERGY_COST_TO_EAT,
   MAX_FOOD_PER_HUNT,
   MIN_FOOD_PER_HUNT,
@@ -23,7 +21,7 @@ export class DinosaurActionService {
     }
 
     // Quantité de nourriture à consommer depuis le stock, limitée au maximum permis par les constantes
-    const amountConsumed = Math.min(amountToEat, dinosaur.food, MAX_FOOD_PER_MEAL);
+    const amountConsumed = Math.min(amountToEat, dinosaur.food);
     dinosaur.food -= amountConsumed;
     dinosaur.hunger = Math.max(0, dinosaur.hunger - amountConsumed);
     dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_EAT, 0);
