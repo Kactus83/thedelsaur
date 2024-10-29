@@ -1,8 +1,4 @@
 import { Dinosaur } from '../models/dinosaur.interface';
-import {
-  BASE_FOOD,
-  BASE_ENERGY,
-} from '../../../common/config/constants';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
@@ -13,14 +9,7 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas manger.');
     }
 
-    const event: DinosaurEvent = {
-      name: 'Repas normal',
-      description: 'Le dinosaure mange une quantité fixe de nourriture depuis son stock.',
-      energyChange: 0,
-      foodChange: -amountToEat,
-      hungerChange: -amountToEat,
-      weight: 1,
-    };
+    const event = getRandomEventForAction(DinosaurAction.Eat, dinosaur.level);
 
     applyEventToDinosaur(dinosaur, event);
     return { dinosaur, event };
@@ -31,14 +20,7 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas dormir.');
     }
 
-    const event: DinosaurEvent = {
-      name: 'Sommeil réparateur',
-      description: 'Le dinosaure dort et regagne de l\'énergie.',
-      energyChange: 0,
-      foodChange: 0,
-      hungerChange: 0,
-      weight: 1,
-    };
+    const event = getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
 
     dinosaur.isSleeping = true;
     applyEventToDinosaur(dinosaur, event);
@@ -50,14 +32,7 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas se réveiller.');
     }
 
-    const event: DinosaurEvent = {
-      name: 'Réveil en pleine forme',
-      description: 'Le dinosaure se réveille prêt pour une nouvelle journée.',
-      energyChange: 0,
-      foodChange: 0,
-      hungerChange: 0,
-      weight: 1,
-    };
+    const event = getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
 
     dinosaur.isSleeping = false;
     applyEventToDinosaur(dinosaur, event);
@@ -69,17 +44,11 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas être ressuscité.');
     }
 
-    const event: DinosaurEvent = {
-      name: 'Retour à la vie',
-      description: 'Le dinosaure est miraculeusement ressuscité avec des ressources moyennes.',
-      energyChange: BASE_ENERGY,
-      foodChange: BASE_FOOD,
-      hungerChange: -dinosaur.hunger,
-      weight: 1,
-    };
+    const event = getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
 
     dinosaur.isDead = false;
     dinosaur.isSleeping = false;
+    dinosaur.last_reborn = new Date().toISOString();
     applyEventToDinosaur(dinosaur, event);
     return { dinosaur, event };
   }
@@ -89,7 +58,7 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas cueillir.');
     }
 
-    const event = getRandomEventForAction(DinosaurAction.Graze);
+    const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
     applyEventToDinosaur(dinosaur, event);
 
     return { dinosaur, event };
@@ -100,7 +69,7 @@ export class DinosaurActionService {
       throw new Error('Le dinosaure ne peut pas chasser.');
     }
 
-    const event = getRandomEventForAction(DinosaurAction.Hunt);
+    const event = getRandomEventForAction(DinosaurAction.Hunt, dinosaur.level);
     applyEventToDinosaur(dinosaur, event);
 
     return { dinosaur, event };

@@ -13,8 +13,10 @@ export interface Dinosaur {
   hunger: number;
   max_hunger: number;
   experience: number;
+  level: number;
   epoch: EpochType;
   created_at: Date;
+  last_reborn: string;
   last_update_by_time_service: string;
   isSleeping: boolean;
   isDead: boolean;

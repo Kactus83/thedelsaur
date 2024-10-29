@@ -4,9 +4,12 @@ import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurEventsMap } from '../libs/dinosaur-events.mapping';
 import {
+  BASE_EXP_REQUIRED,
   ENERGY_COST_TO_EAT,
   ENERGY_COST_TO_GRAZE,
   ENERGY_COST_TO_HUNT,
+  EXP_GROWTH_FACTOR,
+  LEVEL_MODIFIER,
   MAX_ENERGY_NO_SLEEP,
   MIN_ENERGY_TO_WAKE_UP,
 } from '../../../common/config/constants';
@@ -53,27 +56,52 @@ export function getAvailableActions(dinosaur: Dinosaur) {
 }
 
 /**
- * Sélectionne un événement aléatoire pour une action donnée en tenant compte des poids.
+ * Sélectionne un événement aléatoire pour une action donnée, en tenant compte des poids
+ * et du niveau du dinosaure.
  */
-export function getRandomEventForAction(action: DinosaurAction): DinosaurEvent {
-  const events = DinosaurEventsMap[action];
+export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: number): DinosaurEvent {
+  // Filtrer les événements selon le niveau du dinosaure
+  const events = DinosaurEventsMap[action].filter(event => event.minLevel <= dinosaurLevel);
+
+  // Calculer le poids total des événements disponibles
   const totalWeight = events.reduce((sum, event) => sum + event.weight, 0);
   let randomWeight = Math.random() * totalWeight;
 
+  // Parcourir les événements pour sélectionner celui correspondant au poids aléatoire
   for (const event of events) {
     if (randomWeight < event.weight) {
       return event;
     }
     randomWeight -= event.weight;
   }
-  return events[0]; // En cas d'erreur, retourne le premier événement comme secours
+  return events[0]; // Retourne le premier événement comme secours
 }
 
+
 /**
- * Applique les effets d'un événement au dinosaure en modifiant ses statistiques.
+ * Applique les effets d'un événement au dinosaure en modifiant ses statistiques et son niveau.
  */
 export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): void {
   dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
   dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
   dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
+  dinosaur.experience += event.experienceChange;
+
+  // Gestion de la montée de niveau en fonction du seuil d'expérience dynamique
+  let experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
+
+  while (dinosaur.experience >= experienceThreshold) {
+    dinosaur.level += 1;
+    dinosaur.experience -= experienceThreshold;
+    experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
+  }
+}
+
+/**
+ * Calcul le seuil d'expérience nécessaire pour atteindre un niveau donné.
+ * @param level Niveau du dinosaure pour lequel on veut calculer le seuil d'expérience.
+ * @returns Le seuil d'expérience pour le niveau donné.
+ */
+export function getExperienceThresholdForLevel(level: number): number {
+  return Math.floor(BASE_EXP_REQUIRED * Math.pow(level, EXP_GROWTH_FACTOR) * LEVEL_MODIFIER);
 }

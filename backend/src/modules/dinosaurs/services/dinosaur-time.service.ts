@@ -6,6 +6,8 @@ import {
   HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
   HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
   HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
+  PAST_THRESHOLD_IN_SECONDS,
+  PRESENT_THRESHOLD_IN_SECONDS,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 
@@ -26,6 +28,9 @@ export class DinosaurTimeService {
       dinosaur.hunger = dinosaur.max_hunger;
       return dinosaur;
     }
+
+    // Calculer l'epoch du dinosaure
+    dinosaur.epoch = this.calculateEpoch(dinosaur.last_reborn);
 
     const lastUpdated = new Date(dinosaur.last_update_by_time_service);
     const now = new Date();
@@ -74,5 +79,24 @@ export class DinosaurTimeService {
     }
 
     return dinosaur;
+  }
+
+  /**
+   * Calcul l'epoch d'un dinosaure en fonction du temps écoulé depuis son dernier reborn.
+   * @param lastReborn La date du dernier reborn du dinosaure.
+   * @returns Le type d'epoch (past, present, future).
+   */
+  public calculateEpoch(lastReborn: string): 'past' | 'present' | 'future' {
+    const rebornDate = new Date(lastReborn);
+    const now = new Date();
+    const timeElapsedInSeconds = Math.floor((now.getTime() - rebornDate.getTime()) / 1000);
+
+    if (timeElapsedInSeconds < PAST_THRESHOLD_IN_SECONDS) {
+      return 'past';
+    } else if (timeElapsedInSeconds < PRESENT_THRESHOLD_IN_SECONDS) {
+      return 'present';
+    } else {
+      return 'future';
+    }
   }
 }
