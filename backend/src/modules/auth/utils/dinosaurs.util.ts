@@ -1,3 +1,5 @@
+import { DietType } from "../../dinosaurs/models/dinosaur-diet.type";
+
 // Liste de prénoms possibles pour les dinosaures
 const names: string[] = [
     'Rex', 'Bella', 'Spike', 'Tina', 'Dino', 'Luna',
@@ -6,7 +8,7 @@ const names: string[] = [
 ];
 
 // Liste des régimes alimentaires possibles
-const diets: string[] = ['herbivore', 'carnivore', 'omnivore'];
+const diets: DietType[] = ['herbivore', 'carnivore', 'omnivore'];
 
 // Liste des types de dinosaures possibles
 const types: string[] = ['land', 'air', 'sea'];
@@ -18,7 +20,7 @@ export const generateRandomName = (): string => {
 };
 
 // Fonction pour obtenir un régime alimentaire aléatoire
-export const getRandomDiet = (): string => {
+export const getRandomDiet = (): DietType => {
     const randomIndex = Math.floor(Math.random() * diets.length);
     return diets[randomIndex];
 };

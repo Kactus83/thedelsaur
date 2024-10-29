@@ -104,6 +104,10 @@ export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): 
   dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
   dinosaur.experience += event.experienceChange;
 
+  if(event.typeChange) {
+    dinosaur.type = event.typeChange;
+  }
+
   // Gestion de la montée de niveau en fonction du seuil d'expérience dynamique
   let experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
 

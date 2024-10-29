@@ -1,1 +1,1 @@
-export type DinosaurType = 'land' | 'sea' | 'earth';
+export type DinosaurType = 'land' | 'air' | 'sea';

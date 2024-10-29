@@ -278,6 +278,8 @@ export class DinosaursController {
       dinosaur = updatedDino;
 
       await this.dinosaursService.updateDinosaur(dinosaur.id, {
+        type: dinosaur.type,
+        diet: dinosaur.diet,
         food: dinosaur.food,
         energy: dinosaur.energy,
         hunger: dinosaur.hunger,
