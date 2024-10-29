@@ -4,6 +4,7 @@ import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions, { ActionDetail } from '../../components/Dashboard/Actions';
 import EventOverlay from '../../components/Dashboard/EventOverlay'; 
 import Header from '../../components/Common/Header';
+import Footer from '../../components/Common/Footer';
 import './DashboardPage.css'; 
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
@@ -133,8 +134,7 @@ const DashboardPage: React.FC = () => {
                     )}
                 </div>
             </div>
-            {/* Décommenter le Footer si nécessaire */}
-            {/* <Footer /> */}
+            <Footer />
         </>
     );
 };
