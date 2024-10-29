@@ -1,3 +1,4 @@
+import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
 import pool from '../../../common/database/db';
 import { Dinosaur } from '../models/dinosaur.interface';
 
@@ -48,12 +49,12 @@ export class DinosaursService {
     name: string,
     userId: number,
     diet: string,
-    energy: number = 10000,
-    max_energy: number = 10000,
-    food: number = 10000,
-    max_food: number = 10000,
+    energy: number = BASE_ENERGY,
+    max_energy: number = BASE_ENERGY,
+    food: number = BASE_FOOD,
+    max_food: number = MAX_FOOD,
     hunger: number = 0,
-    max_hunger: number = 10000,
+    max_hunger: number = BASE_MAX_HUNGER,
     experience: number = 0,
     epoch: string = 'past',
     isSleeping: boolean = false,
