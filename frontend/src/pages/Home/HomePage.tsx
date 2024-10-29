@@ -31,9 +31,9 @@ const HomePage: React.FC = () => {
     return (
         <div className="home-page">
             {/* Icône permettant d'accéder à la gestion des utilisateurs */}
-            <a href="/admin" className="user-management-icon" title="Gestion des utilisateurs">
+            {/* <a href="/admin" className="user-management-icon" title="Gestion des utilisateurs">
                 <FaUserCog />
-            </a>
+            </a> */}
 
             {/* Bloc central contenant le titre et les boutons de connexion et d'inscription */}
             <div className="central-block">
