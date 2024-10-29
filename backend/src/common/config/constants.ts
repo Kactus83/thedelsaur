@@ -26,3 +26,13 @@ export const MIN_FOOD_PER_GRAZE = 200;                      // Nourriture minima
 export const MAX_FOOD_PER_GRAZE = 500;                      // Nourriture maximale obtenue en "cueillant"
 export const MIN_FOOD_PER_HUNT = 800;                       // Nourriture minimale obtenue en "chassant"
 export const MAX_FOOD_PER_HUNT = 1500;                      // Nourriture maximale obtenue en "chassant"
+
+
+export const PAST_THRESHOLD_IN_SECONDS = 60; // 1 minute
+export const PRESENT_THRESHOLD_IN_SECONDS = 120; // 2 minutes
+export const FUTURE_THRESHOLD_IN_SECONDS = 180; // 3 minutes ou plus
+
+
+export const BASE_EXP_REQUIRED = 1000;        // Expérience requise pour passer du niveau 1 au niveau 2
+export const EXP_GROWTH_FACTOR = 1.5;         // Facteur de croissance de la progression d'expérience
+export const LEVEL_MODIFIER = 2.0; // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression

@@ -35,10 +35,16 @@ export class DinosaurDTO {
   experience!: number;
 
   @Expose()
+  level!: number;
+
+  @Expose()
   epoch!: EpochType;
 
   @Expose()
   created_at!: Date;
+
+  @Expose()
+  last_reborn!: Date;
 
   @Expose()
   last_update_by_time_service!: Date;
