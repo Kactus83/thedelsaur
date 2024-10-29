@@ -1,6 +1,21 @@
 import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
 import pool from '../../../common/database/db';
 import { Dinosaur } from '../models/dinosaur.interface';
+import { DinosaurEvent } from '../models/dinosaur-event.interface';
+
+/**
+ * Applique les effets d'un événement au dinosaure, en modifiant ses statistiques en place.
+ * @param dinosaur Dinosaure auquel appliquer les effets.
+ * @param event Événement à appliquer avec ses modifications de stats.
+ * @returns L'événement appliqué pour utilisation dans le contrôleur.
+ */
+export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): DinosaurEvent {
+  dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
+  dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
+  dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
+
+  return event; // Renvoie l'événement appliqué pour permettre au contrôleur de l'inclure dans la réponse.
+}
 
 export class DinosaursService {
   // Récupérer un dinosaure par son ID

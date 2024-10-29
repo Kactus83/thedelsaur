@@ -2,89 +2,107 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import {
   BASE_FOOD,
   BASE_ENERGY,
-  MAX_FOOD_PER_HUNT,
-  MIN_FOOD_PER_HUNT,
-  ENERGY_COST_TO_HUNT,
-  ENERGY_COST_TO_GRAZE,
-  MAX_FOOD_PER_GRAZE,
-  MIN_FOOD_PER_GRAZE,
 } from '../../../common/config/constants';
-import { getRandomInt } from '../../../common/utils/randomUtils';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction } from '../utils/dinosaur-actions.util';
+import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { DinosaurEvent } from '../models/dinosaur-event.interface';
 
 export class DinosaurActionService {
-  public eatDinosaur(dinosaur: Dinosaur, amountToEat: number): Dinosaur {
+  public eatDinosaur(dinosaur: Dinosaur, amountToEat: number): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
       throw new Error('Le dinosaure ne peut pas manger.');
     }
 
-    // Quantité de nourriture à consommer depuis le stock, limitée au maximum permis par les constantes
-    const amountConsumed = Math.min(amountToEat, dinosaur.food);
-    dinosaur.food -= amountConsumed;
-    dinosaur.hunger = Math.max(0, dinosaur.hunger - amountConsumed);
+    const event: DinosaurEvent = {
+      name: 'Repas normal',
+      description: 'Le dinosaure mange une quantité fixe de nourriture depuis son stock.',
+      energyChange: 0,
+      foodChange: -amountToEat,
+      hungerChange: -amountToEat,
+      weight: 1,
+    };
 
-    console.log(`Le dinosaure mange ${amountConsumed} de nourriture. Stock restant: ${dinosaur.food}, faim réduite: ${dinosaur.hunger}, énergie : ${dinosaur.energy}`);
-    return dinosaur;
+    applyEventToDinosaur(dinosaur, event);
+    return { dinosaur, event };
   }
 
-  public sleepDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public sleepDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Sleep)) {
       throw new Error('Le dinosaure ne peut pas dormir.');
     }
 
+    const event: DinosaurEvent = {
+      name: 'Sommeil réparateur',
+      description: 'Le dinosaure dort et regagne de l\'énergie.',
+      energyChange: 0,
+      foodChange: 0,
+      hungerChange: 0,
+      weight: 1,
+    };
+
     dinosaur.isSleeping = true;
-    console.log('Le dinosaure est maintenant en sommeil.');
-    return dinosaur;
+    applyEventToDinosaur(dinosaur, event);
+    return { dinosaur, event };
   }
 
-  public wakeDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public wakeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.WakeUp)) {
       throw new Error('Le dinosaure ne peut pas se réveiller.');
     }
 
+    const event: DinosaurEvent = {
+      name: 'Réveil en pleine forme',
+      description: 'Le dinosaure se réveille prêt pour une nouvelle journée.',
+      energyChange: 0,
+      foodChange: 0,
+      hungerChange: 0,
+      weight: 1,
+    };
+
     dinosaur.isSleeping = false;
-    console.log('Le dinosaure s\'est réveillé.');
-    return dinosaur;
+    applyEventToDinosaur(dinosaur, event);
+    return { dinosaur, event };
   }
 
-  public resurrectDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public resurrectDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Resurrect)) {
       throw new Error('Le dinosaure ne peut pas être ressuscité.');
     }
 
+    const event: DinosaurEvent = {
+      name: 'Retour à la vie',
+      description: 'Le dinosaure est miraculeusement ressuscité avec des ressources moyennes.',
+      energyChange: BASE_ENERGY,
+      foodChange: BASE_FOOD,
+      hungerChange: -dinosaur.hunger,
+      weight: 1,
+    };
+
     dinosaur.isDead = false;
     dinosaur.isSleeping = false;
-    dinosaur.food = BASE_FOOD;
-    dinosaur.energy = BASE_ENERGY;
-    dinosaur.hunger = 0;
-    console.log('Le dinosaure a été ressuscité avec des statistiques réinitialisées.');
-    return dinosaur;
+    applyEventToDinosaur(dinosaur, event);
+    return { dinosaur, event };
   }
 
-  public grazeDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public grazeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Graze)) {
       throw new Error('Le dinosaure ne peut pas cueillir.');
     }
 
-    const amount = getRandomInt(MIN_FOOD_PER_GRAZE, MAX_FOOD_PER_GRAZE);
-    dinosaur.food = Math.min(dinosaur.food + amount, dinosaur.max_food);
-    dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_GRAZE, 0);
-    console.log(`Le dinosaure cueille. Nourriture : ${dinosaur.food}, énergie : ${dinosaur.energy}`);
+    const event = getRandomEventForAction(DinosaurAction.Graze);
+    applyEventToDinosaur(dinosaur, event);
 
-    return dinosaur;
+    return { dinosaur, event };
   }
 
-  public huntDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public huntDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
     if (!canPerformAction(dinosaur, DinosaurAction.Hunt)) {
       throw new Error('Le dinosaure ne peut pas chasser.');
     }
 
-    const amount = getRandomInt(MIN_FOOD_PER_HUNT, MAX_FOOD_PER_HUNT);
-    dinosaur.food = Math.min(dinosaur.food + amount, dinosaur.max_food);
-    dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_HUNT, 0);
-    console.log(`Le dinosaure chasse. Nourriture : ${dinosaur.food}, énergie : ${dinosaur.energy}`);
+    const event = getRandomEventForAction(DinosaurAction.Hunt);
+    applyEventToDinosaur(dinosaur, event);
 
-    return dinosaur;
+    return { dinosaur, event };
   }
 }
