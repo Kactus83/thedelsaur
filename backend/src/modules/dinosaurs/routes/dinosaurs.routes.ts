@@ -12,6 +12,9 @@ export default function (dinosaursController: DinosaursController): Router {
 
   // Route pour récupérer le dinosaure de l'utilisateur connecté
   router.get('/my-dinosaur', authenticateJWT, (req, res) => dinosaursController.getMyDinosaur(req, res));
+
+  // Route pour récupérer le dinosaure de l'utilisateur connecté
+  router.patch('/my-dinosaur/change-name', authenticateJWT, (req, res) => dinosaursController.changeDinosaurName(req, res));
   
   // Route pour récupérer les actions effectuables par le dinosaure de l'utilisateur connecté
   router.get('/my-dinosaur/actions', authenticateJWT, (req, res) => dinosaursController.getAvailableActionsForDinosaur(req, res));

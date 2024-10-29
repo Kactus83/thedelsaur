@@ -53,4 +53,29 @@ export class UsersService {
       throw err;
     }
   }
+
+  // Vérifie si un nom d'utilisateur est déjà utilisé
+  public async isUsernameTaken(username: string): Promise<boolean> {
+    try {
+      const [results] = await pool.query('SELECT id FROM user WHERE username = ?', [username]);
+      const users = results as User[];
+      return users.length > 0;
+    } catch (err) {
+      console.error('Erreur lors de la vérification de l\'unicité du nom d\'utilisateur:', err);
+      throw err;
+    }
+  }
+
+  // Met à jour le nom d'utilisateur d'un utilisateur spécifique
+  public async updateUsername(userId: number, newUsername: string): Promise<boolean> {
+    try {
+      const query = `UPDATE user SET username = ? WHERE id = ?`;
+      const [result] = await pool.query(query, [newUsername, userId]);
+      const res = result as any;
+      return res.affectedRows > 0;
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour du nom d\'utilisateur:', err);
+      throw err;
+    }
+  }
 }

@@ -99,4 +99,17 @@ export class DinosaursService {
       throw err;
     }
   }
+
+  // Méthode pour mettre à jour le nom d'un dinosaure par l'ID utilisateur
+  public async updateDinosaurName(userId: number, newName: string): Promise<boolean> {
+    try {
+      const query = `UPDATE dinosaur SET name = ? WHERE user_id = ?`;
+      const [result] = await pool.query(query, [newName, userId]);
+      const res = result as any;
+      return res.affectedRows > 0;
+    } catch (err) {
+      console.error('Erreur lors de la mise à jour du nom du dinosaure:', err);
+      throw err;
+    }
+  }
 }

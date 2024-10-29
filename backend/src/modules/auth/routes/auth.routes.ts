@@ -13,6 +13,8 @@ export default function (authController: AuthController): Router {
 
   router.post('/login', (req, res) => authController.login(req, res));
 
+  router.post('/reset-password', (req, res) => authController.login(req, res));
+
   router.post('/verify-token', (req, res) => authController.verifyToken(req, res));
 
   return router;

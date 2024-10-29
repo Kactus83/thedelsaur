@@ -80,4 +80,27 @@ export class AuthController {
       res.status(401).json({ message: error.message || 'Token invalide ou expiré' });
     }
   };
+
+  // Méthode pour réinitialiser le mot de passe
+  public resetPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email, currentPassword, newPassword } = req.body;
+
+      if (!email || !currentPassword || !newPassword) {
+        res.status(400).json({ message: 'Veuillez fournir tous les champs requis' });
+        return;
+      }
+
+      const resetSuccess = await this.authService.resetPassword(email, currentPassword, newPassword);
+      
+      if (resetSuccess) {
+        res.status(200).json({ message: 'Mot de passe réinitialisé avec succès' });
+      } else {
+        res.status(400).json({ message: 'Échec de la réinitialisation du mot de passe' });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
 }
