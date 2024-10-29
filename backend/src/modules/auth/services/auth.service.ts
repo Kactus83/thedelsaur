@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
-import { BASE_ENERGY, BASE_FOOD } from '../../../common/config/constants';
+import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER } from '../../../common/config/constants';
 import { generateRandomName, getRandomDiet } from '../utils/dinosaurs.util';
 
 dotenv.config();
@@ -59,13 +59,15 @@ export class AuthService {
     max_energy: number = BASE_ENERGY,
     food: number = BASE_FOOD,
     max_food: number = BASE_FOOD,
+    hunger: number = 0,
+    max_hunger: number = BASE_MAX_HUNGER,
     experience: number = 0,
     epoch: string = 'past'
   ): Promise<number> {
     try {
-      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, experience, epoch)
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, experience, epoch]);
+      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch]);
       const res = result as any;
       return res.insertId;
     } catch (err) {
