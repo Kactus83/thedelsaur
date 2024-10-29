@@ -13,7 +13,7 @@ import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/a
 // Définitions des chemins d'images de fond pour chaque époque
 const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
     past: '../../../public/assets/img/FirstTime.jpg',
-    present: '../../../public/assets/img/MidEpoch.jpg', // Nom provisoire, à corriger si nécessaire
+    present: '../../../public/assets/img/FourthTime.jpg', 
     future: '../../../public/assets/img/Cybercity.jpg',
 };
 
