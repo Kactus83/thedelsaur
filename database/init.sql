@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS dinosaur (
   max_energy INT NOT NULL,
   food INT NOT NULL,
   max_food INT NOT NULL,
+  hunger INT NOT NULL,
+  max_hunger INT NOT NULL,
   experience INT NOT NULL,
   epoch ENUM('past', 'present', 'future') NOT NULL DEFAULT 'past',
   isSleeping BOOLEAN DEFAULT FALSE,

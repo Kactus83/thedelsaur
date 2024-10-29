@@ -17,16 +17,18 @@ import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction } from '../utils/dinosaur-actions.util';
 
 export class DinosaurActionService {
-  public eatDinosaur(dinosaur: Dinosaur): Dinosaur {
+  public eatDinosaur(dinosaur: Dinosaur, amountToEat: number): Dinosaur {
     if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
       throw new Error('Le dinosaure ne peut pas manger.');
     }
 
-    const amount = getRandomInt(MIN_FOOD_PER_MEAL, MAX_FOOD_PER_MEAL);
-    dinosaur.food = Math.min(dinosaur.food + amount, dinosaur.max_food);
+    // Quantité de nourriture à consommer depuis le stock, limitée au maximum permis par les constantes
+    const amountConsumed = Math.min(amountToEat, dinosaur.food, MAX_FOOD_PER_MEAL);
+    dinosaur.food -= amountConsumed;
+    dinosaur.hunger = Math.max(0, dinosaur.hunger - amountConsumed);
     dinosaur.energy = Math.max(dinosaur.energy - ENERGY_COST_TO_EAT, 0);
-    console.log(`Le dinosaure mange. Nourriture : ${dinosaur.food}, énergie : ${dinosaur.energy}`);
 
+    console.log(`Le dinosaure mange ${amountConsumed} de nourriture. Stock restant: ${dinosaur.food}, faim réduite: ${dinosaur.hunger}, énergie : ${dinosaur.energy}`);
     return dinosaur;
   }
 
@@ -59,6 +61,7 @@ export class DinosaurActionService {
     dinosaur.isSleeping = false;
     dinosaur.food = BASE_FOOD;
     dinosaur.energy = BASE_ENERGY;
+    dinosaur.hunger = 0;
     console.log('Le dinosaure a été ressuscité avec des statistiques réinitialisées.');
     return dinosaur;
   }

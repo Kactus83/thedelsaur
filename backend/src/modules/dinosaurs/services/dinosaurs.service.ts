@@ -52,15 +52,17 @@ export class DinosaursService {
     max_energy: number = 10000,
     food: number = 10000,
     max_food: number = 10000,
+    hunger: number = 0,
+    max_hunger: number = 10000,
     experience: number = 0,
     epoch: string = 'past',
     isSleeping: boolean = false,
     isDead: boolean = false
   ): Promise<number> {
     try {
-      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, experience, epoch, isSleeping, isDead)
+      const query = `INSERT INTO dinosaur (name, user_id, diet, energy, max_energy, food, max_food, hunger, max_hunger experience, epoch, isSleeping, isDead)
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, experience, epoch, isSleeping, isDead]);
+      const [result] = await pool.query(query, [name, userId, diet, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, isSleeping, isDead]);
       const res = result as any;
       return res.insertId;
     } catch (err) {
