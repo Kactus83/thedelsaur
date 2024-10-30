@@ -1,0 +1,102 @@
+import { Dinosaur } from '../models/dinosaur.interface';
+import {
+  ENERGY_DECAY_RATE_PER_SECOND,
+  ENERGY_RECOVERY_RATE_PER_SECOND,
+  HUNGER_INCREASE_PER_SECOND,
+  HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
+  HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
+  HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
+  PAST_THRESHOLD_IN_SECONDS,
+  PRESENT_THRESHOLD_IN_SECONDS,
+} from '../../../common/config/constants';
+import { formatDateForMySQL } from '../../../common/utils/dateUtils';
+
+/**
+ * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
+ */
+export class DinosaurTimeService {
+  public adjustDinosaurStats(dinosaur: Dinosaur): Dinosaur {
+    if (!dinosaur || !dinosaur.last_update_by_time_service || dinosaur.food === undefined || dinosaur.energy === undefined || dinosaur.hunger === undefined) {
+      console.error('Les informations du dinosaure sont incomplètes ou invalides.');
+      return dinosaur;
+    }
+
+    if (dinosaur.isDead) {
+      console.log('Le dinosaure est mort. Les stats sont maintenues à zéro.');
+      dinosaur.food = 0;
+      dinosaur.energy = 0;
+      dinosaur.hunger = dinosaur.max_hunger;
+      return dinosaur;
+    }
+
+    // Calculer l'epoch du dinosaure
+    dinosaur.epoch = this.calculateEpoch(dinosaur.last_reborn);
+
+    const lastUpdated = new Date(dinosaur.last_update_by_time_service);
+    const now = new Date();
+    const timeElapsedInSeconds = Math.floor((now.getTime() - lastUpdated.getTime()) / 1000);
+
+    if (timeElapsedInSeconds > 0) {
+      if (dinosaur.isSleeping) {
+        // Régénération de l'énergie pendant le sommeil
+        const energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND;
+        dinosaur.energy = Math.min(dinosaur.max_energy, dinosaur.energy + energyRecovery);
+
+        // Augmentation plus lente de la faim pendant le sommeil
+        const hungerIncreaseWhileSleeping = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING;
+        dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncreaseWhileSleeping);
+      } else {
+        // Augmentation de la faim quand le dinosaure est éveillé
+        const hungerIncrease = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND;
+        dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncrease);
+
+        // Décroissance d'énergie normale lorsque le dinosaure est éveillé
+        const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND;
+        dinosaur.energy = Math.max(0, dinosaur.energy - energyDecay);
+
+        // Perte d'énergie supplémentaire due à la faim critique
+        if (dinosaur.hunger >= HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS) {
+          const hungerEnergyLoss = timeElapsedInSeconds * HUNGER_ENERGY_LOSS_RATE_PER_SECOND;
+          dinosaur.energy = Math.max(0, dinosaur.energy - hungerEnergyLoss);
+        }
+
+        // Si l'énergie atteint zéro, le dinosaure tombe en sommeil
+        if (dinosaur.energy === 0 && !dinosaur.isDead) {
+          dinosaur.isSleeping = true;
+          console.log('Le dinosaure est épuisé et se met en sommeil.');
+        }
+      }
+
+      // Vérifier la mort par faim
+      if (dinosaur.hunger >= dinosaur.max_hunger) {
+        dinosaur.isDead = true;
+        dinosaur.energy = 0;
+        console.log('Le dinosaure est mort de faim.');
+      }
+
+      // Mise à jour de la dernière date de mise à jour en format SQL
+      dinosaur.last_update_by_time_service = formatDateForMySQL(now);
+    }
+
+    return dinosaur;
+  }
+
+  /**
+   * Calcul l'epoch d'un dinosaure en fonction du temps écoulé depuis son dernier reborn.
+   * @param lastReborn La date du dernier reborn du dinosaure.
+   * @returns Le type d'epoch (past, present, future).
+   */
+  public calculateEpoch(lastReborn: string): 'past' | 'present' | 'future' {
+    const rebornDate = new Date(lastReborn);
+    const now = new Date();
+    const timeElapsedInSeconds = Math.floor((now.getTime() - rebornDate.getTime()) / 1000);
+
+    if (timeElapsedInSeconds < PAST_THRESHOLD_IN_SECONDS) {
+      return 'past';
+    } else if (timeElapsedInSeconds < PRESENT_THRESHOLD_IN_SECONDS) {
+      return 'present';
+    } else {
+      return 'future';
+    }
+  }
+}

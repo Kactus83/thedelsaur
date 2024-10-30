@@ -1,0 +1,1 @@
+export type EpochType = 'past' | 'present' | 'future';

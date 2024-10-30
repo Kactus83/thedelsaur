@@ -1,0 +1,1 @@
+export type DinosaurType = 'land' | 'air' | 'sea';

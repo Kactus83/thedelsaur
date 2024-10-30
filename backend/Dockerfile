@@ -1,23 +1,44 @@
-# Utiliser l'image officielle de Node.js avec une version LTS pour stabilité
-FROM node:16-alpine
+# Étape 1 : Build Stage
+FROM node:16-alpine AS builder
 
-# Installer les dépendances de build nécessaires pour bcrypt
-RUN apk add --no-cache make gcc g++ python3
+# Installer les dépendances de build pour bcrypt et d'autres modules natifs
+RUN apk add --no-cache make gcc g++ python3 git
 
-# Définir un répertoire de travail pour l'application
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier uniquement package.json et package-lock.json pour optimiser le cache Docker lors de l'installation des dépendances
+# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
 # Installer les dépendances
-RUN npm install --only=production
+RUN npm install
 
-# Copier le reste de l'application
+# Copier le reste du projet
 COPY . .
 
-# Exposer le port utilisé par votre application Express
+# Compiler le code TypeScript
+RUN npm run build
+
+# Étape 2 : Production Stage
+FROM node:16-alpine
+
+# Installer les dépendances nécessaires pour exécuter les modules natifs comme bcrypt
+RUN apk add --no-cache make gcc g++ python3 git
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers package.json et package-lock.json
+COPY package*.json ./
+
+# Installer les dépendances de production uniquement
+RUN npm install --only=production
+
+# Copier le code compilé depuis l'étape de build
+COPY --from=builder /app/dist ./dist
+
+# Exposer le port
 EXPOSE 3000
 
-# Lancer l'application via src/index.js
-CMD ["node", "src/index.js"]
+# Commande pour lancer l'application
+CMD ["node", "dist/index.js"]

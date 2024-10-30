@@ -1,31 +1,46 @@
-# Dinosaur Game README
+# Getting Started with Create React App
 
-Welcome to the Dinosaur Game! This game is inspired by the classic Tamagotchi, where you take care of a virtual pet dinosaur. 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Installation
+## Available Scripts
 
-To play the Dinosaur Game, follow these steps:
+In the project directory, you can run:
 
-1. Open the terminal and navigate to the frontend directory.
-2. Run the command `npm install axios` to install the required dependencies.
-3. Run the command `npm start` to start the game.
+### `npm start`
 
-## Gameplay
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-In the Dinosaur Game, you will be responsible for taking care of your virtual pet dinosaur. You need to feed it, play with it, and make sure it stays happy and healthy.
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-### Controls
+### `npm test`
 
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
+### `npm run build`
 
-### Scoring
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Your score in the game will be based on how well you take care of your dinosaur. The happier and healthier your dinosaur is, the higher your score will be.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-## Contributing
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-If you would like to contribute to the Dinosaur Game, feel free to submit a pull request. We welcome any improvements or new features you may have.
+### `npm run eject`
 
-## License
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-The Dinosaur Game is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).

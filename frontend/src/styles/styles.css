@@ -1,0 +1,42 @@
+/* Variables CSS */
+:root {
+    --primary-color: #0275d8;
+    --primary-hover-color: #025aa5;
+    --overlay-background: rgba(0, 0, 0, 0.6);
+    --form-background: rgba(255, 255, 255, 0.95);
+    --button-background: #212121;
+    --button-border-color: #fff;
+    --input-border-color: #ccc;
+    --input-border-radius: 5px;
+    --input-padding: 10px;
+    --icon-color: #fff;
+    --icon-hover-color: #ccc;
+}
+
+/* Réinitialisation des marges et hauteurs */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Peanut', sans-serif;
+    font-size: 1.2rem;
+}
+
+/* Importation de la police */
+@font-face {
+    font-family: "Peanut";
+    src: url("../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
+}
+
+/* Styles globaux */
+body {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+}
