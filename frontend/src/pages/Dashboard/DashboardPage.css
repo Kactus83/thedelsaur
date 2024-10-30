@@ -1,0 +1,244 @@
+body, html {
+    text-align: center;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    font-family: 'Peanut', sans-serif;
+    font-size: 1.2rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#main {
+    height: 87vh;
+    width: 100%;
+    overflow-y: hidden;
+    z-index: 0;
+
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-content: stretch;
+    align-items: stretch;
+}
+
+#Infos {
+    margin: 2px;
+    flex-grow: 1;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#Middle {
+    margin: 2px;
+    flex-grow: 500;
+    background-color: rgba(0, 149, 255, 0);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#Actions {
+    margin: 2px;
+    flex-grow: 145;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.topMiddle {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+    flex-grow: 0.5; 
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.xp-bar{
+
+}
+.xp-progress{
+
+}
+
+.bottomMiddle {
+    margin: 2px;
+    background: rgba(255, 255, 255, 0);
+
+    display: flex;
+    flex-grow: 6;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.middleContent {
+    margin: 2px;
+    background: rgba(255, 255, 255, 0.0);
+
+    display: flex;
+    flex-grow: 6;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.middleContent img.dino-svg {
+    width: 100%;
+    max-width: 200px;
+    margin: 10px auto;
+    display: block;
+}
+
+
+.InRight {
+    margin: 2px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+
+    display: flex;
+    flex-grow: 5;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 20rem;
+}
+
+
+/* Mobile layout */
+@media only screen and (max-width: 768px) {
+    #main {
+        flex-direction: column;
+        margin-top: 6vh;
+    }
+
+    #Infos {
+        width: 99%;
+        flex-grow: 1;
+    }
+
+    #Actions {
+        width: 99%;
+        flex-grow: 3;
+        /* position: relative; Pour positionner le bouton correctement */
+    }
+
+    #Middle {
+        width: 99%;
+        flex-grow: 10;
+    }
+
+    .user-infos, .dino-infos, .topMiddle, .bottomMiddle, .InRight, .Title {
+        width: 90%;
+        margin: 10px auto;
+    }
+
+    .dino-infos {
+        display: none;
+    }
+
+    .usersDisplay {
+        flex-grow: 0.5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .Title {
+        display: none;
+    }
+    .mobile-title {
+        display: block;
+    }
+
+    /* Ajustement de l'image du dinosaure */
+    .middleContent img.dino-svg {
+        max-width: 200px;
+    }
+
+    /* Affichage du bouton de l'overlay */
+    .overlay-button {
+        display: flex; /* Affiché uniquement en mode mobile */
+    }
+.div-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+    /* Styles de l'overlay */
+    .overlay {
+        display: none; /* Masqué par défaut */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Afficher l'overlay quand il est actif */
+    .overlay.active {
+        display: flex;
+    }
+
+    /* Contenu de l'overlay */
+    .overlay-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 400px;
+        position: relative;
+        overflow-y: auto;
+        max-height: 80%;
+    }
+
+    /* Bouton de fermeture */
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+
+    /* Styles pour les statistiques du dinosaure dans l'overlay */
+    .dino-infos-overlay h3, .dino-infos-overlay p {
+        margin: 10px 0;
+        text-align: left;
+        padding: 0 10px;
+    }
+}
+
+/* Font-face pour Peanut */
+@font-face {
+    font-family:"Peanut";
+    src: url("../../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
+}

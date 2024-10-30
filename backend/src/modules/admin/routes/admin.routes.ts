@@ -1,0 +1,29 @@
+import { Router } from 'express';
+import { authenticateJWT } from '../../auth/middlewares/authMiddleware';
+import { authorizeAdmin } from '../../auth/middlewares/authorizeAdmin';
+import { AdminController } from '../controllers/admin.controller';
+
+/**
+ * Définit les routes pour l'administration.
+ * @param adminController Instance de AdminController.
+ * @returns Router avec les routes d'administration.
+ */
+export default function (adminController: AdminController): Router {
+  const router = Router();
+
+  // Routes pour la gestion des utilisateurs
+  router.get('/users', authenticateJWT, authorizeAdmin, (req, res) => adminController.getAllUsers(req, res));
+  router.get('/users/username/:username', authenticateJWT, authorizeAdmin, (req, res) => adminController.getUserByUsername(req, res));
+  router.get('/users/email/:email', authenticateJWT, authorizeAdmin, (req, res) => adminController.getUserByEmail(req, res));
+  router.get('/users/:id', authenticateJWT, authorizeAdmin, (req, res) => adminController.getUserById(req, res));
+  router.delete('/users/:id', authenticateJWT, authorizeAdmin, (req, res) => adminController.deleteUser(req, res));
+
+  // Routes pour la gestion des dinosaures
+  router.get('/dinosaurs', authenticateJWT, authorizeAdmin, (req, res) => adminController.getAllDinosaurs(req, res));
+  router.get('/dinosaurs/:id', authenticateJWT, authorizeAdmin, (req, res) => adminController.getDinosaurById(req, res));
+  router.post('/dinosaurs', authenticateJWT, authorizeAdmin, (req, res) => adminController.createDinosaur(req, res));
+  router.put('/dinosaurs/:id', authenticateJWT, authorizeAdmin, (req, res) => adminController.updateDinosaur(req, res));
+  router.delete('/dinosaurs/:id', authenticateJWT, authorizeAdmin, (req, res) => adminController.deleteDinosaur(req, res));
+
+  return router;
+}
