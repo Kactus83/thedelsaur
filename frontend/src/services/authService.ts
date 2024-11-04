@@ -5,7 +5,8 @@ import { LoginResponse } from '../types/Auth';
 
 // Interface définissant les données nécessaires pour la connexion
 interface LoginData {
-    email: string;
+    email?: string;
+    username?: string;
     password: string;
 }
 

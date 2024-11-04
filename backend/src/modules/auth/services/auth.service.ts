@@ -197,24 +197,40 @@ export class AuthService {
   }
 
   // Connexion de l'utilisateur
-  public async login(email: string, password: string): Promise<{ token: string; user: User }> {
+  public async login(identifier: string, password: string): Promise<{ token: string; user: User }> {
     try {
-      const user = await this.findUserByEmail(email);
+      // Recherche l'utilisateur par email ou pseudo
+      const user = identifier.includes('@')
+        ? await this.findUserByEmail(identifier)
+        : await this.findUserByUsername(identifier);
+  
       if (!user) {
         throw new Error('Utilisateur non trouvé');
       }
-
+  
       const passwordValid = await this.checkPassword(password, user.password_hash);
       if (!passwordValid) {
         throw new Error('Identifiants invalides');
       }
-
+  
       const token = this.generateToken(user);
-
+  
       return { token, user };
     } catch (error) {
       console.error('Erreur lors de la connexion:', error);
       throw error;
+    }
+  }
+  
+  // Ajout de la méthode pour trouver un utilisateur par pseudo
+  private async findUserByUsername(username: string): Promise<User | null> {
+    try {
+      const [results] = await pool.query('SELECT * FROM user WHERE username = ?', [username]);
+      const users = results as User[];
+      return users.length > 0 ? users[0] : null;
+    } catch (err) {
+      console.error('Erreur lors de la récupération de l\'utilisateur par username:', err);
+      throw err;
     }
   }
 

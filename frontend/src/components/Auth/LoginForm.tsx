@@ -9,10 +9,16 @@ interface LoginFormProps {
     onClose: () => void; // Fonction pour fermer le formulaire
 }
 
+// Fonction utilitaire pour vérifier si une chaîne est un email valide
+const isEmail = (input: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(input);
+};
+
 // Définition du composant fonctionnel LoginForm
 const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
     // États pour gérer les champs du formulaire et les messages
-    const [email, setEmail] = useState<string>(''); // Email
+    const [identifier, setIdentifier] = useState<string>(''); // Email ou pseudo
     const [password, setPassword] = useState<string>(''); // Mot de passe
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null); // Message de succès ou d'erreur
     const [show, setShow] = useState<boolean>(false); // État pour gérer l'animation d'apparition
@@ -26,10 +32,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
     // Fonction appelée lors de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Empêche le comportement par défaut du formulaire
+
+        // Préparer les données de connexion en fonction de la nature de l'identifiant
+        const loginData = isEmail(identifier)
+            ? { email: identifier, password }
+            : { username: identifier, password };
+
         try {
             console.log("submit login");
             // Appel au service de connexion avec les données du formulaire
-            const data: LoginResponse = await login({ email, password });
+            const data: LoginResponse = await login(loginData);
             // Stockage du token JWT dans le localStorage
             localStorage.setItem('token', data.token);
             console.log("token received : ", data.token);
@@ -63,11 +75,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
             {/* Formulaire de connexion */}
             <form onSubmit={handleSubmit}>
                 <input
-                    type="email"
-                    id="login-email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    id="login-identifier"
+                    placeholder="Email ou Pseudo"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     required
                 />
                 <input
