@@ -3,6 +3,7 @@ import { AdminService } from '../services/admin.service';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from '../../users/models/user.dto';
 import { DinosaurDTO } from '../../dinosaurs/models/dinosaur.dto';
+import { getExperienceThresholdForLevel } from '../../dinosaurs/utils/dinosaur-actions.util';
 
 export class AdminController {
   private adminService: AdminService;
@@ -10,6 +11,20 @@ export class AdminController {
   constructor(adminService: AdminService) {
     this.adminService = adminService;
   }
+
+  public getLevelsXpTable = async (req: Request, res: Response) => {
+    try {
+      const levelsXp = [];
+      for (let level = 1; level <= 100; level++) {
+        const xpRequired = getExperienceThresholdForLevel(level);
+        levelsXp.push({ level, xpRequired });
+      }
+      res.status(200).json(levelsXp);
+    } catch (error) {
+      console.error('Erreur dans getLevelsXpTable:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
 
   // Récupérer tous les utilisateurs
   public getAllUsers = async (req: Request, res: Response) => {

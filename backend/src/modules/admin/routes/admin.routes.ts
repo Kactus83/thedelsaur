@@ -11,6 +11,9 @@ import { AdminController } from '../controllers/admin.controller';
 export default function (adminController: AdminController): Router {
   const router = Router();
 
+  // Route pour obtenir le tableau des niveaux avec les paliers d'expérience
+  router.get('/levels-xp-table', authenticateJWT, authorizeAdmin, (req, res) => adminController.getLevelsXpTable(req, res));
+
   // Routes pour la gestion des utilisateurs
   router.get('/users', authenticateJWT, authorizeAdmin, (req, res) => adminController.getAllUsers(req, res));
   router.get('/users/username/:username', authenticateJWT, authorizeAdmin, (req, res) => adminController.getUserByUsername(req, res));
