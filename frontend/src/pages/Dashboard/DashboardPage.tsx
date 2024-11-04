@@ -131,7 +131,7 @@ const DashboardPage: React.FC = () => {
                         {/* Barre XP indiquant l'expérience du dinosaure */}
                         
                         <Gauge_XP
-                            label="Expérience"
+                            label={`level: ${dinosaur ? dinosaur.level : "NaN"}`}
                             current={experience}
                             max={max_experience}
                             color="blue"

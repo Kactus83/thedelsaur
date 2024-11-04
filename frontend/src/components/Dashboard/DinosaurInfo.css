@@ -53,3 +53,14 @@
     border-style: solid;
     border-color: #555 transparent transparent transparent;
 }
+@media (max-width: 768px) {
+    /* Masquer complètement l'élément tooltip en mode responsive */
+    .tooltip {
+        display: none;
+    }
+    
+    /* Masquer les informations non nécessaires */
+    .notDisplayed {
+        display: none;
+    }
+}
