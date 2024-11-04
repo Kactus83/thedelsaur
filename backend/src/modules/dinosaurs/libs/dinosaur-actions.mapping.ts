@@ -60,4 +60,12 @@ export const DinosaurActionsMap: Record<DinosaurAction, DinosaurActionDetails> =
     endpoint: 'dinosaurs/actions/discover',
     image: '/assets/img/actions/discover.png',
   },
+  [DinosaurAction.Steal]: {
+    levelRequired: 4,
+    name: 'Voler',
+    description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+    canPerform: (dinosaur: Dinosaur) => canPerformAction(dinosaur, DinosaurAction.Steal),
+    endpoint: 'dinosaurs/actions/steal',
+    image: '/assets/img/actions/steal.png',
+  },
 };

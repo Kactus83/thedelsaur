@@ -8,6 +8,7 @@ import {
   ENERGY_COST_TO_DISCOVER,
   ENERGY_COST_TO_GRAZE,
   ENERGY_COST_TO_HUNT,
+  ENERGY_COST_TO_STEAL,
   EXP_GROWTH_FACTOR,
   LEVEL_MODIFIER,
   MAX_ENERGY_NO_SLEEP,
@@ -43,6 +44,8 @@ export function canPerformAction(dinosaur: Dinosaur, action: DinosaurAction): bo
       return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_HUNT && dinosaur.diet !== 'herbivore';
     case DinosaurAction.Discover:
       return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_DISCOVER;
+    case DinosaurAction.Steal:
+      return !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_STEAL;
     default:
       return false;
   }
@@ -102,6 +105,7 @@ export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): 
   dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
   dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
   dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
+  dinosaur.karma = Math.max(dinosaur.karma + event.karmaChange, 0);
   dinosaur.experience += event.experienceChange;
 
   if(event.typeChange) {

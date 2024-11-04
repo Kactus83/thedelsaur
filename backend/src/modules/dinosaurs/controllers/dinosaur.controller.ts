@@ -436,4 +436,41 @@ export class DinosaursController {
       res.status(500).json({ message: 'Erreur interne du serveur' });
     }
   }
+
+  public stealDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
+      }
+
+      let dinosaur = await this.dinosaursService.getDinosaurByUserId(userId);
+      if (!dinosaur) {
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
+      }
+
+      const { dinosaur: updatedDino, event } = this.dinosaurActionService.stealDinosaur(dinosaur);
+      dinosaur = updatedDino;
+
+      await this.dinosaursService.updateDinosaur(dinosaur.id, {
+        food: dinosaur.food,
+        energy: dinosaur.energy,
+        hunger: dinosaur.hunger,
+        last_update_by_time_service: dinosaur.last_update_by_time_service,
+        isDead: dinosaur.isDead,
+        isSleeping: dinosaur.isSleeping,
+        level: dinosaur.level,
+        epoch: dinosaur.epoch,
+        experience: dinosaur.experience,
+      });
+
+      const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
+      res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+    } catch (error) {
+      console.error('Erreur lors de l\'action voler du dinosaure:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  }
 }

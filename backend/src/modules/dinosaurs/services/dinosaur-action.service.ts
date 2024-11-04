@@ -27,6 +27,7 @@ export class DinosaurActionService {
                   energyChange: 0,
                   foodChange: 0,
                   hungerChange: 0,
+                  karmaChange: 0,
                   weight: 1,
               },
           };
@@ -41,6 +42,7 @@ export class DinosaurActionService {
           energyChange: 0,
           foodChange: -foodNeeded,  // Consomme la quantité calculée de nourriture
           hungerChange: -foodNeeded, // Réduit la faim par la même quantité
+          karmaChange: 0,
           weight: 1,
       };
 
@@ -123,6 +125,17 @@ export class DinosaurActionService {
     }
 
     const event = getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
+    applyEventToDinosaur(dinosaur, event);
+
+    return { dinosaur, event };
+  }
+
+  public stealDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    if (!canPerformAction(dinosaur, DinosaurAction.Steal)) {
+      throw new Error('Le dinosaure ne peut pas voler.');
+    }
+
+    const event = getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
     applyEventToDinosaur(dinosaur, event);
 
     return { dinosaur, event };

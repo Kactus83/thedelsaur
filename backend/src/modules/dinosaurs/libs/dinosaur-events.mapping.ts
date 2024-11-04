@@ -1,6 +1,6 @@
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, ENERGY_COST_TO_DISCOVER, ENERGY_COST_TO_GRAZE, ENERGY_COST_TO_HUNT } from '../../../common/config/constants';
+import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, ENERGY_COST_TO_DISCOVER, ENERGY_COST_TO_GRAZE, ENERGY_COST_TO_HUNT, ENERGY_COST_TO_STEAL } from '../../../common/config/constants';
 
 export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
   // Actions avec un seul événement
@@ -13,6 +13,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: 0,
       foodChange: 0, // defini dans le service
       hungerChange: -500,
+      karmaChange: 0,
       weight: 1, 
     },
   ],
@@ -25,6 +26,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: 0,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 1,
     },
   ],
@@ -37,6 +39,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: 0,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 2,
     },
     {
@@ -47,6 +50,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -500,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 1,
     },
     {
@@ -57,6 +61,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -100,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 5,
     },
   ],
@@ -69,6 +74,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: BASE_ENERGY,
       foodChange: BASE_FOOD,
       hungerChange: 0,
+      karmaChange: 0,
       typeChange: "land",
       weight: 5,
     },
@@ -80,6 +86,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: BASE_ENERGY,
       foodChange: BASE_FOOD,
       hungerChange: 0,
+      karmaChange: 0,
       typeChange: "sea",
       weight: 5,
     },
@@ -91,6 +98,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: BASE_ENERGY,
       foodChange: BASE_FOOD,
       hungerChange: 0,
+      karmaChange: 0,
       typeChange: "air",
       weight: 5,
     },
@@ -105,6 +113,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 2500,
       hungerChange: -100,
+      karmaChange: 0,
       weight: 5,
     },
     {
@@ -115,6 +124,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 2000,
       hungerChange: -50,
+      karmaChange: 0,
       weight: 3,
     },
     {
@@ -125,6 +135,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_GRAZE * 2,
       foodChange: 2000,
       hungerChange: -50,
+      karmaChange: 0,
       weight: 3,
     },
     {
@@ -135,6 +146,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_GRAZE,
       foodChange: 1000,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 2,
     },
     {
@@ -145,6 +157,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_GRAZE * 2,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 2,
     },
   ],
@@ -157,6 +170,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_HUNT,
       foodChange: 3000,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 1,
     },
     {
@@ -167,6 +181,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_HUNT,
       foodChange: 2500,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 3,
     },
     {
@@ -177,6 +192,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_HUNT * 2,
       foodChange: 1500,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 3,
     },
     {
@@ -187,6 +203,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_HUNT,
       foodChange: 1000,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 2,
     },
     {
@@ -197,6 +214,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_HUNT,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 1,
     },
   ],
@@ -209,6 +227,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_DISCOVER,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 2,
     },
     {
@@ -219,6 +238,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_DISCOVER,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 4,
     },
     {
@@ -229,6 +249,7 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_DISCOVER,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 14,
     },
     {
@@ -239,7 +260,65 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
       energyChange: -ENERGY_COST_TO_DISCOVER,
       foodChange: 0,
       hungerChange: 0,
+      karmaChange: 0,
       weight: 5,
+    },
+  ],
+  [DinosaurAction.Steal]: [
+    {
+      name: 'Vol réussi',
+      description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+      minLevel: 0,
+      experienceChange: 500,
+      energyChange: -ENERGY_COST_TO_STEAL,
+      foodChange: 4000,
+      hungerChange: 0,
+      karmaChange: -500,
+      weight: 1,
+    },
+    {
+      name: 'Vol modéré',
+      description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+      minLevel: 0,
+      experienceChange: 250,
+      energyChange: -ENERGY_COST_TO_STEAL,
+      foodChange: 3000,
+      hungerChange: 0,
+      karmaChange: -250,
+      weight: 3,
+    },
+    {
+      name: 'Vol modéré, mais épuisant',
+      description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+      minLevel: 0,
+      experienceChange: 500,
+      energyChange: -ENERGY_COST_TO_STEAL * 2,
+      foodChange: 3000,
+      hungerChange: 0,
+      karmaChange: -250,
+      weight: 3,
+    },
+    {
+      name: 'Vol difficile',
+      description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+      minLevel: 0,
+      experienceChange: 500,
+      energyChange: -ENERGY_COST_TO_HUNT,
+      foodChange: 1500,
+      hungerChange: 0,
+      karmaChange: -250,
+      weight: 2,
+    },
+    {
+      name: 'Vol infructueux',
+      description: 'Le dinosaure n’a pas réussi à voler de ressources.',
+      minLevel: 0,
+      experienceChange: 500,
+      energyChange: -ENERGY_COST_TO_HUNT,
+      foodChange: 0,
+      hungerChange: 0,
+      karmaChange: -250,
+      weight: 1,
     },
   ],
 };

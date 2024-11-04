@@ -7,6 +7,7 @@ export interface DinosaurEvent {
     foodChange: number;          // Variation de la nourriture
     hungerChange: number;        // Variation de la faim
     experienceChange: number;    // Variation de l'expérience
+    karmaChange: number;        // Variation du karma
     typeChange?: DinosaurType;          // Variation du type
     minLevel: number,
     weight: number;              // Facteur de probabilité (poids)
