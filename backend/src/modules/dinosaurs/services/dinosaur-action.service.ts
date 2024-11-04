@@ -6,6 +6,11 @@ import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/
 import { getRandomDiet } from '../../auth/utils/dinosaurs.util';
 
 export class DinosaurActionService {
+
+    // Conversion de la date pour le format compatible MySQL
+    private formatDateForMySQL(date: Date): string {
+      return date.toISOString().slice(0, 19).replace('T', ' ');
+    }
   
     public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
       if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
@@ -88,7 +93,7 @@ export class DinosaurActionService {
     dinosaur.energy = 0;
     dinosaur.food = 0;
     dinosaur.hunger = 0;
-    dinosaur.last_reborn = new Date().toISOString();
+    dinosaur.last_reborn = this.formatDateForMySQL(new Date());
     dinosaur.experience = 0;
     dinosaur.level = 1;
     dinosaur.reborn_amount = dinosaur.reborn_amount + 1;
