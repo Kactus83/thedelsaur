@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchDinosaurActions } from '../../services/dinosaurService';
+import { fetchDinosaurActions , getNextLevelXp} from '../../services/dinosaurService';
 import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions, { ActionDetail } from '../../components/Dashboard/Actions';
 import EventOverlay from '../../components/Dashboard/EventOverlay'; 
@@ -94,8 +94,10 @@ const DashboardPage: React.FC = () => {
     // Calcul de la largeur de la barre XP avec une limite à 100%
     const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
 
-    const experience = dinosaur ? dinosaur.experience : 100 ;
-    const max_experience = experience *2;
+    const max_experience = getNextLevelXp;
+    console.log('Test LOG EXP :')
+    console.log(max_experience)
+    const experience = dinosaur ? dinosaur.experience : 0;
 
     return (
         <>
@@ -117,12 +119,12 @@ const DashboardPage: React.FC = () => {
                     {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
-
+                        
                         <Gauge_XP
                             label="Expérience"
                             current={experience}
-                            max={max_experience}
-                            color="yellow"
+                            max={10000}
+                            color="blue"
                             tooltipText={`test`}
                         />
                     </div>
