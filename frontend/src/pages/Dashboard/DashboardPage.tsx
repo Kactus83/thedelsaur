@@ -26,6 +26,7 @@ const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
 const DashboardPage: React.FC = () => {
     // États pour stocker les informations de l'utilisateur et du dinosaure
     const [user, setUser] = useState<User | null>(null);
+    const [max_experience, setMAX_XP] = useState <number>(0);
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
     const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
     const [lastEvent, setLastEvent] = useState<string | null>(null); // État pour l'événement affiché
@@ -41,12 +42,23 @@ const DashboardPage: React.FC = () => {
             const fetchedDinosaur = await fetchDinosaurFromBackend();
             // Récupération des actions disponibles depuis le backend
             const fetchedActions = await fetchDinosaurActions();
+    
+            // Récupération de l'expérience maximale du prochain niveau
+            const maxExperienceResponse = await getNextLevelXp();
+    
+            // Supposons que l'API retourne un objet { nextLevelXp: 1000 }
+            // Extraire directement la valeur numérique
+            const maxExperience = maxExperienceResponse.nextLevelXp; 
+    
+            console.log("max xp :", maxExperience);
+    
             // Mise à jour des états avec les données récupérées
+            setMAX_XP(maxExperience);
             setUser(fetchedUser);
             setDinosaur(fetchedDinosaur);
             setAvailableActions(fetchedActions.availableActions);
         } catch (error) {
-            console.error('Erreur lors de l\'initialisation de la page :', error);
+            console.error("Erreur lors de l'initialisation de la page :", error);
             // Optionnel : Rediriger vers la page d'accueil ou afficher un message d'erreur
         }
     };
@@ -94,9 +106,7 @@ const DashboardPage: React.FC = () => {
     // Calcul de la largeur de la barre XP avec une limite à 100%
     const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
 
-    const max_experience = getNextLevelXp;
-    console.log('Test LOG EXP :')
-    console.log(max_experience)
+
     const experience = dinosaur ? dinosaur.experience : 0;
 
     return (
@@ -123,7 +133,7 @@ const DashboardPage: React.FC = () => {
                         <Gauge_XP
                             label="Expérience"
                             current={experience}
-                            max={10000}
+                            max={max_experience}
                             color="blue"
                             tooltipText={`test`}
                         />
