@@ -36,12 +36,14 @@
 /* Table des utilisateurs */
 #user-management {
     margin-top: 20px;
+
 }
 
 #user-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    
 }
 
 #user-table th,
@@ -49,6 +51,7 @@
     border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
+    border: 1px solid black;
 }
 
 #user-table th {
@@ -103,6 +106,9 @@
 /* Table des niveaux */
 #level-xp-table {
     margin-top: 40px;
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid black;
 }
 
 #level-xp-table table {
@@ -178,4 +184,23 @@
 
 .close:hover {
     color: #dc3545;
+}
+
+/* Fond de la page */
+.Main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative; 
+    text-align: center;
+    overflow: hidden;
+    margin: 0;
+    font-family: 'Peanut', sans-serif;
+    font-size: 1.2rem;
+    background-image: url('../../../public/assets/img/Cybercity.jpg'); /* Chemin relatif à partir de HomePage.css */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
