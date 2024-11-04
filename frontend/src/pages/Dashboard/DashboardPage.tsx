@@ -10,6 +10,7 @@ import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
+import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 
 // Définitions des chemins d'images de fond pour chaque époque
 const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
@@ -93,6 +94,9 @@ const DashboardPage: React.FC = () => {
     // Calcul de la largeur de la barre XP avec une limite à 100%
     const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
 
+    const experience = dinosaur ? dinosaur.experience : 100 ;
+    const max_experience = experience *2;
+
     return (
         <>
             {/* Overlay d'image dynamique */}
@@ -113,10 +117,14 @@ const DashboardPage: React.FC = () => {
                     {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
-                        <div className="xp-bar">
-                            {/* Barre de progression dont la largeur est proportionnelle à l'expérience */}
-                            <div className="xp-progress" style={{ width: `${xpWidth}%` }}></div>
-                        </div>
+
+                        <Gauge_XP
+                            label="Expérience"
+                            current={experience}
+                            max={max_experience}
+                            color="yellow"
+                            tooltipText={`test`}
+                        />
                     </div>
                     {/* Partie inférieure de la section Middle */}
                     <div className="bottomMiddle">
