@@ -12,6 +12,7 @@ exports.getMyProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé pour l id', userId });
     }
+    // Retirer le mot de passe 
     user.password_hash = "";
     res.status(200).json(user);
   } catch (error) {
