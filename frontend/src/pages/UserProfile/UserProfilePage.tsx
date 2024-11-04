@@ -36,8 +36,9 @@ const UserProfilePage: React.FC = () => {
 
     return (
         <>
-            <Header />
-            <div id="main">
+            
+            <div id="main2">
+                <Header />
                 <div className="user-profile-page">
                     <div className="user-info">
                         <h2>Profil Utilisateur</h2>
@@ -87,8 +88,9 @@ const UserProfilePage: React.FC = () => {
                         <button onClick={handleEditName}>Modifier le nom</button>
                     </div>
                 </div>
+              <Footer />
             </div>
-            <Footer />
+
         </>
     );
 };
