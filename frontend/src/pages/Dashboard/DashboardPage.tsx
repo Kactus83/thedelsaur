@@ -87,7 +87,7 @@ const DashboardPage: React.FC = () => {
      */
     const handleEventDisplay = (eventMessage: string) => {
         setLastEvent(eventMessage);
-        setTimeout(() => setLastEvent(null), 2000); // Cache l'overlay après 3 secondes
+        setTimeout(() => setLastEvent(null), 1200); // Cache l'overlay après 3 secondes
     };
 
     // Initialiser les données au montage du composant
