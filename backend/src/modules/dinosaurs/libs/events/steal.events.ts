@@ -26,7 +26,7 @@ export const stealEvents: DinosaurEvent[] = [
   },
   {
     name: 'Vol modéré, mais épuisant',
-    description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+    description: 'Le dinosaure se fatigue plus que prévu en volant des ressources à un autre dinosaure.',
     minLevel: 4,
     experienceChange: 500,
     energyChange: -ENERGY_COST_TO_STEAL * 2,
@@ -37,7 +37,7 @@ export const stealEvents: DinosaurEvent[] = [
   },
   {
     name: 'Vol difficile',
-    description: 'Le dinosaure vole des ressources à un autre dinosaure.',
+    description: 'Le dinosaure vole un maigre butin.',
     minLevel: 4,
     experienceChange: 500,
     energyChange: -ENERGY_COST_TO_STEAL,

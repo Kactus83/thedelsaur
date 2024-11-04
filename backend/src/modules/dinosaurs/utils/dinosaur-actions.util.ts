@@ -105,7 +105,8 @@ export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): 
   dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
   dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
   dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
-  dinosaur.karma = Math.max(dinosaur.karma + event.karmaChange, 0);
+  dinosaur.karma += event.karmaChange;
+
   dinosaur.experience += event.experienceChange;
 
   if(event.typeChange) {
