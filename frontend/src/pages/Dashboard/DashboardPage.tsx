@@ -68,16 +68,16 @@ const DashboardPage: React.FC = () => {
      */
     const refreshDinosaur = async () => {
         try {
-            // Récupération des données dinosaure mises à jour depuis le backend
             const updatedDinosaur = await fetchDinosaurFromBackend();
-            // Récupération des actions disponibles mises à jour depuis le backend
             const updatedActions = await fetchDinosaurActions();
-            // Mise à jour des états avec les nouvelles données
+            const maxExperienceResponse = await getNextLevelXp();
+            const maxExperience = maxExperienceResponse.nextLevelXp;
+
             setDinosaur(updatedDinosaur);
             setAvailableActions(updatedActions.availableActions);
+            setMAX_XP(maxExperience);
         } catch (error) {
             console.error('Erreur lors de la mise à jour des données du dinosaure :', error);
-            // Optionnel : Afficher un message d'erreur à l'utilisateur
         }
     };
 
