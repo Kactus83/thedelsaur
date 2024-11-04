@@ -12,20 +12,6 @@
     position: relative;
 }
 
-/* Icône de gestion des utilisateurs en haut à droite */
-.user-management-icon {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    font-size: 2em;
-    color: var(--icon-color);
-    z-index: 1000;
-    cursor: pointer;
-}
-
-.user-management-icon:hover {
-    color: var(--icon-hover-color);
-}
 
 /* Bloc central avec un fond semi-transparent */
 .central-block {
