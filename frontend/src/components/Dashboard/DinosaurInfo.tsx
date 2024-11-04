@@ -24,7 +24,7 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
     return (
         <div className="dinosaur-info">
             <h3>Dinosaure : {dinosaur.name}</h3>
-            <p><strong>Niveau</strong> : {dinosaur.level}</p>
+            <p className='notDisplayed'><strong>Niveau</strong> : {dinosaur.level}</p>
             <p><strong>Régime alimentaire</strong> : {capitalizeFirstLetter(dinosaur.diet)}</p>
             <p><strong>Type</strong> : {capitalizeFirstLetter(dinosaur.type)}</p>
 
@@ -51,8 +51,8 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
                 tooltipText={`Herbi : ${dinosaur.multipliers.earn_herbi_food_multiplier}x, Carni : ${dinosaur.multipliers.earn_carni_food_multiplier}x, Global : ${dinosaur.multipliers.earn_food_multiplier}x`}
             />
 
-            <p><strong>Expérience</strong> : {dinosaur.experience}</p>
-            <p className="tooltip">
+            <p className='notDisplayed'><strong>Expérience</strong> : {dinosaur.experience}</p>
+            <p className="tooltip ">
                 <strong>Âge</strong> : {calculateDinosaurAge(dinosaur.last_reborn)}
                 <span className="tooltip-text">
                     Multiplieur Expérience : {dinosaur.multipliers.earn_experience_multiplier}x
@@ -61,8 +61,8 @@ const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
             <p><strong>Époque</strong> : {dinosaur.epoch}</p>
             <p><strong>Nombre de renaissances</strong> : {dinosaur.reborn_amount}</p>
             <p><strong>Karma</strong> : {dinosaur.karma}</p>
-            <p><strong>Créé le </strong>: {new Date(dinosaur.created_at).toLocaleDateString()}</p>
-            <p><strong>Dernière mise à jour</strong> : {new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
+            <p className='notDisplayed'><strong>Créé le </strong>: {new Date(dinosaur.created_at).toLocaleDateString()}</p>
+            <p className='notDisplayed'><strong>Dernière mise à jour</strong> : {new Date(dinosaur.last_update_by_time_service).toLocaleDateString()}</p>
             <p><strong>En Sommeil</strong> : {dinosaur.isSleeping ? 'Oui' : 'Non'}</p>
             <p><strong>Mort</strong> : {dinosaur.isDead ? 'Oui' : 'Non'}</p>
         </div>
