@@ -465,6 +465,7 @@ export class DinosaursController {
         level: dinosaur.level,
         epoch: dinosaur.epoch,
         experience: dinosaur.experience,
+        karma: dinosaur.karma,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
