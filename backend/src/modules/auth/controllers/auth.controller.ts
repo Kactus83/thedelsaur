@@ -43,19 +43,25 @@ export class AuthController {
     try {
       const loginDto: LoginDto = plainToInstance(LoginDto, req.body);
       const errors = await validate(loginDto);
-
+  
       if (errors.length > 0) {
         res.status(400).json({ message: 'Données invalides', errors });
         return;
       }
-
-      const { email, password } = loginDto;
-
-      const { token, user } = await this.authService.login(email, password);
-
+  
+      const { email, username, password } = loginDto;
+      const identifier = email || username;
+  
+      if (!identifier) {
+        res.status(400).json({ message: 'Veuillez fournir un email ou un pseudo' });
+        return;
+      }
+  
+      const { token, user } = await this.authService.login(identifier, password);
+  
       // Transformer l'utilisateur en DTO
       const userDTO = plainToInstance(UserDTO, user);
-
+  
       res.status(200).json({ message: 'Connexion réussie', token, user: userDTO });
     } catch (error: any) {
       console.error('Erreur lors de la connexion:', error);
