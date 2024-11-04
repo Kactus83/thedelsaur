@@ -315,6 +315,7 @@ export class DinosaursController {
         epoch: dinosaur.epoch,
         experience: dinosaur.experience,
         reborn_amount: dinosaur.reborn_amount,
+        last_reborn: dinosaur.last_reborn,
         karma: dinosaur.karma,    
       });
 
