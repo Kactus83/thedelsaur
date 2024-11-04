@@ -315,6 +315,7 @@ export class DinosaursController {
         epoch: dinosaur.epoch,
         experience: dinosaur.experience,
         reborn_amount: dinosaur.reborn_amount,
+        last_reborn: dinosaur.last_reborn,
         karma: dinosaur.karma,    
       });
 
@@ -464,6 +465,7 @@ export class DinosaursController {
         level: dinosaur.level,
         epoch: dinosaur.epoch,
         experience: dinosaur.experience,
+        karma: dinosaur.karma,
       });
 
       const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
