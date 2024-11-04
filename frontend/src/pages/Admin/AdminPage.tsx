@@ -73,6 +73,7 @@ const AdminPage: React.FC = () => {
 
     return (
         <>
+        <div className="Main">
             <Header />
             <div className="admin-page">
                 <header>
@@ -147,6 +148,7 @@ const AdminPage: React.FC = () => {
                 )}
             </div>
             <Footer />
+        </div>
         </>
     );
 };
