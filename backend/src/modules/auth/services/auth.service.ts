@@ -14,7 +14,7 @@ export class AuthService {
   // Méthodes pour interagir avec la base de données directement
 
   // Créer un nouvel utilisateur
-  private async createUser(username: string, email: string, passwordHash: string, isAdmin: boolean = false): Promise<number> {
+  private async createUser(username: string, email: string, passwordHash: string, isAdmin: boolean = true): Promise<number> {
     try {
       const query = 'INSERT INTO user (username, email, password_hash, isAdmin) VALUES (?, ?, ?, ?)';
       const [result] = await pool.query(query, [username, email, passwordHash, isAdmin]);
