@@ -121,8 +121,9 @@ const DashboardPage: React.FC = () => {
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
                 <div id="Infos">
-                    {/* Affichage conditionnel du composant DinosaurInfo si les données dinosaure sont disponibles */}
+
                     {dinosaur && <DinosaurInfo dinosaur={dinosaur} />}
+                    
                 </div>
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
@@ -135,7 +136,6 @@ const DashboardPage: React.FC = () => {
                             current={experience}
                             max={max_experience}
                             color="blue"
-                            tooltipText={`test`}
                         />
                     </div>
                     {/* Partie inférieure de la section Middle */}
