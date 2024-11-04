@@ -141,6 +141,9 @@ const signup = async (username, email, password) => {
     const userId = await createUser(username, email, passwordHash);
     const newUser = await findUserById(userId);
 
+    // retirer le mot de passe du retour
+    newUser.password_hash = undefined;
+
     // Générer un nom et régime aléatoires pour le dinosaure
     const randomName = generateRandomName();
     const randomDiet = getRandomDiet();

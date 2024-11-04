@@ -6,7 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { DinosaurActionService } from '../services/dinosaur-action.service';
-import { getAvailableActions } from '../utils/dinosaur-actions.util';
+import { getAvailableActions, getExperienceThresholdForLevel } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { ChangeDinosaurNameRequestBody } from '../models/change-dinosaur-name.dto';
 
@@ -66,6 +66,31 @@ export class DinosaursController {
       });
     } catch (error) {
       console.error('Erreur lors de la récupération des actions disponibles pour le dinosaure:', error);
+      res.status(500).json({ message: 'Erreur interne du serveur' });
+    }
+  };
+
+  public getNextLevelXp = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        res.status(400).json({ message: 'Utilisateur non authentifié' });
+        return;
+      }
+  
+      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
+  
+      if (!dinosaur) {
+        res.status(404).json({ message: 'Dinosaure non trouvé' });
+        return;
+      }
+  
+      // Calcul de la valeur d'expérience nécessaire pour le prochain niveau
+      const nextLevelXp = getExperienceThresholdForLevel(dinosaur.level + 1);
+  
+      res.status(200).json({ nextLevelXp });
+    } catch (error) {
+      console.error('Erreur lors de la récupération de l\'expérience nécessaire pour le prochain niveau:', error);
       res.status(500).json({ message: 'Erreur interne du serveur' });
     }
   };

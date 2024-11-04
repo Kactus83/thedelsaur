@@ -6,6 +6,11 @@ export const fetchDinosaur = async () => {
     return response.data;
 };
 
+export const getNextLevelXp = async () => {
+    const response = await api.get('/dinosaurs/my-dinosaur/next-level-xp');
+    return response.data;
+};
+
 export const fetchDinosaurActions = async () => {
     const response = await api.get('/dinosaurs/my-dinosaur/actions'); 
     return response.data;
