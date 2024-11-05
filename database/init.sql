@@ -38,12 +38,12 @@ CREATE TABLE IF NOT EXISTS dinosaur (
 CREATE TABLE IF NOT EXISTS dinosaur_multiplier (
   id INT AUTO_INCREMENT PRIMARY KEY,
   dinosaur_id INT NOT NULL,
-  earn_herbi_food_multiplier INT NOT NULL DEFAULT 1,
-  earn_carni_food_multiplier INT NOT NULL DEFAULT 1,
-  earn_food_multiplier INT NOT NULL DEFAULT 1,
-  earn_energy_multiplier INT NOT NULL DEFAULT 1,
-  earn_experience_multiplier INT NOT NULL DEFAULT 1,
-  max_energy_multiplier INT NOT NULL DEFAULT 1,
-  max_food_multiplier INT NOT NULL DEFAULT 1,
+  earn_herbi_food_multiplier FLOAT NOT NULL DEFAULT 1,
+  earn_carni_food_multiplier FLOAT NOT NULL DEFAULT 1,
+  earn_food_multiplier FLOAT NOT NULL DEFAULT 1,
+  earn_energy_multiplier FLOAT NOT NULL DEFAULT 1,
+  earn_experience_multiplier FLOAT NOT NULL DEFAULT 1,
+  max_energy_multiplier FLOAT NOT NULL DEFAULT 1,
+  max_food_multiplier FLOAT NOT NULL DEFAULT 1,
   FOREIGN KEY (dinosaur_id) REFERENCES dinosaur(id) ON DELETE CASCADE
 );
