@@ -42,7 +42,7 @@ export class DinosaursModule {
     this.dinosaurTimeService = new DinosaurTimeService();
 
     // Initialisation des services spécifiques
-    this.basicActionsService = new BasicActionsService(this.dinosaursService, this.dinosaurTimeService);
+    this.basicActionsService = new BasicActionsService(this.dinosaursService);
     this.carnivoreActionsService = new CarnivoreActionsService(this.dinosaursService);
     this.herbivoreActionsService = new HerbivoreActionsService(this.dinosaursService);
     this.advancedActionsService = new AdvancedActionsService(this.dinosaursService);
