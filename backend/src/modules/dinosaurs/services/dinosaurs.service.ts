@@ -1,3 +1,4 @@
+import { BASE_ENERGY, MAX_FOOD } from '../../../common/config/constants';
 import pool from '../../../common/database/db';
 import { Dinosaur } from '../models/dinosaur.interface';
 
@@ -28,6 +29,8 @@ export class DinosaursService {
       const dinosaurData = dinosaurs[0];
       const dinosaur: Dinosaur = {
         ...dinosaurData,
+        max_food: MAX_FOOD * dinosaurData.max_food_multiplier,
+        max_energy: BASE_ENERGY * dinosaurData.max_energy_multiplier,
         multipliers: {
           earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier,
           earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier,
@@ -72,6 +75,8 @@ export class DinosaursService {
       const dinosaurData = dinosaurs[0];
       const dinosaur: Dinosaur = {
         ...dinosaurData,
+        max_food: MAX_FOOD * dinosaurData.max_food_multiplier,
+        max_energy: BASE_ENERGY * dinosaurData.max_energy_multiplier,
         multipliers: {
           earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier,
           earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier,
@@ -93,30 +98,31 @@ export class DinosaursService {
   // Mettre à jour un dinosaure
   public async updateDinosaur(dinosaurId: number, updates: Partial<Dinosaur>): Promise<boolean> {
     try {
-      const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-      const values = Object.values(updates);
-      const query = `UPDATE dinosaur SET ${fields} WHERE id = ?`;
-      values.push(dinosaurId);
+        // Récupérer le dinosaure actuel pour obtenir les multiplicateurs existants si nécessaires
+        const currentDinosaur = await this.getDinosaurById(dinosaurId);
+        if (!currentDinosaur) {
+            throw new Error('Dinosaure introuvable');
+        }
 
-      const [result] = await pool.query(query, values);
-      const res = result as any;
-      return res.affectedRows > 0;
+        // Utiliser les multiplicateurs actuels si les nouveaux ne sont pas fournis
+        const multipliers = updates.multipliers || currentDinosaur.multipliers;
+
+        // Recalculer max_food et max_energy en utilisant les multiplicateurs actuels ou fournis
+        updates.max_food = MAX_FOOD * (multipliers.max_food_multiplier || 1);
+        updates.max_energy = BASE_ENERGY * (multipliers.max_energy_multiplier || 1);
+
+        // Préparer la mise à jour en base de données
+        const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+        const values = Object.values(updates);
+        const query = `UPDATE dinosaur SET ${fields} WHERE id = ?`;
+        values.push(dinosaurId);
+
+        const [result] = await pool.query(query, values);
+        const res = result as any;
+        return res.affectedRows > 0;
     } catch (err) {
-      console.error('Erreur lors de la mise à jour du dinosaure:', err);
-      throw err;
-    }
-  }
-  
-  // Supprimer un dinosaure par son ID
-  public async deleteDinosaurById(dinosaurId: number): Promise<boolean> {
-    try {
-      const query = 'DELETE FROM dinosaur WHERE id = ?';
-      const [result] = await pool.query(query, [dinosaurId]);
-      const res = result as any;
-      return res.affectedRows > 0;
-    } catch (err) {
-      console.error('Erreur lors de la suppression du dinosaure:', err);
-      throw err;
+        console.error('Erreur lors de la mise à jour du dinosaure:', err);
+        throw err;
     }
   }
 
