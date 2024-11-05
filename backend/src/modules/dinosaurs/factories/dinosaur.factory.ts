@@ -30,14 +30,14 @@ const generateRandomName = (): string => {
 
 // Fonction pour obtenir un régime alimentaire aléatoire
 const getRandomDiet = (): DietType => {
-  const diets: DietType[] = [DietType.HERBIVORE, DietType.CARNIVORE, DietType.OMNIVORE];
+  const diets: DietType[] = [DietType.HERBIVORE, DietType.CARNIVORE, DietType.OMNIVORE, DietType.HERBIVORE, DietType.CARNIVORE, DietType.OMNIVORE];
   const randomIndex = Math.floor(Math.random() * diets.length);
   return diets[randomIndex];
 };
 
 // Fonction pour obtenir un type de dinosaure aléatoire
 const getRandomType = (): DinosaurType => {
-  const types: DinosaurType[] = [DinosaurType.LAND, DinosaurType.AIR, DinosaurType.SEA];
+  const types: DinosaurType[] = [DinosaurType.LAND, DinosaurType.AIR, DinosaurType.SEA, DinosaurType.LAND, DinosaurType.AIR, DinosaurType.SEA];
   const randomIndex = Math.floor(Math.random() * types.length);
   return types[randomIndex];
 };
