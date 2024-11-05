@@ -3,7 +3,6 @@ import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaursService } from './dinosaurs.service';
-import { DinosaurTimeService } from './dinosaur-time.service';
 
 /**
  * Service pour gérer les actions avancées du dinosaure (voler, découvrir).
@@ -58,7 +57,7 @@ export class AdvancedActionsService {
         }
 
         const event = getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Steal, event);
         return { dinosaur, event };
     }
 
@@ -73,7 +72,7 @@ export class AdvancedActionsService {
         }
 
         const event = getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Discover, event);
         return { dinosaur, event };
     }
 }

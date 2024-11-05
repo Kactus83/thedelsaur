@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
-import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
+import { BASE_ENERGY, BASE_FOOD, BASE_FOOD_MULTIPLIER_FOR_DIETS, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
 import { generateRandomName, getRandomDiet, getRandomType } from '../utils/dinosaurs.util';
 
 dotenv.config();
@@ -73,9 +73,21 @@ export class AuthService {
       const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma]);
       const dinosaurId = (dinosaurResult as any).insertId;
 
-      // Initialisation des multiplicateurs pour le dinosaure créé
-      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id) VALUES (?)`;
-      await pool.query(multiplierQuery, [dinosaurId]);
+      // Définir les multiplicateurs en fonction du régime alimentaire
+      let earn_herbi_food_multiplier = 1;
+      let earn_carni_food_multiplier = 1;
+
+      if (diet === 'herbivore') {
+        earn_herbi_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS;
+      } else if (diet === 'carnivore') {
+        earn_carni_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS;
+      }
+
+      // Initialisation des multiplicateurs pour le dinosaure créé avec les valeurs appropriées
+      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id, earn_herbi_food_multiplier, earn_carni_food_multiplier, earn_food_multiplier, earn_energy_multiplier, earn_experience_multiplier, max_energy_multiplier, max_food_multiplier)
+                               VALUES (?, ?, ?, 1, 1, 1, 1, 1)`;
+      await pool.query(multiplierQuery, [dinosaurId, earn_herbi_food_multiplier, earn_carni_food_multiplier]);
+
 
       return dinosaurId;
     } catch (err) {

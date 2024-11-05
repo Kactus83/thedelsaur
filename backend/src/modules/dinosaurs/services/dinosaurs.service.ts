@@ -1,21 +1,5 @@
-import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
 import pool from '../../../common/database/db';
 import { Dinosaur } from '../models/dinosaur.interface';
-import { DinosaurEvent } from '../models/dinosaur-event.interface';
-
-/**
- * Applique les effets d'un événement au dinosaure, en modifiant ses statistiques en place.
- * @param dinosaur Dinosaure auquel appliquer les effets.
- * @param event Événement à appliquer avec ses modifications de stats.
- * @returns L'événement appliqué pour utilisation dans le contrôleur.
- */
-export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): DinosaurEvent {
-  dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
-  dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
-  dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
-
-  return event; // Renvoie l'événement appliqué pour permettre au contrôleur de l'inclure dans la réponse.
-}
 
 export class DinosaursService {
   // Récupérer un dinosaure par son ID, incluant les multiplicateurs
@@ -122,43 +106,7 @@ export class DinosaursService {
       throw err;
     }
   }
-
-  // Créer un nouveau dinosaure
-  public async createDinosaur(
-    name: string,
-    userId: number,
-    diet: string,
-    type: string,
-    energy: number = BASE_ENERGY,
-    max_energy: number = BASE_ENERGY,
-    food: number = BASE_FOOD,
-    max_food: number = MAX_FOOD,
-    hunger: number = 0,
-    max_hunger: number = BASE_MAX_HUNGER,
-    experience: number = 0,
-    epoch: string = 'past',
-    reborn_amount: number = 0,
-    karma: number = 0,
-    isSleeping: boolean = false,
-    isDead: boolean = false
-  ): Promise<number> {
-    try {
-      const dinosaurQuery = `INSERT INTO dinosaur (name, user_id, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, isSleeping, isDead, karma)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, isSleeping, isDead, karma]);
-      const dinosaurId = (dinosaurResult as any).insertId;
-
-      // Initialisation des multiplicateurs pour le dinosaure créé
-      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id) VALUES (?)`;
-      await pool.query(multiplierQuery, [dinosaurId]);
-
-      return dinosaurId;
-    } catch (err) {
-      console.error('Erreur lors de la création du dinosaure:', err);
-      throw err;
-    }
-  }
-
+  
   // Supprimer un dinosaure par son ID
   public async deleteDinosaurById(dinosaurId: number): Promise<boolean> {
     try {
