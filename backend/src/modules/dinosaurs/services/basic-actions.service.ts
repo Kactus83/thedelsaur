@@ -147,8 +147,8 @@ export class BasicActionsService {
         dinosaur.isDead = false;
         dinosaur.diet = getRandomDiet();
         dinosaur.isSleeping = false;
-        dinosaur.energy = BASE_ENERGY;
-        dinosaur.food = BASE_FOOD;
+        dinosaur.energy = 0;
+        dinosaur.food = 0;
         dinosaur.hunger = 0;
         dinosaur.last_reborn = formatDateForMySQL(new Date());
         dinosaur.experience = 0;
