@@ -127,12 +127,13 @@ const DashboardPage: React.FC = () => {
                 <div id="Middle">
                     {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
-                        {/* Barre XP indiquant l'expérience du dinosaure */}
+                        {/* Jauge XP avec infobulle pour le multiplicateur d'expérience */}
                         <Gauge_XP
                             label={`level: ${dinosaur ? dinosaur.level : "NaN"}`}
                             current={experience}
                             max={max_experience}
                             color="blue"
+                            tooltipText={`Multiplicateur d'expérience : ${dinosaur?.multipliers.earn_experience_multiplier}x`}
                         />
                     </div>
                     {/* Partie inférieure de la section Middle */}
