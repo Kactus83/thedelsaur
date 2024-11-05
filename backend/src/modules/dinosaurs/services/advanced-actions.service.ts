@@ -1,6 +1,6 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaursService } from './dinosaurs.service';
 import { DinosaurTimeService } from './dinosaur-time.service';
@@ -10,11 +10,9 @@ import { DinosaurTimeService } from './dinosaur-time.service';
  */
 export class AdvancedActionsService {
     private dinosaursService: DinosaursService;
-    private dinosaurTimeService: DinosaurTimeService;
 
-    constructor(dinosaursService: DinosaursService, dinosaurTimeService: DinosaurTimeService) {
+    constructor(dinosaursService: DinosaursService) {
         this.dinosaursService = dinosaursService;
-        this.dinosaurTimeService = dinosaurTimeService;
     }
 
     /**
@@ -59,19 +57,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas voler.');
         }
 
-        // Exemple d'événement de vol réussi
-        const event: DinosaurEvent = {
-            name: 'Vol réussi',
-            description: 'Le dinosaure a volé avec succès.',
-            minLevel: 2,
-            experienceChange: 25,
-            energyChange: -40,
-            foodChange: 0,
-            hungerChange: 10,
-            karmaChange: -5,
-            weight: 1,
-        };
-
+        const event = getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
         applyEventToDinosaur(dinosaur, event);
         return { dinosaur, event };
     }
@@ -86,19 +72,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas découvrir.');
         }
 
-        // Exemple d'événement de découverte réussi
-        const event: DinosaurEvent = {
-            name: 'Découverte réussie',
-            description: 'Le dinosaure a découvert de nouvelles terres.',
-            minLevel: 3,
-            experienceChange: 30,
-            energyChange: -50,
-            foodChange: 0,
-            hungerChange: 15,
-            karmaChange: 10,
-            weight: 1,
-        };
-
+        const event = getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
         applyEventToDinosaur(dinosaur, event);
         return { dinosaur, event };
     }
