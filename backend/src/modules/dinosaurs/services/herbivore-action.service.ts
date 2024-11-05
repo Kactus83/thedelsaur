@@ -58,7 +58,7 @@ export class HerbivoreActionsService {
         }
 
         const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
         return { dinosaur, event };
     }
 }

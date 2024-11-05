@@ -34,4 +34,8 @@ export const BASE_EXP_REQUIRED = 100;        // Expérience requise pour passer 
 export const EXP_GROWTH_FACTOR = 1.5;         // Facteur de croissance de la progression d'expérience
 export const LEVEL_MODIFIER = 2.0; // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
 
+// Multipliers constants
+export const BASE_FOOD_MULTIPLIER_FOR_DIETS = 1.2;
+
+// Karma system constants
 export const KARMA_GAIN_AFTER_DEATH = 100;

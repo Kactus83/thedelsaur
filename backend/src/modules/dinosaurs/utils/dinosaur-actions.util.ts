@@ -15,6 +15,7 @@ import {
   MIN_ENERGY_TO_WAKE_UP,
 } from '../../../common/config/constants';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
+import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
 
 /**
  * Détermine si une action peut être effectuée par le dinosaure en fonction de son état.
@@ -100,16 +101,61 @@ export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: n
 
 /**
  * Applique les effets d'un événement au dinosaure en modifiant ses statistiques et son niveau.
+ * @param dinosaur Le dinosaure à mettre à jour.
+ * @param action L'action effectuée.
+ * @param multipliers Les multiplicateurs du dinosaure.
+ * @param event L'événement à appliquer.
  */
-export function applyEventToDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): void {
-  dinosaur.food = Math.min(dinosaur.food + event.foodChange, dinosaur.max_food);
-  dinosaur.energy = Math.max(dinosaur.energy + event.energyChange, 0);
-  dinosaur.hunger = Math.max(dinosaur.hunger + event.hungerChange, 0);
-  dinosaur.karma += event.karmaChange;
+export function applyEventToDinosaur(
+  dinosaur: Dinosaur,
+  action: DinosaurAction,
+  event: DinosaurEvent
+): void {
+  let adjustedFoodChange = event.foodChange;
+  let adjustedEnergyChange = event.energyChange;
+  let adjustedHungerChange = event.hungerChange;
+  let adjustedExperienceChange = event.experienceChange;
+  let adjustedKarmaChange = event.karmaChange;
 
-  dinosaur.experience += event.experienceChange;
+  // Utilisation des multiplicateurs du dinosaure
+  const multipliers = dinosaur.multipliers;
 
-  if(event.typeChange) {
+  // Application des multiplicateurs spécifiques selon l'action
+  switch (action) {
+    case DinosaurAction.Graze:
+      // Appliquer le multiplicateur global et spécifique herbivore si gain de nourriture
+      if (adjustedFoodChange > 0) {
+        adjustedFoodChange *= multipliers.earn_food_multiplier + multipliers.earn_herbi_food_multiplier - 1;
+      }
+      break;
+
+    case DinosaurAction.Hunt:
+      // Appliquer le multiplicateur global et spécifique carnivore si gain de nourriture
+      if (adjustedFoodChange > 0) {
+        adjustedFoodChange *= multipliers.earn_food_multiplier + multipliers.earn_carni_food_multiplier - 1;
+      }
+      break;
+  }
+
+  // Appliquer le multiplicateur d'expérience si le changement est positif
+  if (adjustedExperienceChange > 0) {
+    adjustedExperienceChange *= multipliers.earn_experience_multiplier;
+  }
+
+  // Appliquer le multiplicateur d'énergie uniquement si le changement est positif
+  if (adjustedEnergyChange > 0) {
+    adjustedEnergyChange *= multipliers.earn_energy_multiplier;
+  }
+
+  // Appliquer les changements ajustés
+  dinosaur.food = Math.min(dinosaur.food + adjustedFoodChange, dinosaur.max_food * multipliers.max_food_multiplier);
+  dinosaur.energy = Math.max(dinosaur.energy + adjustedEnergyChange, 0);
+  dinosaur.hunger = Math.max(dinosaur.hunger + adjustedHungerChange, 0);
+  dinosaur.karma += adjustedKarmaChange;
+
+  dinosaur.experience += adjustedExperienceChange;
+
+  if (event.typeChange) {
     dinosaur.type = event.typeChange;
   }
 

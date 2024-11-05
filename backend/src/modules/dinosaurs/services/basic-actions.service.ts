@@ -94,7 +94,7 @@ export class BasicActionsService {
         };
 
         // Applique l'événement au dinosaure
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Eat, event);
         return { dinosaur, event };
     }
 
@@ -111,7 +111,7 @@ export class BasicActionsService {
         const event = getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
 
         dinosaur.isSleeping = true;
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Sleep, event);
         return { dinosaur, event };
     }
 
@@ -128,7 +128,7 @@ export class BasicActionsService {
         const event = getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
 
         dinosaur.isSleeping = false;
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.WakeUp, event);
         return { dinosaur, event };
     }
 
@@ -156,7 +156,7 @@ export class BasicActionsService {
         dinosaur.reborn_amount += 1;
         dinosaur.karma += KARMA_GAIN_AFTER_DEATH;
 
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event);
         return { dinosaur, event };
     }
 
@@ -171,7 +171,7 @@ export class BasicActionsService {
         }
 
         const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
-        applyEventToDinosaur(dinosaur, event);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
         return { dinosaur, event };
     }
 }
