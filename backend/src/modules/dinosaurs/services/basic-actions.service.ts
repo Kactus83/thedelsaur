@@ -2,22 +2,19 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
-import { BASE_ENERGY, BASE_FOOD, KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
+import { KARMA_GAIN_AFTER_DEATH, BASE_ENERGY, BASE_FOOD } from '../../../common/config/constants';
 import { getRandomDiet } from '../../auth/utils/dinosaurs.util';
-import { DinosaursService } from './dinosaurs.service';
-import { DinosaurTimeService } from './dinosaur-time.service';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
+import { DinosaursService } from '../services/dinosaurs.service';
 
 /**
  * Service pour gérer les actions basiques du dinosaure (manger, dormir, se réveiller, ressusciter).
  */
 export class BasicActionsService {
     private dinosaursService: DinosaursService;
-    private dinosaurTimeService: DinosaurTimeService;
 
-    constructor(dinosaursService: DinosaursService, dinosaurTimeService: DinosaurTimeService) {
+    constructor(dinosaursService: DinosaursService) {
         this.dinosaursService = dinosaursService;
-        this.dinosaurTimeService = dinosaurTimeService;
     }
 
     /**
@@ -62,7 +59,41 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas manger.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Eat, dinosaur.level);
+        // Calcule la quantité de nourriture à consommer pour réduire la faim autant que possible
+        const foodNeeded = Math.min(dinosaur.hunger, dinosaur.food);
+
+        // Si aucune nourriture n'est disponible ou aucune faim n'est présente, renvoie un événement indiquant l'échec
+        if (foodNeeded <= 0) {
+            return {
+                dinosaur,
+                event: {
+                    name: 'Pas de nourriture suffisante',
+                    description: 'Le dinosaure n\'a pas assez de nourriture pour satisfaire sa faim.',
+                    minLevel: 0,
+                    experienceChange: 0,
+                    energyChange: 0,
+                    foodChange: 0,
+                    hungerChange: 0,
+                    karmaChange: 0,
+                    weight: 1,
+                },
+            };
+        }
+
+        // Crée l'événement basé sur la consommation réelle de nourriture
+        const event: DinosaurEvent = {
+            name: 'Repas optimisé',
+            description: 'Le dinosaure utilise la nourriture disponible pour réduire sa faim.',
+            minLevel: 0,
+            experienceChange: 0,
+            energyChange: 0,
+            foodChange: -foodNeeded,  // Consomme la quantité calculée de nourriture
+            hungerChange: -foodNeeded, // Réduit la faim par la même quantité
+            karmaChange: 0,
+            weight: 1,
+        };
+
+        // Applique l'événement au dinosaure
         applyEventToDinosaur(dinosaur, event);
         return { dinosaur, event };
     }
