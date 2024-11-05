@@ -6,6 +6,8 @@ import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
 import { BASE_ENERGY, BASE_FOOD, BASE_FOOD_MULTIPLIER_FOR_DIETS, BASE_MAX_HUNGER, MAX_ENERGY, MAX_FOOD } from '../../../common/config/constants';
 import { generateRandomName, getRandomDiet, getRandomType } from '../utils/dinosaurs.util';
+import { DinosaurTypeMultipliers } from '../../dinosaurs/libs/dinosaur-type-multipliers';
+import { DinosaurType } from '../../dinosaurs/models/dinosaur-type.type';
 
 dotenv.config();
 
@@ -51,11 +53,12 @@ export class AuthService {
   }
 
   // Créer un dinosaure
+
   private async createDinosaur(
     name: string,
     userId: number,
     diet: string,
-    type: string,
+    type: DinosaurType,
     energy: number = BASE_ENERGY,
     max_energy: number = MAX_ENERGY,
     food: number = BASE_FOOD,
@@ -73,21 +76,43 @@ export class AuthService {
       const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma]);
       const dinosaurId = (dinosaurResult as any).insertId;
 
-      // Définir les multiplicateurs en fonction du régime alimentaire
-      let earn_herbi_food_multiplier = 1;
-      let earn_carni_food_multiplier = 1;
+      // Obtenir les multiplicateurs de base pour le type de dinosaure
+      const typeMultipliers = DinosaurTypeMultipliers[type as DinosaurType];
+
+      // Initialiser les multiplicateurs en fonction du régime alimentaire
+      let earn_herbi_food_multiplier = 0;
+      let earn_carni_food_multiplier = 0;
 
       if (diet === 'herbivore') {
-        earn_herbi_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS;
+        earn_herbi_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS - 1; // Soustraire 1 pour la base
       } else if (diet === 'carnivore') {
-        earn_carni_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS;
+        earn_carni_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS - 1; // Soustraire 1 pour la base
       }
 
-      // Initialisation des multiplicateurs pour le dinosaure créé avec les valeurs appropriées
-      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id, earn_herbi_food_multiplier, earn_carni_food_multiplier, earn_food_multiplier, earn_energy_multiplier, earn_experience_multiplier, max_energy_multiplier, max_food_multiplier)
-                               VALUES (?, ?, ?, 1, 1, 1, 1, 1)`;
-      await pool.query(multiplierQuery, [dinosaurId, earn_herbi_food_multiplier, earn_carni_food_multiplier]);
+      // Calcul final des multiplicateurs en additionnant ceux du type de dinosaure et ceux liés au régime alimentaire
+      const finalMultipliers = {
+        earn_herbi_food_multiplier: typeMultipliers.earn_herbi_food_multiplier + earn_herbi_food_multiplier,
+        earn_carni_food_multiplier: typeMultipliers.earn_carni_food_multiplier + earn_carni_food_multiplier,
+        earn_food_multiplier: typeMultipliers.earn_food_multiplier,
+        earn_energy_multiplier: typeMultipliers.earn_energy_multiplier,
+        earn_experience_multiplier: typeMultipliers.earn_experience_multiplier,
+        max_energy_multiplier: typeMultipliers.max_energy_multiplier,
+        max_food_multiplier: typeMultipliers.max_food_multiplier,
+      };
 
+      // Initialisation des multiplicateurs pour le dinosaure créé avec les valeurs calculées
+      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id, earn_herbi_food_multiplier, earn_carni_food_multiplier, earn_food_multiplier, earn_energy_multiplier, earn_experience_multiplier, max_energy_multiplier, max_food_multiplier)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+      await pool.query(multiplierQuery, [
+        dinosaurId,
+        finalMultipliers.earn_herbi_food_multiplier,
+        finalMultipliers.earn_carni_food_multiplier,
+        finalMultipliers.earn_food_multiplier,
+        finalMultipliers.earn_energy_multiplier,
+        finalMultipliers.earn_experience_multiplier,
+        finalMultipliers.max_energy_multiplier,
+        finalMultipliers.max_food_multiplier,
+      ]);
 
       return dinosaurId;
     } catch (err) {

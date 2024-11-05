@@ -1,4 +1,5 @@
 import { DietType } from "../../dinosaurs/models/dinosaur-diet.type";
+import { DinosaurType } from "../../dinosaurs/models/dinosaur-type.type";
 
 // Liste de prénoms possibles pour les dinosaures
 const names: string[] = [
@@ -11,7 +12,7 @@ const names: string[] = [
 const diets: DietType[] = ['herbivore', 'carnivore', 'omnivore'];
 
 // Liste des types de dinosaures possibles
-const types: string[] = ['land', 'air', 'sea'];
+const types: DinosaurType[] = ['land', 'air', 'sea'];
 
 // Fonction pour générer un nom aléatoire
 export const generateRandomName = (): string => {
@@ -26,7 +27,7 @@ export const getRandomDiet = (): DietType => {
 };
 
 // Fonction pour obtenir un type de dinosaure aléatoire
-export const getRandomType = (): string => {
+export const getRandomType = (): DinosaurType => {
     const randomIndex = Math.floor(Math.random() * types.length);
     return types[randomIndex];
 };
