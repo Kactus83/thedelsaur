@@ -5,16 +5,6 @@ const {
 } = require('../config/constants');
 
 /**
- * Formatte une date pour qu'elle soit compatible avec MySQL TIMESTAMP (sans millisecondes ni fuseau horaire).
- * @param {Date} date - La date à formater.
- * @returns {string} La date formatée pour MySQL.
- */
-const formatDateForMySQL = (date) => {
-    const pad = (n) => (n < 10 ? '0' + n : n); // Ajoute un zéro devant les valeurs < 10
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-};
-
-/**
  * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
  * Les caractéristiques modifiées sont : nourriture (food) et énergie (energy).
  * Prend en compte les états `isDead` et `isSleeping`.

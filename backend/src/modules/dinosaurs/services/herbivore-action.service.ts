@@ -1,6 +1,6 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaursService } from './dinosaurs.service';
 import { DinosaurTimeService } from './dinosaur-time.service';
@@ -10,11 +10,9 @@ import { DinosaurTimeService } from './dinosaur-time.service';
  */
 export class HerbivoreActionsService {
     private dinosaursService: DinosaursService;
-    private dinosaurTimeService: DinosaurTimeService;
 
-    constructor(dinosaursService: DinosaursService, dinosaurTimeService: DinosaurTimeService) {
+    constructor(dinosaursService: DinosaursService) {
         this.dinosaursService = dinosaursService;
-        this.dinosaurTimeService = dinosaurTimeService;
     }
 
     /**
@@ -59,19 +57,7 @@ export class HerbivoreActionsService {
             throw new Error('Le dinosaure ne peut pas cueillir.');
         }
 
-        // Exemple d'événement de cueillette réussi
-        const event: DinosaurEvent = {
-            name: 'Cueillette réussie',
-            description: 'Le dinosaure a cueilli des plantes avec succès.',
-            minLevel: 1,
-            experienceChange: 15,
-            energyChange: -20,
-            foodChange: 30,
-            hungerChange: -20,
-            karmaChange: 3,
-            weight: 1,
-        };
-
+        const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
         applyEventToDinosaur(dinosaur, event);
         return { dinosaur, event };
     }
