@@ -9,6 +9,7 @@ import { DinosaurDTO } from '../models/dinosaur.dto';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
+import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 
 // Liste de prénoms possibles pour les dinosaures
 const names: string[] = [
@@ -145,7 +146,7 @@ export class DinosaurFactory {
     dinosaur.experience = 0;
     dinosaur.level = 1;
     dinosaur.reborn_amount += 1;
-    dinosaur.last_reborn = new Date().toISOString();
+    dinosaur.last_reborn = formatDateForMySQL(new Date());
     dinosaur.isSleeping = false;
 
     if (event.typeChange) {

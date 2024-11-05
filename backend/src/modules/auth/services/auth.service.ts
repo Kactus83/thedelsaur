@@ -5,6 +5,7 @@ import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
 import { DinosaurFactory } from '../../dinosaurs/factories/dinosaur.factory';
+import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 
 dotenv.config();
 
@@ -136,9 +137,9 @@ export class AuthService {
           dinosaur.level,
           dinosaur.isSleeping,
           dinosaur.isDead,
-          dinosaur.created_at,
-          dinosaur.last_reborn,
-          dinosaur.last_update_by_time_service,
+          formatDateForMySQL(dinosaur.created_at),
+          formatDateForMySQL(new Date(dinosaur.last_reborn)),
+          formatDateForMySQL(new Date(dinosaur.last_update_by_time_service)),
         ]);
 
         const dinosaurId = (dinosaurResult as any).insertId;
