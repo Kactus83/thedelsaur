@@ -1,5 +1,6 @@
 import { BASE_ENERGY, BASE_FOOD } from "../../../../common/config/constants";
 import { DinosaurEvent } from "../../models/dinosaur-event.interface";
+import { DinosaurType } from "../../models/dinosaur-type.type";
 
 export const resurrectEvents: DinosaurEvent[] = [
   {
@@ -11,7 +12,7 @@ export const resurrectEvents: DinosaurEvent[] = [
     foodChange: BASE_FOOD,
     hungerChange: 0,
     karmaChange: 0,
-    typeChange: "land",
+    typeChange: DinosaurType.LAND,
     weight: 5,
   },
   {
@@ -23,7 +24,7 @@ export const resurrectEvents: DinosaurEvent[] = [
     foodChange: BASE_FOOD,
     hungerChange: 0,
     karmaChange: 0,
-    typeChange: "sea",
+    typeChange: DinosaurType.SEA,
     weight: 5,
   },
   {
@@ -35,7 +36,7 @@ export const resurrectEvents: DinosaurEvent[] = [
     foodChange: BASE_FOOD,
     hungerChange: 0,
     karmaChange: 0,
-    typeChange: "air",
+    typeChange: DinosaurType.AIR,
     weight: 5,
   },
 ];

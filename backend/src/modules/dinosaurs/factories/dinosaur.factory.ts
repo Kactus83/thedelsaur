@@ -6,7 +6,9 @@ import { DinosaurType } from '../models/dinosaur-type.type';
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
 import { DinosaurDTO } from '../models/dinosaur.dto';
-import { validateOrReject, plainToInstance } from 'class-validator';
+import { validateOrReject } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { DinosaurEvent } from '../models/dinosaur-event.interface';
 
 // Liste de prénoms possibles pour les dinosaures
 const names: string[] = [
@@ -123,6 +125,63 @@ export class DinosaurFactory {
     await validateOrReject(dinosaurDTO).catch((errors: any) => {
       console.error('Validation échouée pour le dinosaure:', errors);
       throw new Error('Validation échouée pour le dinosaure');
+    });
+
+    return dinosaur;
+  }
+
+  /**
+   * Ressuscite un dinosaure existant en appliquant les modifications d'un événement de résurrection.
+   * @param dinosaur Le dinosaure à ressusciter.
+   * @param event L'événement de résurrection appliqué.
+   * @returns Le dinosaure ressuscité.
+   */
+  public static async resurrectDinosaur(dinosaur: Dinosaur, event: DinosaurEvent): Promise<Dinosaur> {
+    dinosaur.isDead = false;
+    dinosaur.energy = event.energyChange;
+    dinosaur.food = event.foodChange;
+    dinosaur.hunger = event.hungerChange;
+    dinosaur.karma += event.karmaChange;
+    dinosaur.experience = 0;
+    dinosaur.level = 1;
+    dinosaur.reborn_amount += 1;
+    dinosaur.last_reborn = new Date().toISOString();
+    dinosaur.isSleeping = false;
+
+    if (event.typeChange) {
+      dinosaur.type = event.typeChange;
+    }
+
+    // Générer un nouveau nom et diète aléatoires
+    dinosaur.name = generateRandomName();
+    dinosaur.diet = getRandomDiet();
+
+    // Recalculer les multiplicateurs
+    const typeMultipliers = DinosaurTypeMultipliers[dinosaur.type];
+    const dietMultipliers = DietTypeMultipliers[dinosaur.diet];
+
+    dinosaur.multipliers = {
+      earn_herbi_food_multiplier: (typeMultipliers.earn_herbi_food_multiplier || 1) +
+        ((dietMultipliers.earn_herbi_food_multiplier || 1) - 1),
+      earn_carni_food_multiplier: (typeMultipliers.earn_carni_food_multiplier || 1) +
+        ((dietMultipliers.earn_carni_food_multiplier || 1) - 1),
+      earn_food_multiplier: (typeMultipliers.earn_food_multiplier || 1) +
+        ((dietMultipliers.earn_food_multiplier || 1) - 1),
+      earn_energy_multiplier: (typeMultipliers.earn_energy_multiplier || 1) +
+        ((dietMultipliers.earn_energy_multiplier || 1) - 1),
+      earn_experience_multiplier: (typeMultipliers.earn_experience_multiplier || 1) +
+        ((dietMultipliers.earn_experience_multiplier || 1) - 1),
+      max_energy_multiplier: (typeMultipliers.max_energy_multiplier || 1) +
+        ((dietMultipliers.max_energy_multiplier || 1) - 1),
+      max_food_multiplier: (typeMultipliers.max_food_multiplier || 1) +
+        ((dietMultipliers.max_food_multiplier || 1) - 1),
+    };
+
+    // Valider l'objet Dinosaur après la résurrection
+    const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
+    await validateOrReject(dinosaurDTO).catch((errors: any) => {
+      console.error('Validation échouée pour le dinosaure ressuscité:', errors);
+      throw new Error('Validation échouée pour le dinosaure ressuscité');
     });
 
     return dinosaur;

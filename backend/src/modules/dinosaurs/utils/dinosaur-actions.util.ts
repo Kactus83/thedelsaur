@@ -16,6 +16,7 @@ import {
 } from '../../../common/config/constants';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
+import { DinosaurFactory } from '../factories/dinosaur.factory';
 
 /**
  * Détermine si une action peut être effectuée par le dinosaure en fonction de son état.
@@ -103,14 +104,19 @@ export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: n
  * Applique les effets d'un événement au dinosaure en modifiant ses statistiques et son niveau.
  * @param dinosaur Le dinosaure à mettre à jour.
  * @param action L'action effectuée.
- * @param multipliers Les multiplicateurs du dinosaure.
  * @param event L'événement à appliquer.
+ * @returns Le dinosaure mis à jour (nouvelle instance si ressuscité).
  */
-export function applyEventToDinosaur(
+export async function applyEventToDinosaur(
   dinosaur: Dinosaur,
   action: DinosaurAction,
   event: DinosaurEvent
-): void {
+): Promise<Dinosaur> {
+  if (action === DinosaurAction.Resurrect) {
+    // Utiliser la factory pour ressusciter le dinosaure
+    return await DinosaurFactory.resurrectDinosaur(dinosaur, event);
+  }
+
   let adjustedFoodChange = event.foodChange;
   let adjustedEnergyChange = event.energyChange;
   let adjustedHungerChange = event.hungerChange;
@@ -167,6 +173,8 @@ export function applyEventToDinosaur(
     dinosaur.experience -= experienceThreshold;
     experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
   }
+
+  return dinosaur;
 }
 
 /**
