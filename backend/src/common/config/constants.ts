@@ -1,7 +1,8 @@
 // Constants for Dinosaur Base Stats
 export const BASE_FOOD = 5000;                             // Stock de nourriture initial
 export const MAX_FOOD = 10000;
-export const BASE_ENERGY = 10000;                           // Énergie de départ maximale
+export const BASE_ENERGY = 10000;  
+export const MAX_ENERGY = 10000;                           // Énergie de départ maximale
 export const BASE_MAX_HUNGER = 10000;                       // Niveau maximal de faim
 
 // Energy Consumption and Recovery Rates
@@ -16,8 +17,8 @@ export const HUNGER_ENERGY_LOSS_RATE_PER_SECOND = 10;       // Perte d'énergie 
 export const HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS = 7000;    // Seuil de faim au-delà duquel la perte d'énergie commence
 
 // Limits for Sleeping and Waking Conditions
-export const MAX_ENERGY_NO_SLEEP = 2500;                    // Seuil d'énergie maximale avant de dormir
-export const MIN_ENERGY_TO_WAKE_UP = 6000;                  // Seuil minimum d'énergie pour se réveiller
+export const MAX_ENERGY_NO_SLEEP = MAX_ENERGY / 4;                    // Seuil d'énergie maximale avant de dormir
+export const MIN_ENERGY_TO_WAKE_UP = MAX_ENERGY / 2;                  // Seuil minimum d'énergie pour se réveiller
 
 // Specific Action Costs and Effects
 export const ENERGY_COST_TO_GRAZE = 1500;                    // Coût énergétique pour l'action de "cueillir"

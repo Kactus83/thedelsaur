@@ -2,7 +2,7 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
-import { KARMA_GAIN_AFTER_DEATH, BASE_ENERGY, BASE_FOOD } from '../../../common/config/constants';
+import { KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
 import { getRandomDiet } from '../../auth/utils/dinosaurs.util';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { DinosaursService } from '../services/dinosaurs.service';

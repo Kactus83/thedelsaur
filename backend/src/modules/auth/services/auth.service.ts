@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
-import { BASE_ENERGY, BASE_FOOD, BASE_FOOD_MULTIPLIER_FOR_DIETS, BASE_MAX_HUNGER, MAX_FOOD } from '../../../common/config/constants';
+import { BASE_ENERGY, BASE_FOOD, BASE_FOOD_MULTIPLIER_FOR_DIETS, BASE_MAX_HUNGER, MAX_ENERGY, MAX_FOOD } from '../../../common/config/constants';
 import { generateRandomName, getRandomDiet, getRandomType } from '../utils/dinosaurs.util';
 
 dotenv.config();
@@ -57,7 +57,7 @@ export class AuthService {
     diet: string,
     type: string,
     energy: number = BASE_ENERGY,
-    max_energy: number = BASE_ENERGY,
+    max_energy: number = MAX_ENERGY,
     food: number = BASE_FOOD,
     max_food: number = MAX_FOOD,
     hunger: number = 0,
