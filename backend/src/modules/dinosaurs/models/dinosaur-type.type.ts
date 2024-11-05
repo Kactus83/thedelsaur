@@ -1,1 +1,5 @@
-export type DinosaurType = 'land' | 'air' | 'sea';
+export enum DinosaurType {
+    LAND = 'land',
+    AIR = 'air',
+    SEA = 'sea',
+  }
