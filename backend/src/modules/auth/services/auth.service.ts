@@ -4,10 +4,7 @@ import dotenv from 'dotenv';
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
 import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
-import { BASE_ENERGY, BASE_FOOD, BASE_FOOD_MULTIPLIER_FOR_DIETS, BASE_MAX_HUNGER, MAX_ENERGY, MAX_FOOD } from '../../../common/config/constants';
-import { generateRandomName, getRandomDiet, getRandomType } from '../utils/dinosaurs.util';
-import { DinosaurTypeMultipliers } from '../../dinosaurs/libs/dinosaur-type-multipliers';
-import { DinosaurType } from '../../dinosaurs/models/dinosaur-type.type';
+import { DinosaurFactory } from '../../dinosaurs/factories/dinosaur.factory';
 
 dotenv.config();
 
@@ -48,87 +45,6 @@ export class AuthService {
       return users.length > 0 ? users[0] : null;
     } catch (err) {
       console.error('Erreur lors de la récupération de l\'utilisateur par email:', err);
-      throw err;
-    }
-  }
-
-  // Créer un dinosaure
-
-  private async createDinosaur(
-    name: string,
-    userId: number,
-    diet: string,
-    type: DinosaurType,
-    energy: number = BASE_ENERGY,
-    max_energy: number = MAX_ENERGY,
-    food: number = BASE_FOOD,
-    max_food: number = MAX_FOOD,
-    hunger: number = 0,
-    max_hunger: number = BASE_MAX_HUNGER,
-    experience: number = 0,
-    epoch: string = 'past',
-    reborn_amount: number = 0,
-    karma: number = 0
-  ): Promise<number> {
-    try {
-      const dinosaurQuery = `INSERT INTO dinosaur (name, user_id, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma)
-                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-      const [dinosaurResult] = await pool.query(dinosaurQuery, [name, userId, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma]);
-      const dinosaurId = (dinosaurResult as any).insertId;
-
-      // Obtenir les multiplicateurs de base pour le type de dinosaure
-      const typeMultipliers = DinosaurTypeMultipliers[type as DinosaurType];
-
-      // Initialiser les multiplicateurs en fonction du régime alimentaire
-      let earn_herbi_food_multiplier = 0;
-      let earn_carni_food_multiplier = 0;
-
-      if (diet === 'herbivore') {
-        earn_herbi_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS - 1; // Soustraire 1 pour la base
-      } else if (diet === 'carnivore') {
-        earn_carni_food_multiplier = BASE_FOOD_MULTIPLIER_FOR_DIETS - 1; // Soustraire 1 pour la base
-      }
-
-      // Calcul final des multiplicateurs en additionnant ceux du type de dinosaure et ceux liés au régime alimentaire
-      const finalMultipliers = {
-        earn_herbi_food_multiplier: typeMultipliers.earn_herbi_food_multiplier + earn_herbi_food_multiplier,
-        earn_carni_food_multiplier: typeMultipliers.earn_carni_food_multiplier + earn_carni_food_multiplier,
-        earn_food_multiplier: typeMultipliers.earn_food_multiplier,
-        earn_energy_multiplier: typeMultipliers.earn_energy_multiplier,
-        earn_experience_multiplier: typeMultipliers.earn_experience_multiplier,
-        max_energy_multiplier: typeMultipliers.max_energy_multiplier,
-        max_food_multiplier: typeMultipliers.max_food_multiplier,
-      };
-
-      // Initialisation des multiplicateurs pour le dinosaure créé avec les valeurs calculées
-      const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id, earn_herbi_food_multiplier, earn_carni_food_multiplier, earn_food_multiplier, earn_energy_multiplier, earn_experience_multiplier, max_energy_multiplier, max_food_multiplier)
-                               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-      await pool.query(multiplierQuery, [
-        dinosaurId,
-        finalMultipliers.earn_herbi_food_multiplier,
-        finalMultipliers.earn_carni_food_multiplier,
-        finalMultipliers.earn_food_multiplier,
-        finalMultipliers.earn_energy_multiplier,
-        finalMultipliers.earn_experience_multiplier,
-        finalMultipliers.max_energy_multiplier,
-        finalMultipliers.max_food_multiplier,
-      ]);
-
-      return dinosaurId;
-    } catch (err) {
-      console.error('Erreur lors de la création du dinosaure:', err);
-      throw err;
-    }
-  }
-
-  // Trouver un dinosaure par ID
-  private async findDinosaurById(dinosaurId: number): Promise<Dinosaur | null> {
-    try {
-      const [results] = await pool.query('SELECT * FROM dinosaur WHERE id = ?', [dinosaurId]);
-      const dinosaurs = results as Dinosaur[];
-      return dinosaurs.length > 0 ? dinosaurs[0] : null;
-    } catch (err) {
-      console.error('Erreur lors de la récupération du dinosaure par ID:', err);
       throw err;
     }
   }
@@ -193,6 +109,68 @@ export class AuthService {
     }
   }
 
+  // Méthode pour enregistrer un dinosaure dans la base de données
+  private async registerDinosaur(dinosaur: Dinosaur): Promise<number> {
+    try {
+      const connection = await pool.getConnection();
+      try {
+        await connection.beginTransaction();
+
+        const dinosaurQuery = `INSERT INTO dinosaur (name, user_id, diet, type, energy, max_energy, food, max_food, hunger, max_hunger, experience, epoch, reborn_amount, karma, level, isSleeping, isDead, created_at, last_reborn, last_update_by_time_service)
+                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const [dinosaurResult] = await connection.execute(dinosaurQuery, [
+          dinosaur.name,
+          dinosaur.user_id,
+          dinosaur.diet,
+          dinosaur.type,
+          dinosaur.energy,
+          dinosaur.max_energy,
+          dinosaur.food,
+          dinosaur.max_food,
+          dinosaur.hunger,
+          dinosaur.max_hunger,
+          dinosaur.experience,
+          dinosaur.epoch,
+          dinosaur.reborn_amount,
+          dinosaur.karma,
+          dinosaur.level,
+          dinosaur.isSleeping,
+          dinosaur.isDead,
+          dinosaur.created_at,
+          dinosaur.last_reborn,
+          dinosaur.last_update_by_time_service,
+        ]);
+
+        const dinosaurId = (dinosaurResult as any).insertId;
+
+        const multiplierQuery = `INSERT INTO dinosaur_multiplier (dinosaur_id, earn_herbi_food_multiplier, earn_carni_food_multiplier, earn_food_multiplier, earn_energy_multiplier, earn_experience_multiplier, max_energy_multiplier, max_food_multiplier)
+                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        await connection.execute(multiplierQuery, [
+          dinosaurId,
+          dinosaur.multipliers.earn_herbi_food_multiplier,
+          dinosaur.multipliers.earn_carni_food_multiplier,
+          dinosaur.multipliers.earn_food_multiplier,
+          dinosaur.multipliers.earn_energy_multiplier,
+          dinosaur.multipliers.earn_experience_multiplier,
+          dinosaur.multipliers.max_energy_multiplier,
+          dinosaur.multipliers.max_food_multiplier,
+        ]);
+
+        await connection.commit();
+        return dinosaurId;
+      } catch (error) {
+        await connection.rollback();
+        console.error('Erreur lors de l\'enregistrement du dinosaure:', error);
+        throw error;
+      } finally {
+        connection.release();
+      }
+    } catch (err) {
+      console.error('Erreur lors de la création de la connexion à la base de données:', err);
+      throw err;
+    }
+  }
+
   // Inscription d'un nouvel utilisateur
   public async signup(username: string, email: string, password: string): Promise<{ user: User; dinosaur: Dinosaur }> {
     try {
@@ -213,20 +191,17 @@ export class AuthService {
         throw new Error('Erreur lors de la création de l\'utilisateur');
       }
 
-      // Générer un nom et un régime alimentaire aléatoires pour le dinosaure
-      const randomName = generateRandomName();
-      const randomDiet = getRandomDiet();
-      const randomType = getRandomType();
+      // Créer le dinosaure associé via la factory
+      const dinosaur = await DinosaurFactory.createDinosaur(userId);
 
-      // Créer le dinosaure associé à l'utilisateur
-      const dinosaurId = await this.createDinosaur(randomName, userId, randomDiet, randomType);
-      const newDinosaur = await this.findDinosaurById(dinosaurId);
+      // Valider le dinosaure avant l'enregistrement
+      // (Assurez-vous que DinosaurDTO est importé et configuré pour la validation)
+      // await validateOrReject(new DinosaurDTO(dinosaur));
 
-      if (!newDinosaur) {
-        throw new Error('Erreur lors de la création du dinosaure');
-      }
+      // Enregistrer le dinosaure dans la base de données
+      await this.registerDinosaur(dinosaur);
 
-      return { user: newUser, dinosaur: newDinosaur };
+      return { user: newUser, dinosaur };
     } catch (error) {
       console.error('Erreur lors de l\'inscription:', error);
       throw error;

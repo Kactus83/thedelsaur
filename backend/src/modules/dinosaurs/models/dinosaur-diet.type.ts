@@ -1,1 +1,5 @@
-export type DietType = 'carnivore' | 'herbivore' | 'omnivore';
+export enum DietType {
+    CARNIVORE = 'carnivore',
+    HERBIVORE = 'herbivore',
+    OMNIVORE = 'omnivore',
+  }
