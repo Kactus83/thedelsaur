@@ -15,7 +15,6 @@ body, html {
     overflow-y: hidden;
     z-index: 0;
 
-
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -35,6 +34,11 @@ body, html {
     flex-direction: column;
     justify-content: space-between;
     align-items: stretch;
+}
+
+.desktop-only {
+    /* Afficher seulement en mode desktop */
+    display: block;
 }
 
 #Middle {
@@ -85,7 +89,6 @@ body, html {
     align-items: center;
 }
 
-
 .middleContent {
     margin: 2px;
     background: rgba(255, 255, 255, 0.0);
@@ -104,7 +107,6 @@ body, html {
     display: block;
 }
 
-
 .InRight {
     margin: 2px;
     border: 2px solid black;
@@ -120,7 +122,6 @@ body, html {
     width: 20rem;
 }
 
-
 /* Mobile layout */
 @media only screen and (max-width: 768px) {
     #main {
@@ -128,9 +129,9 @@ body, html {
         margin-top: 6vh;
     }
 
+    /* Masquer la section Infos en mode mobile */
     #Infos {
-        width: 99%;
-        flex-grow: 1;
+        display: none;
     }
 
     #Actions {
@@ -176,12 +177,23 @@ body, html {
     /* Affichage du bouton de l'overlay */
     .overlay-button {
         display: flex; /* Affiché uniquement en mode mobile */
+        margin: 10px auto;
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
     }
-.div-button{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
+
+    /* Cacher le bouton en mode desktop */
+    @media only screen and (min-width: 769px) {
+        .mobile-only {
+            display: none;
+        }
+    }
+
     /* Styles de l'overlay */
     .overlay {
         display: none; /* Masqué par défaut */

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchDinosaurActions , getNextLevelXp} from '../../services/dinosaurService';
+import { fetchDinosaurActions, getNextLevelXp } from '../../services/dinosaurService';
 import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions, { ActionDetail } from '../../components/Dashboard/Actions';
 import EventOverlay from '../../components/Dashboard/EventOverlay'; 
@@ -12,7 +12,9 @@ import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/a
 import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 
-// Définitions des chemins d'images de fond pour chaque époque
+/**
+ * Définitions des chemins d'images de fond pour chaque époque
+ */
 const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
     past: '/assets/img/FirstTime.jpg',
     present: '/assets/img/FifthTime.jpg', // Nom inventé pour l'époque du milieu
@@ -26,10 +28,11 @@ const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
 const DashboardPage: React.FC = () => {
     // États pour stocker les informations de l'utilisateur et du dinosaure
     const [user, setUser] = useState<User | null>(null);
-    const [max_experience, setMAX_XP] = useState <number>(0);
+    const [max_experience, setMAX_XP] = useState<number>(0);
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
     const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
     const [lastEvent, setLastEvent] = useState<string | null>(null); // État pour l'événement affiché
+    const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
 
     /**
      * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur, dinosaure et actions.
@@ -42,16 +45,16 @@ const DashboardPage: React.FC = () => {
             const fetchedDinosaur = await fetchDinosaurFromBackend();
             // Récupération des actions disponibles depuis le backend
             const fetchedActions = await fetchDinosaurActions();
-    
+
             // Récupération de l'expérience maximale du prochain niveau
             const maxExperienceResponse = await getNextLevelXp();
-    
+
             // Supposons que l'API retourne un objet { nextLevelXp: 1000 }
             // Extraire directement la valeur numérique
             const maxExperience = maxExperienceResponse.nextLevelXp; 
-    
+
             console.log("max xp :", maxExperience);
-    
+
             // Mise à jour des états avec les données récupérées
             setMAX_XP(maxExperience);
             setUser(fetchedUser);
@@ -87,7 +90,7 @@ const DashboardPage: React.FC = () => {
      */
     const handleEventDisplay = (eventMessage: string) => {
         setLastEvent(eventMessage);
-        setTimeout(() => setLastEvent(null), 1200); // Cache l'overlay après 3 secondes
+        setTimeout(() => setLastEvent(null), 1200); // Cache l'overlay après 1,2 secondes
     };
 
     // Initialiser les données au montage du composant
@@ -103,10 +106,7 @@ const DashboardPage: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // Calcul de la largeur de la barre XP avec une limite à 100%
-    const xpWidth = dinosaur ? Math.min(dinosaur.experience / 100, 100) : 0;
-
-
+    // Calcul de l'expérience actuelle pour la jauge
     const experience = dinosaur ? dinosaur.experience : 0;
 
     return (
@@ -120,17 +120,14 @@ const DashboardPage: React.FC = () => {
             {/* Conteneur principal de la page Dashboard */}
             <div id="main">
                 {/* Section Infos contenant les informations de l'utilisateur et du dinosaure */}
-                <div id="Infos">
-
+                <div id="Infos" className="desktop-only">
                     {dinosaur && <DinosaurInfo dinosaur={dinosaur} />}
-                    
                 </div>
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
                     {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
                         {/* Barre XP indiquant l'expérience du dinosaure */}
-                        
                         <Gauge_XP
                             label={`level: ${dinosaur ? dinosaur.level : "NaN"}`}
                             current={experience}
@@ -153,6 +150,13 @@ const DashboardPage: React.FC = () => {
                             {lastEvent && <EventOverlay eventMessage={lastEvent} />}
                         </div>
                     </div>
+                    {/* Bouton pour afficher l'overlay en mode mobile */}
+                    <button 
+                        className="mobile-only overlay-button" 
+                        onClick={() => setIsOverlayVisible(true)}
+                    >
+                        Voir infos du dinosaure
+                    </button>
                 </div>
                 {/* Section Actions */}
                 <div id="Actions">
@@ -167,6 +171,21 @@ const DashboardPage: React.FC = () => {
                 </div>
             </div>
             <Footer />
+
+            {/* Overlay pour afficher les informations du dinosaure en mode mobile */}
+            {isOverlayVisible && (
+                <div className="overlay active">
+                    <div className="overlay-content">
+                        <span 
+                            className="close-button" 
+                            onClick={() => setIsOverlayVisible(false)}
+                        >
+                            &times;
+                        </span>
+                        {dinosaur && <DinosaurInfo dinosaur={dinosaur} />}
+                    </div>
+                </div>
+            )}
         </>
     );
 };
