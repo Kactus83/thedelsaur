@@ -95,6 +95,8 @@ export class DinosaurFactory {
         ((dietMultipliers.max_food_multiplier || 1) - 1),
     };
 
+    console.log(finalMultipliers);
+
     // Créer l'objet Dinosaur
     const dinosaur: Dinosaur = {
       id: 0, // Sera généré lors de l'insertion en base de données
