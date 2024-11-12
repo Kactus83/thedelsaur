@@ -19,7 +19,7 @@ import { Epoch } from '../../types/Epoch';
 const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
     acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
     return acc;
-  }, {} as Record<Epoch, string>);
+}, {} as Record<Epoch, string>);
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -109,6 +109,9 @@ const DashboardPage: React.FC = () => {
     // Calcul de l'expérience actuelle pour la jauge
     const experience = dinosaur ? dinosaur.experience : 0;
 
+    // Génération dynamique du chemin de l'image en fonction de diet et type du dinosaure
+    const dinosaurImagePath = dinosaur ? `/assets/dino/dino_${dinosaur.diet}_${dinosaur.type}.svg` : '';
+
     return (
         <>
             {/* Overlay d'image dynamique */}
@@ -139,12 +142,12 @@ const DashboardPage: React.FC = () => {
                     {/* Partie inférieure de la section Middle */}
                     <div className="bottomMiddle">
                         <div className="middleContent">
-                            {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire */}
+                            {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire et son type */}
                             {dinosaur && (
                                 <img
-                                    src={`/assets/dino/dino_${dinosaur.diet}.svg`} // Chemin absolu vers l'image du dinosaure
-                                    alt={`Dinosaure ${dinosaur.name}`} // Texte alternatif pour l'accessibilité
-                                    className="dino-svg" // Classe CSS pour le style de l'image
+                                    src={dinosaurImagePath}
+                                    alt={`Dinosaure ${dinosaur.name}`}
+                                    className="dino-svg"
                                 />
                             )}
                             {/* Affichage de l'overlay si un événement est présent */}
