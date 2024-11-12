@@ -26,7 +26,7 @@ export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétiq
 export const ENERGY_COST_TO_STEAL = 2000;                   // Coût énergétique pour l'action de "voler"
 
 // Epoch thresholds 
-export const BASE_EPOCH_DURATION = 40;       // Durée de base en secondes pour la première époque
+export const BASE_EPOCH_DURATION = 20;       // Durée de base en secondes pour la première époque
 export const EPOCH_GROWTH_FACTOR = 1.5;      // Facteur de croissance pour les durées des époques
 
 // Constants for Dinosaur Leveling System
