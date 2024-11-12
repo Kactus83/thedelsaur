@@ -96,7 +96,7 @@ const DashboardPage: React.FC = () => {
             setIsActionInProgress(false); // Arrête l'animation du dinosaure
             // Cache l'overlay après 3 secondes
             setTimeout(() => setLastEvent(null), 3000);
-        }, 1200);
+        }, 500);
     };
 
     /**
@@ -151,6 +151,14 @@ const DashboardPage: React.FC = () => {
                             color="blue"
                             tooltipText={`Multiplicateur d'expérience : ${dinosaur?.multipliers.earn_experience_multiplier}x`}
                         />
+                
+                        {/* Bouton pour afficher l'overlay en mode mobile */}
+                        <button
+                            className="mobile-only overlay-button"
+                            onClick={() => setIsOverlayVisible(true)}
+                        >
+                            Voir infos du dinosaure
+                        </button>
                     </div>
                     {/* Partie inférieure de la section Middle */}
                     <div className="bottomMiddle">
@@ -167,13 +175,6 @@ const DashboardPage: React.FC = () => {
                             {lastEvent && <EventOverlay event={lastEvent} />}
                         </div>
                     </div>
-                    {/* Bouton pour afficher l'overlay en mode mobile */}
-                    <button
-                        className="mobile-only overlay-button"
-                        onClick={() => setIsOverlayVisible(true)}
-                    >
-                        Voir infos du dinosaure
-                    </button>
                 </div>
                 {/* Section Actions */}
                 <div id="Actions">
