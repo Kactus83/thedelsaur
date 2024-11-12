@@ -1,6 +1,7 @@
 import * as React from 'react';
 import './Actions.css';
 import api from '../../services/api';
+import { DinosaurEvent } from '../../types/DinosaurEvent';
 
 export interface ActionDetail {
   name: string;
@@ -13,28 +14,41 @@ export interface ActionDetail {
 interface ActionsProps {
   refreshDinosaur: () => void;
   availableActions: ActionDetail[];
-  onActionEvent: (eventMessage: string) => void; // Callback pour envoyer les messages d'événements
+  onActionEvent: (event: DinosaurEvent) => void; // Callback pour envoyer les événements
+  onActionStart: () => void; // Callback pour indiquer le début d'une action
 }
 
-const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, onActionEvent }) => {
+const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, onActionEvent, onActionStart }) => {
 
   /**
    * Fonction pour gérer l'action dynamique
    */
   const handleAction = async (action: ActionDetail) => {
+    onActionStart(); // Indique que l'action commence
     try {
       const response = await api.post(action.endpoint); // Appel à l'API pour effectuer l'action
       console.log(response);
       if (response.status === 200) {
         const { event } = response.data;
-        onActionEvent(event?.description || `Action réussie: ${action.name}`); // Passe le message d'event à onActionEvent
+        onActionEvent(event); // Passe l'événement à onActionEvent
+        console.log(event);
         refreshDinosaur(); // Rafraîchir les données du dinosaure après l'action
       } else {
         throw new Error('Échec de l\'action');
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Erreur interne du serveur.';
-      onActionEvent(`Erreur lors de l'action ${action.name}: ${errorMessage}`);
+      onActionEvent({
+        name: `Erreur lors de l'action ${action.name}`,
+        description: errorMessage,
+        energyChange: 0,
+        foodChange: 0,
+        hungerChange: 0,
+        experienceChange: 0,
+        karmaChange: 0,
+        minLevel: 0,
+        weight: 0,
+      });
     }
   };
 

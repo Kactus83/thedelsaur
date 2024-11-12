@@ -2,16 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { fetchDinosaurActions, getNextLevelXp } from '../../services/dinosaurService';
 import DinosaurInfo from '../../components/Dashboard/DinosaurInfo';
 import Actions, { ActionDetail } from '../../components/Dashboard/Actions';
-import EventOverlay from '../../components/Dashboard/EventOverlay'; 
+import EventOverlay from '../../components/Dashboard/EventOverlay';
 import Header from '../../components/Common/Header';
 import Footer from '../../components/Common/Footer';
-import './DashboardPage.css'; 
+import './DashboardPage.css';
 import { User } from '../../types/User';
 import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 import { Epoch } from '../../types/Epoch';
+import { DinosaurEvent } from '../../types/DinosaurEvent';
 
 /**
  * Définitions des chemins d'images de fond pour chaque époque
@@ -31,8 +32,9 @@ const DashboardPage: React.FC = () => {
     const [max_experience, setMAX_XP] = useState<number>(0);
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
     const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
-    const [lastEvent, setLastEvent] = useState<string | null>(null); // État pour l'événement affiché
+    const [lastEvent, setLastEvent] = useState<DinosaurEvent | null>(null); // État pour l'événement affiché
     const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
+    const [isActionInProgress, setIsActionInProgress] = useState<boolean>(false); // État pour l'animation du dinosaure
 
     /**
      * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur, dinosaure et actions.
@@ -51,7 +53,7 @@ const DashboardPage: React.FC = () => {
 
             // Supposons que l'API retourne un objet { nextLevelXp: 1000 }
             // Extraire directement la valeur numérique
-            const maxExperience = maxExperienceResponse.nextLevelXp; 
+            const maxExperience = maxExperienceResponse.nextLevelXp;
 
             console.log("max xp :", maxExperience);
 
@@ -86,11 +88,22 @@ const DashboardPage: React.FC = () => {
 
     /**
      * Fonction pour gérer l'affichage de l'événement.
-     * @param eventMessage Message de l'événement à afficher.
+     * @param event L'événement à afficher.
      */
-    const handleEventDisplay = (eventMessage: string) => {
-        setLastEvent(eventMessage);
-        setTimeout(() => setLastEvent(null), 1200); // Cache l'overlay après 1,2 secondes
+    const handleEventDisplay = (event: DinosaurEvent) => {
+        setTimeout(() => {
+            setLastEvent(event);
+            setIsActionInProgress(false); // Arrête l'animation du dinosaure
+            // Cache l'overlay après 3 secondes
+            setTimeout(() => setLastEvent(null), 3000);
+        }, 1200);
+    };
+
+    /**
+     * Fonction pour indiquer le début d'une action.
+     */
+    const handleActionStart = () => {
+        setIsActionInProgress(true); // Démarre l'animation du dinosaure
     };
 
     // Initialiser les données au montage du composant
@@ -147,16 +160,16 @@ const DashboardPage: React.FC = () => {
                                 <img
                                     src={dinosaurImagePath}
                                     alt={`Dinosaure ${dinosaur.name}`}
-                                    className="dino-svg"
+                                    className={`dino-svg ${isActionInProgress ? 'action-in-progress' : ''}`}
                                 />
                             )}
                             {/* Affichage de l'overlay si un événement est présent */}
-                            {lastEvent && <EventOverlay eventMessage={lastEvent} />}
+                            {lastEvent && <EventOverlay event={lastEvent} />}
                         </div>
                     </div>
                     {/* Bouton pour afficher l'overlay en mode mobile */}
-                    <button 
-                        className="mobile-only overlay-button" 
+                    <button
+                        className="mobile-only overlay-button"
                         onClick={() => setIsOverlayVisible(true)}
                     >
                         Voir infos du dinosaure
@@ -170,6 +183,7 @@ const DashboardPage: React.FC = () => {
                             refreshDinosaur={refreshDinosaur}
                             availableActions={availableActions}
                             onActionEvent={handleEventDisplay}
+                            onActionStart={handleActionStart} // Nouvelle prop
                         />
                     )}
                 </div>
@@ -180,8 +194,8 @@ const DashboardPage: React.FC = () => {
             {isOverlayVisible && (
                 <div className="overlay active">
                     <div className="overlay-content">
-                        <span 
-                            className="close-button" 
+                        <span
+                            className="close-button"
                             onClick={() => setIsOverlayVisible(false)}
                         >
                             &times;
