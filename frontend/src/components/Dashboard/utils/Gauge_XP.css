@@ -3,7 +3,7 @@
     margin: 1px 0;
     font-size: 0.9rem;
     width: 100%; /* Utilisation de 100% pour un espace flexible */
-    max-width: 100%; /* S'assurer que la largeur maximale s'ajuste au parent */
+    min-width: 100%; /* S'assurer que la largeur maximale s'ajuste au parent */
     padding: 0 10px; /* Ajouter un padding pour un meilleur espacement sur petits écrans */
 }
 
