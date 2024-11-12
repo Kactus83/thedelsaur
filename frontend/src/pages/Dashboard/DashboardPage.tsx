@@ -11,15 +11,15 @@ import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
+import { Epoch } from '../../types/Epoch';
 
 /**
  * Définitions des chemins d'images de fond pour chaque époque
  */
-const EPOCH_BACKGROUND_IMAGES: Record<string, string> = {
-    past: '/assets/img/FirstTime.jpg',
-    present: '/assets/img/FifthTime.jpg', // Nom inventé pour l'époque du milieu
-    future: '/assets/img/Cybercity.jpg',
-};
+const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
+    acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
+    return acc;
+  }, {} as Record<Epoch, string>);
 
 /**
  * Composant fonctionnel représentant la page Dashboard.

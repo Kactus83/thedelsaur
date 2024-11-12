@@ -7,12 +7,12 @@ export const BASE_MAX_HUNGER = 10000;                       // Niveau maximal de
 
 // Energy Consumption and Recovery Rates
 export const ENERGY_COST_TO_DISCOVER = 2500;                // Coût en énergie pour découvrir
-export const ENERGY_DECAY_RATE_PER_SECOND = 10;              // Décroissance de l'énergie par seconde
-export const ENERGY_RECOVERY_RATE_PER_SECOND = 250;         // Régénération de l'énergie en sommeil
+export const ENERGY_DECAY_RATE_PER_SECOND = 50;              // Décroissance de l'énergie par seconde
+export const ENERGY_RECOVERY_RATE_PER_SECOND = 500;         // Régénération de l'énergie en sommeil
 
 // Hunger Increase Rates
-export const HUNGER_INCREASE_PER_SECOND = 7;                // Augmentation de la faim par seconde
-export const HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING = 250; // Augmentation de la faim par seconde
+export const HUNGER_INCREASE_PER_SECOND = 15;                // Augmentation de la faim par seconde
+export const HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING = 500; // Augmentation de la faim par seconde
 export const HUNGER_ENERGY_LOSS_RATE_PER_SECOND = 10;       // Perte d'énergie par seconde due à la faim
 export const HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS = 7000;    // Seuil de faim au-delà duquel la perte d'énergie commence
 
@@ -26,17 +26,13 @@ export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétiq
 export const ENERGY_COST_TO_STEAL = 2000;                   // Coût énergétique pour l'action de "voler"
 
 // Epoch thresholds 
-export const PAST_THRESHOLD_IN_SECONDS = 60; // 1 minute
-export const PRESENT_THRESHOLD_IN_SECONDS = 120; // 2 minutes
-export const FUTURE_THRESHOLD_IN_SECONDS = 180; // 3 minutes ou plus
+export const BASE_EPOCH_DURATION = 40;       // Durée de base en secondes pour la première époque
+export const EPOCH_GROWTH_FACTOR = 1.5;      // Facteur de croissance pour les durées des époques
 
 // Constants for Dinosaur Leveling System
 export const BASE_EXP_REQUIRED = 100;        // Expérience requise pour passer du niveau 1 au niveau 2
 export const EXP_GROWTH_FACTOR = 1.5;         // Facteur de croissance de la progression d'expérience
 export const LEVEL_MODIFIER = 2.0; // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
-
-// Multipliers constants
-export const BASE_FOOD_MULTIPLIER_FOR_DIETS = 1.2;
 
 // Karma system constants
 export const KARMA_GAIN_AFTER_DEATH = 100;

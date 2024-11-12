@@ -6,13 +6,14 @@ import {
   HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
   HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
   HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
-  PAST_THRESHOLD_IN_SECONDS,
-  PRESENT_THRESHOLD_IN_SECONDS,
+  BASE_EPOCH_DURATION,
+  EPOCH_GROWTH_FACTOR,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { BasicActionsService } from './basic-actions.service';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { applyEventToDinosaur, getRandomEventForAction } from '../utils/dinosaur-actions.util';
+import { Epoch } from '../models/epoch.enum';
 
 /**
  * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
@@ -115,17 +116,24 @@ export class DinosaurTimeService {
    * @param lastReborn La date du dernier reborn du dinosaure.
    * @returns Le type d'époque ('past', 'present', 'future').
    */
-  public calculateEpoch(lastReborn: string): 'past' | 'present' | 'future' {
+
+  public calculateEpoch(lastReborn: string): Epoch {
     const rebornDate = new Date(lastReborn);
     const now = new Date();
-    const timeElapsedInSeconds = Math.floor((now.getTime() - rebornDate.getTime()) / 1000);
+    const timeElapsedInSeconds = (now.getTime() - rebornDate.getTime()) / 1000;
 
-    if (timeElapsedInSeconds < PAST_THRESHOLD_IN_SECONDS) {
-      return 'past';
-    } else if (timeElapsedInSeconds < PRESENT_THRESHOLD_IN_SECONDS) {
-      return 'present';
-    } else {
-      return 'future';
+    const epochValues = Object.values(Epoch);
+    let cumulativeTime = 0;
+
+    for (let i = 0; i < epochValues.length; i++) {
+      const epochDuration = BASE_EPOCH_DURATION * Math.pow(EPOCH_GROWTH_FACTOR, i);
+      cumulativeTime += epochDuration;
+      if (timeElapsedInSeconds < cumulativeTime) {
+        return epochValues[i] as Epoch;
+      }
     }
+    // Si le temps écoulé dépasse tous les seuils, retourner la dernière époque
+    return epochValues[epochValues.length - 1] as Epoch;
   }
 }
+

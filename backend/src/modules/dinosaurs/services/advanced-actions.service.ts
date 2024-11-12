@@ -1,8 +1,9 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaursService } from './dinosaurs.service';
+import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 
 /**
  * Service pour gérer les actions avancées du dinosaure (voler, découvrir).
@@ -52,7 +53,9 @@ export class AdvancedActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public stealDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Steal)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Steal];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas voler.');
         }
 
@@ -67,7 +70,9 @@ export class AdvancedActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public discoverDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Discover)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Discover];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas découvrir.');
         }
 

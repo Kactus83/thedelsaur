@@ -1,9 +1,9 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaursService } from './dinosaurs.service';
-import { DinosaurTimeService } from './dinosaur-time.service';
+import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 
 /**
  * Service pour gérer les actions spécifiques aux dinosaures herbivores (cueillir).
@@ -53,7 +53,9 @@ export class HerbivoreActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public grazeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Graze)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas cueillir.');
         }
 
