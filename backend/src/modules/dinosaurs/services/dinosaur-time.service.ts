@@ -7,7 +7,9 @@ import {
   HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
   HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
   BASE_EPOCH_DURATION,
-  EPOCH_GROWTH_FACTOR,
+  EPOCH_OFFSET,
+  EPOCH_LOG_BASE,
+  LINEAR_ADJUSTMENT_FACTOR,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { BasicActionsService } from './basic-actions.service';
@@ -121,18 +123,19 @@ export class DinosaurTimeService {
     const rebornDate = new Date(lastReborn);
     const now = new Date();
     const timeElapsedInSeconds = (now.getTime() - rebornDate.getTime()) / 1000;
-
+  
     const epochValues = Object.values(Epoch);
     let cumulativeTime = 0;
-
+  
     for (let i = 0; i < epochValues.length; i++) {
-      const epochDuration = BASE_EPOCH_DURATION * Math.pow(EPOCH_GROWTH_FACTOR, i);
+      const epochDuration = BASE_EPOCH_DURATION * Math.log(i + EPOCH_LOG_BASE) + (i * LINEAR_ADJUSTMENT_FACTOR) + EPOCH_OFFSET;
       cumulativeTime += epochDuration;
+  
       if (timeElapsedInSeconds < cumulativeTime) {
         return epochValues[i] as Epoch;
       }
     }
-    // Si le temps écoulé dépasse tous les seuils, retourner la dernière époque
+  
     return epochValues[epochValues.length - 1] as Epoch;
   }
 }
