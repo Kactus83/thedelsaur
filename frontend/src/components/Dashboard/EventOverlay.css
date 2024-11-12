@@ -1,23 +1,58 @@
 .event-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #ffffff;
-    font-size: 1.5rem;
-    z-index: 10;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 15px 25px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeInOut 4s forwards;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.event-overlay h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.event-overlay p {
+  margin: 5px 0 10px;
+  font-size: 1rem;
+}
+
+.event-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.stat-change {
+  margin: 5px 10px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.stat-change span:first-child {
+  margin-right: 5px;
+}
+
+@keyframes fadeInOut {
+  0% {
+      opacity: 0;
   }
-  
-  .event-message {
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    color: #333;
-    font-weight: bold;
-    text-align: center;
+  10% {
+      opacity: 1;
   }
+  90% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}
