@@ -101,6 +101,7 @@ body, html {
 }
 
 .middleContent img.dino-svg {
+    padding-top: 25%;
     min-width: 60%;
     max-width: 200px;
     margin: 10px auto;
