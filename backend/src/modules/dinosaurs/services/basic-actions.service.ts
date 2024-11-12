@@ -1,10 +1,9 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { canPerformAction, getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
+import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
-import { KARMA_GAIN_AFTER_DEATH } from '../../../common/config/constants';
-import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { DinosaursService } from '../services/dinosaurs.service';
+import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 
 /**
  * Service pour gérer les actions basiques du dinosaure (manger, dormir, se réveiller, ressusciter).
@@ -54,7 +53,9 @@ export class BasicActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Eat)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Eat];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas manger.');
         }
 
@@ -103,7 +104,9 @@ export class BasicActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public sleepDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Sleep)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Sleep];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas dormir.');
         }
 
@@ -120,7 +123,9 @@ export class BasicActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public wakeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.WakeUp)) {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.WakeUp];
+
+        if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas se réveiller.');
         }
 
@@ -137,8 +142,10 @@ export class BasicActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public resurrectDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Resurrect)) {
-            throw new Error('Le dinosaure ne peut pas être ressuscité.');
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Resurrect];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas ressusciter.');
         }
 
         const event = getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
@@ -153,8 +160,10 @@ export class BasicActionsService {
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
     public grazeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
-        if (!canPerformAction(dinosaur, DinosaurAction.Graze)) {
-            throw new Error('Le dinosaure ne peut pas cueillir.');
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas brouter.');
         }
 
         const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);

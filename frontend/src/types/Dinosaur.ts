@@ -1,3 +1,5 @@
+import { Epoch } from "./Epoch";
+
 export interface Dinosaur {
     id: number;
     name: string;
@@ -11,7 +13,7 @@ export interface Dinosaur {
     experience: number;
     hunger: number;
     max_hunger: number;
-    epoch: string;
+    epoch: Epoch;
     created_at: string;
     last_reborn: string;
     karma: number;

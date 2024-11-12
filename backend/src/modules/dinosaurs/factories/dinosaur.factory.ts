@@ -10,6 +10,7 @@ import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
+import { Epoch } from '../models/epoch.enum';
 
 // Liste de prénoms possibles pour les dinosaures
 const names: string[] = [
@@ -61,7 +62,7 @@ export class DinosaurFactory {
     const hunger = 0;
     const max_hunger = BASE_MAX_HUNGER;
     const experience = 0;
-    const epoch = 'past';
+    const epoch = Epoch.Ancient_Epoch1;
     const reborn_amount = 0;
     const karma = 0;
     const level = 1;

@@ -1,7 +1,7 @@
 import { DietType } from "./dinosaur-diet.type";
-import { EpochType } from "./epoch.type";
 import { DinosaurMultiplier } from "./dinosaur-multiplier.interface";
 import { DinosaurType } from "./dinosaur-type.type";
+import { Epoch } from "./epoch.enum";
 
 export interface Dinosaur {
   id: number;
@@ -16,7 +16,7 @@ export interface Dinosaur {
   max_hunger: number;
   experience: number;
   level: number;
-  epoch: EpochType;
+  epoch: Epoch;
   created_at: Date;
   last_reborn: string;
   karma: number;

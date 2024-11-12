@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { DietType } from './dinosaur-diet.type';
-import { EpochType } from './epoch.type';
+import { Epoch } from './epoch.enum';
 import { DinosaurMultiplierDTO } from './dinosaur-multiplier.dto';
 import { DinosaurType } from './dinosaur-type.type';
 
@@ -43,7 +43,7 @@ export class DinosaurDTO {
   level!: number;
 
   @Expose()
-  epoch!: EpochType;
+  epoch!: Epoch;
 
   @Expose()
   created_at!: Date;
