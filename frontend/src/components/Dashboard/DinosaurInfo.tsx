@@ -17,7 +17,7 @@ export function calculateDinosaurAge(lastReborn: string): string {
     const minutes = Math.floor((diffInMilliseconds / (1000 * 60)) % 60);
     const seconds = Math.floor((diffInMilliseconds / 1000) % 60);
 
-    return `${days} jours, ${hours} heures, ${minutes} min, ${seconds} sec`;
+    return `${hours} heures, ${minutes} min, ${seconds} sec`;
 }
 
 const DinosaurInfo: React.FC<DinosaurInfoProps> = ({ dinosaur }) => {
