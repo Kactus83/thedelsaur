@@ -8,6 +8,7 @@ import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { getAvailableActions, getExperienceThresholdForLevel } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { ChangeDinosaurNameRequestBody } from '../models/change-dinosaur-name.dto';
+import { calculateEpochThresholds } from '../utils/epochUtils';
 
 export class DinosaursController {
   private dinosaursService: DinosaursService;
@@ -20,6 +21,17 @@ export class DinosaursController {
     this.dinosaursService = dinosaursService;
     this.dinosaurTimeService = dinosaurTimeService;
   }
+  
+  // Nouvelle méthode pour obtenir les seuils des époques
+  public getEpochThresholds = (req: Request, res: Response) => {
+      try {
+          const thresholds = calculateEpochThresholds();
+          res.status(200).json({ thresholds });
+      } catch (error) {
+          console.error('Erreur lors de la récupération des seuils d\'époques:', error);
+          res.status(500).json({ message: 'Erreur interne du serveur' });
+      }
+  };
 
   // Méthode pour obtenir les actions disponibles pour un dinosaure
   public getAvailableActionsForDinosaur = async (req: AuthenticatedRequest, res: Response) => {

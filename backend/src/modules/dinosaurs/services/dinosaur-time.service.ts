@@ -6,26 +6,22 @@ import {
   HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
   HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
   HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
-  BASE_EPOCH_DURATION,
-  LOG_BASE_START,
-  LOG_BASE_END,
-  ATTENUATION_FACTOR,
-  LINEAR_ADJUST_FACTOR,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { BasicActionsService } from './basic-actions.service';
-import { DinosaurAction } from '../models/dinosaur-action.enum';
-import { applyEventToDinosaur, getRandomEventForAction } from '../utils/dinosaur-actions.util';
 import { Epoch } from '../models/epoch.enum';
+import { calculateEpochThresholds } from '../utils/epochUtils';
 
 /**
  * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
  */
 export class DinosaurTimeService {
   private basicActionsService: BasicActionsService;
+  private epochThresholds: { epoch: Epoch, threshold: number }[];
 
   constructor(basicActionsService: BasicActionsService) {
     this.basicActionsService = basicActionsService;
+    this.epochThresholds = calculateEpochThresholds();
   }
 
   public adjustDinosaurStats(dinosaur: Dinosaur): Dinosaur {
@@ -60,11 +56,7 @@ export class DinosaurTimeService {
           // Réveil automatique du dinosaure
           console.log('Le dinosaure a atteint son énergie maximale et se réveille automatiquement.');
 
-          // Utiliser l'événement de réveil pour appliquer les changements
-          const event = getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
-
-          dinosaur.isSleeping = false;
-          applyEventToDinosaur(dinosaur, DinosaurAction.WakeUp, event);
+          this.basicActionsService.wakeDinosaur(dinosaur);
         }
 
         // Augmentation plus lente de la faim pendant le sommeil
@@ -119,28 +111,19 @@ export class DinosaurTimeService {
    * @param lastReborn La date du dernier reborn du dinosaure.
    * @returns Le type d'époque ('past', 'present', 'future').
    */
-
   public calculateEpoch(lastReborn: string): Epoch {
     const rebornDate = new Date(lastReborn);
     const now = new Date();
     const timeElapsedInSeconds = (now.getTime() - rebornDate.getTime()) / 1000;
-  
-    const epochValues = Object.values(Epoch);
-    let cumulativeTime = 0;
-  
-    for (let i = 0; i < epochValues.length; i++) {
-      const logBase = LOG_BASE_START + (LOG_BASE_END - LOG_BASE_START) * (i / (epochValues.length - 1));
-      const adjustedIndex = i * ATTENUATION_FACTOR;
-      const epochDuration = BASE_EPOCH_DURATION * Math.log(adjustedIndex + 1) / Math.log(logBase) + (i * LINEAR_ADJUST_FACTOR);
 
-      cumulativeTime += epochDuration;
-  
-      if (timeElapsedInSeconds < cumulativeTime) {
-        return epochValues[i] as Epoch;
+    // Utilisation des seuils calculés pour déterminer l'époque
+    for (const { epoch, threshold } of this.epochThresholds) {
+      if (timeElapsedInSeconds < threshold) {
+        return epoch;
       }
     }
-  
-    return epochValues[epochValues.length - 1] as Epoch;
+
+    return this.epochThresholds[this.epochThresholds.length - 1].epoch; // Dernière époque si toutes les autres sont dépassées
   }
 }
 
