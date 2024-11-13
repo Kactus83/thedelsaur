@@ -2,9 +2,10 @@ import { Dinosaur } from '../models/dinosaur.interface';
 import {
   MAX_FOOD,
   BASE_ENERGY,
+  BASE_MAX_HUNGER,
 } from '../../../common/config/constants';
 import pool from '../../../common/database/db';
-import { calculateFinalMultipliers } from '../utils/dinosaurUtils';
+import { calculateFinalMultipliers, calculateMaxHungerMultiplier } from '../utils/dinosaurUtils';
 import { DietType } from '../models/dinosaur-diet.type';
 import { DinosaurType } from '../models/dinosaur-type.type';
 
@@ -46,12 +47,14 @@ export class DinosaursService {
 
       // Calculer les multiplicateurs finaux en fonction du régime alimentaire, du type et du niveau
       const finalMultipliers = calculateFinalMultipliers(dietType, dinoType, level);
+      const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
 
       // Calculer et arrondir les valeurs de max_food et max_energy
       const dinosaur: Dinosaur = {
         ...dinosaurData,
         max_food: Math.round(MAX_FOOD * finalMultipliers.max_food_multiplier),
         max_energy: Math.round(BASE_ENERGY * finalMultipliers.max_energy_multiplier),
+        max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier),
         multipliers: finalMultipliers,
       };
 
@@ -96,12 +99,14 @@ export class DinosaursService {
 
       // Calculer les multiplicateurs finaux en fonction du régime alimentaire, du type et du niveau
       const finalMultipliers = calculateFinalMultipliers(dietType, dinoType, level);
+      const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
 
       // Calculer et arrondir les valeurs de max_food et max_energy
       const dinosaur: Dinosaur = {
         ...dinosaurData,
         max_food: Math.round(MAX_FOOD * finalMultipliers.max_food_multiplier),
         max_energy: Math.round(BASE_ENERGY * finalMultipliers.max_energy_multiplier),
+        max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier),
         multipliers: finalMultipliers,
       };
 
@@ -128,10 +133,12 @@ export class DinosaursService {
 
       // Utiliser les multiplicateurs actuels si les nouveaux ne sont pas fournis
       const multipliers = updates.multipliers || currentDinosaur.multipliers;
+      const level = updates.level || currentDinosaur.level;
 
       // Recalculer et arrondir max_food et max_energy en utilisant les multiplicateurs finaux
       updates.max_food = Math.round(MAX_FOOD * multipliers.max_food_multiplier);
       updates.max_energy = Math.round(BASE_ENERGY * multipliers.max_energy_multiplier);
+      updates.max_hunger = Math.round(BASE_MAX_HUNGER * calculateMaxHungerMultiplier(level));
 
       // Préparer la mise à jour en base de données
       const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');

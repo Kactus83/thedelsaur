@@ -64,12 +64,12 @@ export class DinosaurTimeService {
 
         // Augmentation plus lente de la faim pendant le sommeil
         const hungerIncreaseWhileSleeping = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING * hungerMultiplier;
-        dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncreaseWhileSleeping);
+        dinosaur.hunger = Math.min(dinosaur.max_hunger, Math.floor(dinosaur.hunger + hungerIncreaseWhileSleeping));
 
       } else {
         // Augmentation de la faim quand le dinosaure est éveillé
         const hungerIncrease = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND * hungerMultiplier;
-        dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncrease);
+        dinosaur.hunger = Math.min(dinosaur.max_hunger, Math.floor(dinosaur.hunger + hungerIncrease));
 
         // Décroissance d'énergie normale lorsque le dinosaure est éveillé
         const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND;
