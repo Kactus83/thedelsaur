@@ -37,7 +37,7 @@
     margin: 10px;
 }
 
-#login-email::placeholder, #login-password::placeholder, #signup-username::placeholder, #signup-email::placeholder, #signup-password::placeholder, .btn-submit {
+#login-identifier::placeholder, #login-password::placeholder, #signup-username::placeholder, #signup-email::placeholder, #signup-password::placeholder, .btn-submit {
     font-family: 'Peanut', sans-serif;
     font-size: 1.5rem;
 }
