@@ -40,6 +40,9 @@ body, html {
     /* Afficher seulement en mode desktop */
     display: block;
 }
+.mobile-only {
+    display: none;
+}
 
 #Middle {
     margin: 2px;
