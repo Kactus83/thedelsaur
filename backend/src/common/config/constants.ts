@@ -54,5 +54,11 @@ export const LEVEL_HUNGER_MULTIPLIER_CONFIG = {
     curve: 0.8,  // Facteur de courbe pour contrôler l'évolution
 };
 
+export const LEVEL_MAX_HUNGER_MULTIPLIER_CONFIG = {
+    start: 1.0,  // Valeur de départ du multiplicateur de faim maximale
+    end: 20.0,    // Valeur finale du multiplicateur de faim maximale
+    curve: 0.8,  // Facteur de courbe pour ajuster la progression
+};
+
 // Karma system constants
 export const KARMA_GAIN_AFTER_DEATH = 100;
