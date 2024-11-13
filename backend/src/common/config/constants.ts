@@ -26,10 +26,11 @@ export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétiq
 export const ENERGY_COST_TO_STEAL = 2000;                   // Coût énergétique pour l'action de "voler"
 
 // Epoch thresholds 
-export const BASE_EPOCH_DURATION = 30;       // Durée de base pour la première époque
-export const EPOCH_LOG_BASE = 1.2;           // Base pour la croissance logarithmique
-export const LINEAR_ADJUSTMENT_FACTOR = 15;  // Facteur d'ajustement linéaire ajouté à chaque époque
-export const EPOCH_OFFSET = 5;                // Décalage fixe à ajouter à chaque durée d'époque (en secondes)
+export const BASE_EPOCH_DURATION = 20;
+export const LOG_BASE_START = 1.5;          // Base initiale pour la croissance logarithmique
+export const LOG_BASE_END = 3;            // Base finale pour la croissance logarithmique
+export const LINEAR_ADJUST_FACTOR = 10;     // Facteur linéaire pour ajouter une croissance uniforme
+export const ATTENUATION_FACTOR = 0.75;     // Facteur d'atténuation pour les indices élevés
 
 
 // Constants for Dinosaur Leveling System
