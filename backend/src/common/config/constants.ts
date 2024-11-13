@@ -48,6 +48,11 @@ export const LEVEL_MULTIPLIER_CONFIG: Record<keyof DinosaurMultiplier, { start: 
     max_energy_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
     max_food_multiplier: { start: 1.0, end: 50.0, curve: 0.8 },
 };
+export const LEVEL_HUNGER_MULTIPLIER_CONFIG = {
+    start: 1.0,  // Début du multiplicateur de faim
+    end: 40.0,   // Fin du multiplicateur de faim
+    curve: 0.8,  // Facteur de courbe pour contrôler l'évolution
+};
 
 // Karma system constants
 export const KARMA_GAIN_AFTER_DEATH = 100;

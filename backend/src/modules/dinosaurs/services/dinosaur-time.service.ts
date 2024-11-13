@@ -6,6 +6,8 @@ import {
   HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
   HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
   HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
+  LEVEL_MAX,
+  LEVEL_HUNGER_MULTIPLIER_CONFIG,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { BasicActionsService } from './basic-actions.service';
@@ -44,6 +46,7 @@ export class DinosaurTimeService {
     const lastUpdated = new Date(dinosaur.last_update_by_time_service);
     const now = new Date();
     const timeElapsedInSeconds = Math.floor((now.getTime() - lastUpdated.getTime()) / 1000);
+    const hungerMultiplier = this.calculateHungerMultiplier(dinosaur.level);
 
     if (timeElapsedInSeconds > 0) {
       if (dinosaur.isSleeping) {
@@ -60,11 +63,12 @@ export class DinosaurTimeService {
         }
 
         // Augmentation plus lente de la faim pendant le sommeil
-        const hungerIncreaseWhileSleeping = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING;
+        const hungerIncreaseWhileSleeping = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING * hungerMultiplier;
         dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncreaseWhileSleeping);
+
       } else {
         // Augmentation de la faim quand le dinosaure est éveillé
-        const hungerIncrease = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND;
+        const hungerIncrease = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND * hungerMultiplier;
         dinosaur.hunger = Math.min(dinosaur.max_hunger, dinosaur.hunger + hungerIncrease);
 
         // Décroissance d'énergie normale lorsque le dinosaure est éveillé
@@ -124,6 +128,21 @@ export class DinosaurTimeService {
     }
 
     return this.epochThresholds[this.epochThresholds.length - 1].epoch; // Dernière époque si toutes les autres sont dépassées
+  }
+
+  /**
+   * Calcule le multiplicateur de faim pour un dinosaure en fonction de son niveau.
+   * @param level Le niveau du dinosaure.
+   * @returns Le multiplicateur de faim ajusté au niveau.
+   */
+  private calculateHungerMultiplier(level: number): number {
+      // Limiter le niveau entre 2 et LEVEL_MAX
+      const effectiveLevel = Math.max(2, Math.min(level, LEVEL_MAX));
+      const levelRatio = (effectiveLevel - 1) / (LEVEL_MAX - 1);
+  
+      // Calculer le multiplicateur de faim en utilisant les paramètres de courbe
+      const { start, end, curve } = LEVEL_HUNGER_MULTIPLIER_CONFIG;
+      return start + (end - start) * Math.pow(levelRatio, curve);
   }
 }
 
