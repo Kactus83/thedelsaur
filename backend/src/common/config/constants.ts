@@ -1,3 +1,5 @@
+import { DinosaurMultiplier } from "../../modules/dinosaurs/models/dinosaur-multiplier.interface";
+
 // Constants for Dinosaur Base Stats
 export const BASE_FOOD = 5000;                             // Stock de nourriture initial
 export const MAX_FOOD = 10000;
@@ -32,9 +34,20 @@ export const CURVE_STEEPNESS = 1.5;        // Facteur de contrôle pour la progr
 
 
 // Constants for Dinosaur Leveling System
-export const BASE_EXP_REQUIRED = 100;        // Expérience requise pour passer du niveau 1 au niveau 2
-export const EXP_GROWTH_FACTOR = 1.5;         // Facteur de croissance de la progression d'expérience
-export const LEVEL_MODIFIER = 2.0; // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
+export const BASE_EXP_REQUIRED = 100;               // Expérience requise pour passer du niveau 1 au niveau 2
+export const EXP_GROWTH_FACTOR = 1.5;               // Facteur de croissance de la progression d'expérience
+export const LEVEL_MODIFIER = 2.0;                  // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
+export const LEVEL_MAX = 100;                       // Niveau maximum où l'influence est effective
+
+export const LEVEL_MULTIPLIER_CONFIG: Record<keyof DinosaurMultiplier, { start: number, end: number, curve: number }> = {
+    earn_herbi_food_multiplier: { start: 1.0, end: 1.0, curve: 1 },
+    earn_carni_food_multiplier: { start: 1.0, end: 1.0, curve: 1 },
+    earn_food_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
+    earn_energy_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
+    earn_experience_multiplier: { start: 1.0, end: 1.0, curve: 1 },
+    max_energy_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
+    max_food_multiplier: { start: 1.0, end: 50.0, curve: 0.8 },
+};
 
 // Karma system constants
 export const KARMA_GAIN_AFTER_DEATH = 100;
