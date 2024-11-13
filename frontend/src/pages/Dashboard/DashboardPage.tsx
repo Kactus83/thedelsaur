@@ -95,7 +95,7 @@ const DashboardPage: React.FC = () => {
             setLastEvent(event);
             setIsActionInProgress(false); // Arrête l'animation du dinosaure
             // Cache l'overlay après 3 secondes
-            setTimeout(() => setLastEvent(null), 3000);
+            setTimeout(() => setLastEvent(null), 1500);
         }, 500);
     };
 

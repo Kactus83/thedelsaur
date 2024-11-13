@@ -253,7 +253,7 @@ body, html {
 
 /* Animation du dinosaure lors d'une action */
 .dino-svg.action-in-progress {
-    animation: dinoActionAnimation 0.3s forwards;
+    animation: dinoActionAnimation 0.45s forwards;
 }
 
 @keyframes dinoActionAnimation {
@@ -261,9 +261,13 @@ body, html {
         transform: scale(1) translateY(0);
         opacity: 1;
     }
-    100% {
+    60% {
         transform: scale(0.5) translateY(-25px);
         opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
     }
 }
 
