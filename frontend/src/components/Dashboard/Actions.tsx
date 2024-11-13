@@ -52,10 +52,13 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, on
     }
   };
 
+  
   return (
     <div className="actions">
-      {availableActions.map((action) => (
-        action.canPerform && (
+      {availableActions
+      .filter((action) => (
+        action.canPerform))
+      .map((action) => ((
           <button key={action.name} onClick={() => handleAction(action)}>
             <img src={action.image} alt={action.name} className="action-image" />
             {action.name}
