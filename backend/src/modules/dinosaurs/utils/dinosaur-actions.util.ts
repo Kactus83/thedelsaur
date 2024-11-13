@@ -112,7 +112,7 @@ export async function applyEventToDinosaur(
   }
 
   // Appliquer les changements ajustés
-  dinosaur.food = Math.min(dinosaur.food + adjustedFoodChange, dinosaur.max_food * multipliers.max_food_multiplier);
+  dinosaur.food = Math.min(dinosaur.food + adjustedFoodChange, dinosaur.max_food);
   dinosaur.energy = Math.max(dinosaur.energy + adjustedEnergyChange, 0);
   dinosaur.hunger = Math.max(dinosaur.hunger + adjustedHungerChange, 0);
   dinosaur.karma += adjustedKarmaChange;
