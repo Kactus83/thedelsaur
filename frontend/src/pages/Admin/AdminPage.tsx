@@ -11,7 +11,9 @@ const AdminPage: React.FC = () => {
     const [selectedDinosaur, setSelectedDinosaur] = useState<Dinosaur | null>(null);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [levelsXp, setLevelsXp] = useState<{ level: number, xpRequired: number }[]>([]);
+    const [epochThresholds, setEpochThresholds] = useState<{ epoch: string, threshold: number }[]>([]);
 
+    // Récupère la liste des utilisateurs
     const fetchUsers = async () => {
         try {
             const response = await api.get('/admin/users');
@@ -22,6 +24,7 @@ const AdminPage: React.FC = () => {
         }
     };
 
+    // Récupère les niveaux et leurs XP requis
     const fetchLevelsXp = async () => {
         try {
             const response = await api.get('/admin/levels-xp-table');
@@ -29,6 +32,17 @@ const AdminPage: React.FC = () => {
         } catch (error: any) {
             console.error('Erreur lors de la récupération des niveaux.', error);
             alert('Erreur lors de la récupération des niveaux.');
+        }
+    };
+
+    // Récupère les seuils des époques
+    const fetchEpochThresholds = async () => {
+        try {
+            const response = await api.get('/dinosaurs/epochs/thresholds');
+            setEpochThresholds(response.data.thresholds);
+        } catch (error: any) {
+            console.error('Erreur lors de la récupération des seuils des époques.', error);
+            alert('Erreur lors de la récupération des seuils des époques.');
         }
     };
 
@@ -64,6 +78,7 @@ const AdminPage: React.FC = () => {
     useEffect(() => {
         fetchUsers();
         fetchLevelsXp();
+        fetchEpochThresholds(); // Nouvelle fonction de récupération des seuils d'époque
     }, []);
 
     const closeModal = () => {
@@ -73,82 +88,109 @@ const AdminPage: React.FC = () => {
 
     return (
         <>
-        <div className="Main">
-            <Header />
-            <div className="admin-page">
-                <header>
-                    <h1>Gestion des utilisateurs</h1>
-                    <a href="/" className="back-btn">Retour à l'accueil</a>
-                </header>
+            <div className="Main">
+                <Header />
+                <div className="admin-page">
+                    <header>
+                        <h1>Gestion des utilisateurs</h1>
+                        <a href="/" className="back-btn">Retour à l'accueil</a>
+                    </header>
 
-                <section id="user-management">
-                    <table id="user-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nom d'utilisateur</th>
-                                <th>Email</th>
-                                <th>Date de création</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map(user => (
-                                <tr key={user.id}>
-                                    <td>{user.id}</td>
-                                    <td>{user.username}</td>
-                                    <td>{user.email}</td>
-                                    <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                                    <td>
-                                        <button className="action-btn delete" onClick={() => deleteUser(user.id)}>Supprimer</button>
-                                        <button className="action-btn update" onClick={() => alert(`Fonction de mise à jour de l'utilisateur avec ID ${user.id} non encore implémentée.`)}>Modifier</button>
-                                        <button className="action-btn view-dino" onClick={() => viewDinosaur(user.id)}>Voir Dinosaure</button>
-                                    </td>
+                    <section id="user-management">
+                        <table id="user-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Date de création</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </section>
+                            </thead>
+                            <tbody>
+                                {users.map(user => (
+                                    <tr key={user.id}>
+                                        <td>{user.id}</td>
+                                        <td>{user.username}</td>
+                                        <td>{user.email}</td>
+                                        <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                                        <td>
+                                            <button className="action-btn delete" onClick={() => deleteUser(user.id)}>Supprimer</button>
+                                            <button className="action-btn update" onClick={() => alert(`Fonction de mise à jour de l'utilisateur avec ID ${user.id} non encore implémentée.`)}>Modifier</button>
+                                            <button className="action-btn view-dino" onClick={() => viewDinosaur(user.id)}>Voir Dinosaure</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
 
-                <section id="level-xp-table">
-                    <h2>Table des niveaux et paliers d'expérience</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Niveau</th>
-                                <th>XP Requis</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {levelsXp.map(({ level, xpRequired }) => (
-                                <tr key={level}>
-                                    <td>{level}</td>
-                                    <td>{xpRequired}</td>
+                    <section id="level-xp-table">
+                        <h2>Table des niveaux et paliers d'expérience</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Niveau</th>
+                                    <th>XP Requis</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </section>
+                            </thead>
+                            <tbody>
+                                {levelsXp.map(({ level, xpRequired }) => (
+                                    <tr key={level}>
+                                        <td>{level}</td>
+                                        <td>{xpRequired}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </section>
 
-                {isModalOpen && selectedDinosaur && (
-                    <div className="modal" onClick={closeModal}>
-                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <span className="close" onClick={closeModal}>&times;</span>
-                            <h2>Détails du Dinosaure</h2>
-                            <p><strong>ID:</strong> {selectedDinosaur.id}</p>
-                            <p><strong>Nom:</strong> {selectedDinosaur.name}</p>
-                            <p><strong>Régime Alimentaire:</strong> {capitalizeFirstLetter(selectedDinosaur.diet)}</p>
-                            <p><strong>Énergie:</strong> {selectedDinosaur.energy}</p>
-                            <p><strong>Nourriture:</strong> {selectedDinosaur.food}</p>
-                            <p><strong>Expérience:</strong> {selectedDinosaur.experience}</p>
-                            <p><strong>Epoch:</strong> {capitalizeFirstLetter(selectedDinosaur.epoch)}</p>
-                            <p><strong>Date de création:</strong> {new Date(selectedDinosaur.created_at).toLocaleDateString()}</p>
+                    <section id="epoch-threshold-table">
+                        <h2>Table des époques et leurs seuils</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Époque</th>
+                                    <th>Durée de l'Époque (secondes)</th>
+                                    <th>Seuil cumulé (secondes)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {epochThresholds.map(({ epoch, threshold }, index) => {
+                                    const previousThreshold = index > 0 ? epochThresholds[index - 1].threshold : 0;
+                                    const duration = threshold != null && previousThreshold != null ? threshold - previousThreshold : null;
+
+                                    return (
+                                        <tr key={epoch}>
+                                            <td>{epoch}</td>
+                                            <td>{duration !== null ? duration.toFixed(2) : 'Non défini'}</td>
+                                            <td>{threshold !== null ? threshold.toFixed(2) : 'Non défini'}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </section>
+
+                    {isModalOpen && selectedDinosaur && (
+                        <div className="modal" onClick={closeModal}>
+                            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                                <span className="close" onClick={closeModal}>&times;</span>
+                                <h2>Détails du Dinosaure</h2>
+                                <p><strong>ID:</strong> {selectedDinosaur.id}</p>
+                                <p><strong>Nom:</strong> {selectedDinosaur.name}</p>
+                                <p><strong>Régime Alimentaire:</strong> {capitalizeFirstLetter(selectedDinosaur.diet)}</p>
+                                <p><strong>Énergie:</strong> {selectedDinosaur.energy}</p>
+                                <p><strong>Nourriture:</strong> {selectedDinosaur.food}</p>
+                                <p><strong>Expérience:</strong> {selectedDinosaur.experience}</p>
+                                <p><strong>Époque:</strong> {capitalizeFirstLetter(selectedDinosaur.epoch)}</p>
+                                <p><strong>Date de création:</strong> {new Date(selectedDinosaur.created_at).toLocaleDateString()}</p>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
         </>
     );
 };

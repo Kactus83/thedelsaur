@@ -24,6 +24,11 @@ export default function (
 ): Router {
   const router = Router();
 
+  // Route pour obtenir les seuils d'époques
+  router.get('/epochs/thresholds', (req, res) =>
+    dinosaursController.getEpochThresholds(req, res)
+  );
+
   // Routes générales
   router.get('/my-dinosaur', authenticateJWT, (req, res) =>
     dinosaursController.getMyDinosaur(req, res)
