@@ -75,6 +75,7 @@
     .gauge-bar {
         position: initial;
         height: 15px; /* Réduire la hauteur de la barre sur petits écrans */
+        width: 98%;
     }
 
     .tooltip-text {
