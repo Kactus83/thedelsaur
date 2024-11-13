@@ -63,4 +63,7 @@
     .notDisplayed {
         display: none;
     }
+    .dinosaur-info {
+        width: 97%;
+    }
 }
