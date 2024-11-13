@@ -92,12 +92,15 @@ export class AuthController {
     try {
       const { email, currentPassword, newPassword } = req.body;
 
+      console.log('retour body back: ',req.body);
+
       if (!email || !currentPassword || !newPassword) {
         res.status(400).json({ message: 'Veuillez fournir tous les champs requis' });
         return;
       }
 
       const resetSuccess = await this.authService.resetPassword(email, currentPassword, newPassword);
+      console.log('reset success : ' + resetSuccess);
       
       if (resetSuccess) {
         res.status(200).json({ message: 'Mot de passe réinitialisé avec succès' });

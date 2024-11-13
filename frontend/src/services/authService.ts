@@ -17,6 +17,16 @@ interface SignupData {
     password: string;
 }
 
+interface ResetPasswordData {
+    email?: string;
+    currentPassword: string;
+    newPassword:string;
+}
+
+interface changeDinoNameData {
+    name: string;
+}
+
 // Fonction asynchrone pour gérer la connexion utilisateur
 export const login = async (data: LoginData): Promise<LoginResponse> => {
     const response = await api.post('/auth/login', data);
@@ -39,4 +49,14 @@ export const fetchUserFromBackend = async (): Promise<User> => {
 export const fetchDinosaurFromBackend = async (): Promise<Dinosaur> => {
     const response = await api.get('/dinosaurs/my-dinosaur'); 
     return response.data as Dinosaur;
+};
+
+export const changeDinoName = async (data: changeDinoNameData): Promise<any> => {
+    const response = await api.patch('/dinosaurs/my-dinosaur/change-name', data); 
+    return response;
+};
+
+export const resetPassword = async (data: ResetPasswordData): Promise<any> => {
+    const response = await api.post('/auth/reset-password', data); 
+    return response;
 };
