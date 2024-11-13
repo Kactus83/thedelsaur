@@ -10,6 +10,10 @@ import {
   EPOCH_OFFSET,
   EPOCH_LOG_BASE,
   LINEAR_ADJUSTMENT_FACTOR,
+  LOG_BASE_START,
+  LOG_BASE_END,
+  ATTENUATION_FACTOR,
+  LINEAR_ADJUST_FACTOR,
 } from '../../../common/config/constants';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 import { BasicActionsService } from './basic-actions.service';
@@ -128,7 +132,10 @@ export class DinosaurTimeService {
     let cumulativeTime = 0;
   
     for (let i = 0; i < epochValues.length; i++) {
-      const epochDuration = BASE_EPOCH_DURATION * Math.log(i + EPOCH_LOG_BASE) + (i * LINEAR_ADJUSTMENT_FACTOR) + EPOCH_OFFSET;
+      const logBase = LOG_BASE_START + (LOG_BASE_END - LOG_BASE_START) * (i / (epochValues.length - 1));
+      const adjustedIndex = i * ATTENUATION_FACTOR;
+      const epochDuration = BASE_EPOCH_DURATION * Math.log(adjustedIndex + 1) / Math.log(logBase) + (i * LINEAR_ADJUST_FACTOR);
+
       cumulativeTime += epochDuration;
   
       if (timeElapsedInSeconds < cumulativeTime) {
