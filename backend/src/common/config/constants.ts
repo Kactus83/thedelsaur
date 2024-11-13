@@ -26,7 +26,7 @@ export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétiq
 export const ENERGY_COST_TO_STEAL = 2000;                   // Coût énergétique pour l'action de "voler"
 
 // Epoch thresholds 
-export const BASE_EPOCH_DURATION = 20;       // Durée de base pour la première époque
+export const BASE_EPOCH_DURATION = 30;       // Durée de base pour la première époque
 export const EPOCH_LOG_BASE = 1.2;           // Base pour la croissance logarithmique
 export const LINEAR_ADJUSTMENT_FACTOR = 15;  // Facteur d'ajustement linéaire ajouté à chaque époque
 export const EPOCH_OFFSET = 5;                // Décalage fixe à ajouter à chaque durée d'époque (en secondes)
