@@ -19,12 +19,15 @@ interface ActionsProps {
 }
 
 const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, onActionEvent, onActionStart }) => {
+  const [isActionDisabled, setIsActionDisabled] = React.useState(false);
 
   /**
    * Fonction pour gérer l'action dynamique
    */
   const handleAction = async (action: ActionDetail) => {
     onActionStart(); // Indique que l'action commence
+    setIsActionDisabled(true); // Désactive les boutons
+
     try {
       const response = await api.post(action.endpoint); // Appel à l'API pour effectuer l'action
       console.log(response);
@@ -49,21 +52,24 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, on
         minLevel: 0,
         weight: 0,
       });
+    } finally {
+      setTimeout(() => setIsActionDisabled(false), 1000); // Réactive les boutons après lsec
     }
   };
 
-  
   return (
     <div className="actions">
       {availableActions
-      .filter((action) => (
-        action.canPerform))
-      .map((action) => ((
-          <button key={action.name} onClick={() => handleAction(action)}>
-            <img src={action.image} alt={action.name} className="action-image" />
-            {action.name}
-          </button>
-        )
+      .filter((action) => action.canPerform)
+      .map((action) => (
+        <button
+          key={action.name}
+          onClick={() => handleAction(action)}
+          disabled={isActionDisabled} // Applique l'état disabled
+        >
+          <img src={action.image} alt={action.name} className="action-image" />
+          {action.name}
+        </button>
       ))}
     </div>
   );
