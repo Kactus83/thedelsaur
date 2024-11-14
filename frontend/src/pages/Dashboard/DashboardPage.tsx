@@ -55,8 +55,6 @@ const DashboardPage: React.FC = () => {
             // Extraire directement la valeur numérique
             const maxExperience = maxExperienceResponse.nextLevelXp;
 
-            console.log("max xp :", maxExperience);
-
             // Mise à jour des états avec les données récupérées
             setMAX_XP(maxExperience);
             setUser(fetchedUser);
