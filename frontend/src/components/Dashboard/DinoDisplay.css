@@ -21,6 +21,11 @@
     animation: dinoActionBaisser 0.5s forwards ;
 }
 
+.sleep{
+    opacity: 0%;
+}
+
+
 @keyframes dinoActionBaisser {
     0% {
         transform: rotate(0deg) ;
