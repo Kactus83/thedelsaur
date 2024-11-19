@@ -28,7 +28,7 @@ const DashboardPage: React.FC = () => {
     const [lastEvent, setLastEvent] = useState<DinosaurEvent | null>(null); // État pour l'événement affiché
     const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
     const [isActionInProgress, setIsActionInProgress] = useState<ActionDetail | null>(null); // État pour l'animation du dinosaure
-
+    const [levelUp, setLevelUp] = useState<boolean>(false);
     
     const initializePage = async () => {
         try {
@@ -67,6 +67,15 @@ const DashboardPage: React.FC = () => {
             const maxExperienceResponse = await getNextLevelXp();
             const maxExperience = maxExperienceResponse.nextLevelXp;
 
+            if (dinosaur && updatedDinosaur.level > dinosaur.level) {           
+                setDinosaur(updatedDinosaur);
+                setLevelUp(true);
+                setTimeout(() => {
+                    console.log('leveled up !!!')
+                  setLevelUp(false);
+                }, 2000); // Durée de l'animation
+              }              
+
             setDinosaur(updatedDinosaur);
             setAvailableActions(updatedActions.availableActions);
             setMAX_XP(maxExperience);
@@ -104,6 +113,9 @@ const DashboardPage: React.FC = () => {
     // Mettre en place un intervalle qui rafraîchit les données toutes les 1,1 secondes
     useEffect(() => {
         const interval = setInterval(() => {
+            if(isActionInProgress || levelUp) {
+                return; // Pour éviter els conflts
+            }
             refreshDinosaur();
         }, 1100);
         return () => clearInterval(interval);
@@ -118,7 +130,12 @@ const DashboardPage: React.FC = () => {
         <>
             {/* Overlay d'image dynamique */}
             {dinosaur && (
-                <BackgroundOverlay dinosaur={dinosaur} action={isActionInProgress} lastEvent={lastEvent}/>
+                <BackgroundOverlay 
+                    dinosaur={dinosaur} 
+                    action={isActionInProgress} 
+                    lastEvent={lastEvent} 
+                    levelUp={levelUp}
+                />
             )}
             {/* Composant Header commun à toutes les pages */}
             <Header />
@@ -154,7 +171,12 @@ const DashboardPage: React.FC = () => {
                         <div className="middleContent">
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire et son type */}
                             {dinosaur && (
-                                <DinoDisplay dinosaur={dinosaur} action={isActionInProgress} lastEvent={lastEvent}/>
+                                <DinoDisplay 
+                                    dinosaur={dinosaur} 
+                                    action={isActionInProgress} 
+                                    lastEvent={lastEvent}
+                                    levelUp={levelUp}
+                                />
                             )}
                             {/* Affichage de l'overlay si un événement est présent */}
                             {lastEvent && <EventOverlay event={lastEvent} />}

@@ -9,6 +9,7 @@ interface BackgroundOverlayProps {
   dinosaur: Dinosaur;
   lastEvent: DinosaurEvent | null;
   action: ActionDetail | null;
+  levelUp: boolean;
 }
 
 const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
@@ -19,14 +20,15 @@ const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).redu
 interface Particle {
   id: number;
   style: React.CSSProperties & { [key: string]: string | number };
-  type: 'food' | 'experience';
+  type: 'food' | 'experience' | 'levelUp';
 }
 
-const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEvent, action }) => {
+const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEvent, action, levelUp }) => {
   const [actionClass, setActionClass] = useState<string>('');
   const [eventClass, setEventClass] = useState<string>('');
   const [particles, setParticles] = useState<Particle[]>([]);
   const [karmaEffectClass, setKarmaEffectClass] = useState<string>('');
+  const [levelUpClass, setLevelUpClass] = useState<string>('');
 
   let imageUrl = EPOCH_BACKGROUND_IMAGES[dinosaur.epoch] || EPOCH_BACKGROUND_IMAGES[Epoch.Ancient_Epoch1];
 
@@ -34,7 +36,6 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
     imageUrl = `/assets/img/epochs/graveyard.webp`;
   }
 
-  // Gestion de l'effet de sommeil
   const sleepingClass = dinosaur.isSleeping ? 'sleeping' : '';
 
   // Gestion des animations d'action
@@ -48,25 +49,22 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
   // Gestion des animations d'événement
   useEffect(() => {
     if (lastEvent) {
-      // Démarre l'animation d'événement avec un identifiant unique
       setEventClass(`event-animation-${Date.now()}`);
 
-      // Générer les particules pour foodChange et experienceChange
       const newParticles: Particle[] = [];
-      let particleId = Date.now(); // Utiliser un horodatage pour des IDs uniques
+      let particleId = Date.now();
 
-      // Générer des particules pour foodChange
       if (lastEvent.foodChange) {
         const numParticles = Math.min(100, Math.ceil(Math.abs(lastEvent.foodChange) / 5));
         for (let i = 0; i < numParticles; i++) {
-          const translateX = (Math.random() - 0.5) * 100; // Mouvement horizontal aléatoire
-          const translateY = -100 - Math.random() * 300; // Mouvement vers le haut
-          const animationDuration = 2 + Math.random(); // Durée plus longue
+          const translateX = (Math.random() - 0.5) * 100;
+          const translateY = -100 - Math.random() * 300;
+          const animationDuration = 2 + Math.random();
           const particle: Particle = {
             id: particleId++,
             type: 'food',
             style: {
-              left: `${Math.random() * 100}%`, // Position horizontale aléatoire en bas
+              left: `${Math.random() * 100}%`,
               bottom: '0%',
               '--translateX': `${translateX}px`,
               '--translateY': `${translateY}px`,
@@ -77,18 +75,17 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
         }
       }
 
-      // Générer des particules pour experienceChange
       if (lastEvent.experienceChange) {
         const numParticles = Math.min(100, Math.ceil(Math.abs(lastEvent.experienceChange) / 5));
         for (let i = 0; i < numParticles; i++) {
-          const translateX = (Math.random() - 0.5) * 100; // Mouvement horizontal aléatoire
-          const translateY = -100 - Math.random() * 300; // Mouvement vers le haut
-          const animationDuration = 2 + Math.random(); // Durée plus longue
+          const translateX = (Math.random() - 0.5) * 100;
+          const translateY = -100 - Math.random() * 300;
+          const animationDuration = 2 + Math.random();
           const particle: Particle = {
             id: particleId++,
             type: 'experience',
             style: {
-              left: `${Math.random() * 100}%`, // Position horizontale aléatoire en bas
+              left: `${Math.random() * 100}%`,
               bottom: '0%',
               '--translateX': `${translateX}px`,
               '--translateY': `${translateY}px`,
@@ -101,30 +98,72 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
 
       setParticles(newParticles);
 
-      // Gérer l'effet de karma avec un identifiant unique pour forcer la réanimation
       if (lastEvent.karmaChange) {
         const uniqueClass = lastEvent.karmaChange > 0 ? `karma-brighten-${Date.now()}` : `karma-darken-${Date.now()}`;
         setKarmaEffectClass(uniqueClass);
       }
 
-      // Supprimer les animations après une durée définie
       const timer = setTimeout(() => {
         setEventClass('');
         setActionClass('');
         setKarmaEffectClass('');
-        setParticles([]); // Laisser les particules finir leur animation avant de les supprimer
-      }, 4000); // Durée étendue
+        setParticles([]);
+      }, 4000);
 
-      // Fonction de nettoyage
       return () => {
         clearTimeout(timer);
-        // Ne pas réinitialiser les particules ici pour permettre à l'animation de se terminer
       };
     }
   }, [lastEvent]);
 
-  // Combiner les classes CSS
-  const classes = ['background-overlay', sleepingClass, actionClass, eventClass, karmaEffectClass].filter(Boolean).join(' ');
+  // Gestion de l'animation de montée de niveau
+  useEffect(() => {
+    if (levelUp) {
+      const uniqueClass = `level-up-${Date.now()}`;
+      setLevelUpClass(uniqueClass);
+
+      // Générer des particules pour la montée de niveau
+      const newParticles: Particle[] = [];
+      let particleId = Date.now();
+      const numParticles = 150; // Nombre de particules pour l'effet de niveau
+
+      for (let i = 0; i < numParticles; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = 100 + Math.random() * 200;
+        const translateX = Math.cos(angle) * speed;
+        const translateY = Math.sin(angle) * speed;
+        const animationDuration = 2 + Math.random() * 2;
+        const particle: Particle = {
+          id: particleId++,
+          type: 'levelUp',
+          style: {
+            left: '50%',
+            top: '50%',
+            '--translateX': `${translateX}px`,
+            '--translateY': `${translateY}px`,
+            '--animationDuration': `${animationDuration}s`,
+          },
+        };
+        newParticles.push(particle);
+      }
+
+      setParticles(prevParticles => [...prevParticles, ...newParticles]);
+
+      // Nettoyer après l'animation
+      const timer = setTimeout(() => {
+        setLevelUpClass('');
+        setParticles([]);
+      }, 2000);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [levelUp]);
+
+  const classes = ['background-overlay', sleepingClass, actionClass, eventClass, karmaEffectClass, levelUpClass]
+    .filter(Boolean)
+    .join(' ');
 
   const overlayStyle: React.CSSProperties = {
     position: 'fixed',
