@@ -1,13 +1,29 @@
 import React from 'react';
+import { Dinosaur } from '../../types/Dinosaur';
+import { Epoch } from '../../types/Epoch';
+import { DinosaurEvent } from '../../types/DinosaurEvent';
+import { ActionDetail } from './Actions';
 
 // Interface pour les propriétés du composant BackgroundOverlay
 interface BackgroundOverlayProps {
-    epoch: string;
-    backgroundImages: Record<string, string>;
+    dinosaur: Dinosaur;
+    lastEvent: DinosaurEvent | null;
+    action: ActionDetail | null;
 }
 
-const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ epoch, backgroundImages }) => {
-    const imageUrl = backgroundImages[epoch] || backgroundImages['past'];
+
+const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
+    acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
+    return acc;
+}, {} as Record<Epoch, string>);
+
+
+const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ( props : BackgroundOverlayProps) => {
+
+    let imageUrl = EPOCH_BACKGROUND_IMAGES[props.dinosaur.epoch] || EPOCH_BACKGROUND_IMAGES[Epoch.Ancient_Epoch1];
+    if(props.dinosaur.isDead){
+        imageUrl= `/assets/img/epochs/graveyard.webp`;
+    }
 
     const overlayStyle: React.CSSProperties = {
         position: 'fixed',
@@ -23,6 +39,8 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ epoch, background
         height: '100%',
         objectFit: 'cover', // S'assure que l'image couvre tout l'espace
     };
+
+   
 
     return (
         <div style={overlayStyle}>

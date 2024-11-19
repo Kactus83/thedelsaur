@@ -15,7 +15,7 @@ interface ActionsProps {
   refreshDinosaur: () => void;
   availableActions: ActionDetail[];
   onActionEvent: (event: DinosaurEvent) => void; // Callback pour envoyer les événements
-  onActionStart: () => void; // Callback pour indiquer le début d'une action
+  onActionStart: (action: ActionDetail) => void; // Callback pour indiquer le début d'une action
 }
 
 const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, onActionEvent, onActionStart }) => {
@@ -25,7 +25,7 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, on
    * Fonction pour gérer l'action dynamique
    */
   const handleAction = async (action: ActionDetail) => {
-    onActionStart(); // Indique que l'action commence
+    onActionStart(action); // Indique que l'action commence
     setIsActionDisabled(true); // Désactive les boutons
 
     try {
