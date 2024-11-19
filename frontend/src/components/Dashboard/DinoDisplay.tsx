@@ -23,11 +23,13 @@ const DinoDisplay: React.FC<DinoDisplayProps> = ( props : DinoDisplayProps) => {
         case null:
             break;
         case 'Se Réveiller':
+            animation='';
             break;
         case 'Manger':
             animation= 'baisser';
             break;
         case 'Dormir':
+            animation='sleep'
             break;
         case 'Cueillir':
             animation= 'baisser';
