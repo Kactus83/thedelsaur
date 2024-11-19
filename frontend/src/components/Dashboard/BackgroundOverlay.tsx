@@ -21,6 +21,7 @@ const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).redu
 const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ( props : BackgroundOverlayProps) => {
 
     let imageUrl = EPOCH_BACKGROUND_IMAGES[props.dinosaur.epoch] || EPOCH_BACKGROUND_IMAGES[Epoch.Ancient_Epoch1];
+    
     if(props.dinosaur.isDead){
         imageUrl= `/assets/img/epochs/graveyard.webp`;
     }

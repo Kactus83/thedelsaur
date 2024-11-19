@@ -11,12 +11,8 @@ import { Dinosaur } from '../../types/Dinosaur';
 import { fetchDinosaurFromBackend, fetchUserFromBackend } from '../../services/authService';
 import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
-import { Epoch } from '../../types/Epoch';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
-
-/**
- * Définitions des chemins d'images de fond pour chaque époque
- */
+import DinoDisplay from '../../components/Dashboard/DinoDisplay';
 
 
 /**
@@ -33,13 +29,6 @@ const DashboardPage: React.FC = () => {
     const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
     const [isActionInProgress, setIsActionInProgress] = useState<ActionDetail | null>(null); // État pour l'animation du dinosaure
 
-    /**
-     * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur, dinosaure et actions.
-     */
-    const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
-        acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
-        return acc;
-    }, {} as Record<Epoch, string>);
     
     const initializePage = async () => {
         try {
@@ -123,8 +112,7 @@ const DashboardPage: React.FC = () => {
     // Calcul de l'expérience actuelle pour la jauge
     const experience = dinosaur ? dinosaur.experience : 0;
 
-    // Génération dynamique du chemin de l'image en fonction de diet et type du dinosaure
-    const dinosaurImagePath = dinosaur ? `/assets/dino/dino_${dinosaur.diet}_${dinosaur.type}.svg` : '';
+
 
     return (
         <>
@@ -166,11 +154,7 @@ const DashboardPage: React.FC = () => {
                         <div className="middleContent">
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire et son type */}
                             {dinosaur && (
-                                <img
-                                    src={dinosaurImagePath}
-                                    alt={`Dinosaure ${dinosaur.name}`}
-                                    className={`dino-svg ${isActionInProgress ? 'action-in-progress' : ''}`}
-                                />
+                                <DinoDisplay dinosaur={dinosaur} action={isActionInProgress} lastEvent={lastEvent}/>
                             )}
                             {/* Affichage de l'overlay si un événement est présent */}
                             {lastEvent && <EventOverlay event={lastEvent} />}
