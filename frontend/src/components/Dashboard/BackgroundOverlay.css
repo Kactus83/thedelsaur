@@ -1,0 +1,27 @@
+.background-overlay.sleeping img {
+    /* Complex CSS effects for sleeping */
+    filter: brightness(0.5) contrast(0.8) saturate(0.7);
+    transition: filter 1s ease;
+  }
+  
+  .background-overlay.event-animation img {
+    /* Short animation after receiving an event */
+    animation: eventPulse 1s ease;
+  }
+  
+  @keyframes eventPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  
+  /* Empty classes for action animations (to be defined) */
+  .background-overlay.action-eat img { }
+  .background-overlay.action-sleep img { }
+  .background-overlay.action-wake-up img { }
+  .background-overlay.action-resurrect img { }
+  .background-overlay.action-graze img { }
+  .background-overlay.action-hunt img { }
+  .background-overlay.action-discover img { }
+  .background-overlay.action-steal img { }
+  
