@@ -1,0 +1,64 @@
+/* Animation du dinosaure lors d'une action */
+.dino-svg.action-in-progress {
+    animation: dinoActionAnimation 0.45s forwards;
+}
+
+.dino-dead {
+    filter: grayscale(100%);
+    transition: filter 2s, transform 2s ;
+    transform: rotate(180deg) translateY(-35%);
+}
+
+.dino-alive {
+    filter: grayscale(0%);
+    transition: filter 2s, transform 2s ;
+    transform: rotate(0deg) translateY(0) ;
+}
+.wonder{
+    animation: dinoActionWonder 0.45 forwards ;
+}
+.baisser{
+    animation: dinoActionBaisser 0.5s forwards ;
+}
+
+@keyframes dinoActionBaisser {
+    0% {
+        transform: rotate(0deg) ;
+    }
+    50% {
+        transform: rotate(-45deg) ;
+    }
+
+    100% {
+        transform: rotate(0deg) ;
+    }
+    
+}
+
+@keyframes dinoActionWonder {
+    0% {
+        transform: scaleX(1) ;
+    }
+
+    50% {
+        transform: scaleX(-1);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}
+/* 
+@keyframes dinoActionAnimation {
+    0% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+    60% {
+        transform: scale(0.5) translateY(-50px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+} */
