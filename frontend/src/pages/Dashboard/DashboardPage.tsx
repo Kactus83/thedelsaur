@@ -17,10 +17,7 @@ import { DinosaurEvent } from '../../types/DinosaurEvent';
 /**
  * Définitions des chemins d'images de fond pour chaque époque
  */
-const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
-    acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
-    return acc;
-}, {} as Record<Epoch, string>);
+
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -34,11 +31,16 @@ const DashboardPage: React.FC = () => {
     const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
     const [lastEvent, setLastEvent] = useState<DinosaurEvent | null>(null); // État pour l'événement affiché
     const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
-    const [isActionInProgress, setIsActionInProgress] = useState<boolean>(false); // État pour l'animation du dinosaure
+    const [isActionInProgress, setIsActionInProgress] = useState<ActionDetail | null>(null); // État pour l'animation du dinosaure
 
     /**
      * Fonction asynchrone pour initialiser la page en récupérant les données utilisateur, dinosaure et actions.
      */
+    const EPOCH_BACKGROUND_IMAGES: Record<Epoch, string> = Object.values(Epoch).reduce((acc, epoch) => {
+        acc[epoch as Epoch] = `/assets/img/epochs/${epoch}.webp`;
+        return acc;
+    }, {} as Record<Epoch, string>);
+    
     const initializePage = async () => {
         try {
             // Récupération des données utilisateur depuis le backend
@@ -91,7 +93,7 @@ const DashboardPage: React.FC = () => {
     const handleEventDisplay = (event: DinosaurEvent) => {
         setTimeout(() => {
             setLastEvent(event);
-            setIsActionInProgress(false); // Arrête l'animation du dinosaure
+            setIsActionInProgress(null); // Arrête l'animation du dinosaure
             // Cache l'overlay après 3 secondes
             setTimeout(() => setLastEvent(null), 1750);
         }, 500);
@@ -100,8 +102,9 @@ const DashboardPage: React.FC = () => {
     /**
      * Fonction pour indiquer le début d'une action.
      */
-    const handleActionStart = () => {
-        setIsActionInProgress(true); // Démarre l'animation du dinosaure
+    const handleActionStart = (action: ActionDetail) => {
+        
+        setIsActionInProgress(action); // Démarre l'animation du dinosaure
     };
 
     // Initialiser les données au montage du composant
@@ -127,7 +130,7 @@ const DashboardPage: React.FC = () => {
         <>
             {/* Overlay d'image dynamique */}
             {dinosaur && (
-                <BackgroundOverlay epoch={dinosaur.epoch} backgroundImages={EPOCH_BACKGROUND_IMAGES} />
+                <BackgroundOverlay dinosaur={dinosaur} action={isActionInProgress} lastEvent={lastEvent}/>
             )}
             {/* Composant Header commun à toutes les pages */}
             <Header />
