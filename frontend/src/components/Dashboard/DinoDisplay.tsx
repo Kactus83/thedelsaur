@@ -46,10 +46,13 @@ const DinoDisplay: React.FC<DinoDisplayProps> = ( props : DinoDisplayProps) => {
         default: 
             break;
     }
+
+    if(props.dinosaur.isSleeping) {
+        animation='sleep';
+    }
     
 
-    const className = `dino-svg ${props.dinosaur.isDead ? 'dino-dead' : 'dino-alive'} ${
-        props.action ? animation : ''
+    const className = `dino-svg ${props.dinosaur.isDead ? 'dino-dead' : 'dino-alive'} ${animation
     }`;
 
     return (
