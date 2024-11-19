@@ -1,7 +1,7 @@
 .background-overlay.sleeping img {
     /* Complex CSS effects for sleeping */
-    filter: brightness(0.6) contrast(250%) saturate(0.7);
-    transition: filter 1s ease;
+    filter: brightness(0.6) contrast(166%) saturate(0.6);
+    transition: filter 2s ease;
   }
   
   .background-overlay.event-animation img {
