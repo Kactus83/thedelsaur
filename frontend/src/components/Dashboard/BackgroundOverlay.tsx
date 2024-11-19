@@ -40,7 +40,7 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
   // Gestion des animations d'action
   useEffect(() => {
     if (action) {
-      const actionClassName = `action-${action.name.toLowerCase().replace(/\s+/g, '-')}`;
+      const actionClassName = `action-${action.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
       setActionClass(actionClassName);
     }
   }, [action]);
@@ -48,16 +48,16 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
   // Gestion des animations d'événement
   useEffect(() => {
     if (lastEvent) {
-      // Démarre l'animation d'événement
-      setEventClass('event-animation');
+      // Démarre l'animation d'événement avec un identifiant unique
+      setEventClass(`event-animation-${Date.now()}`);
 
-      // Gérer les particules pour foodChange et experienceChange
-      const particlesArray: Particle[] = [];
-      let particleId = 0;
+      // Générer les particules pour foodChange et experienceChange
+      const newParticles: Particle[] = [];
+      let particleId = Date.now(); // Utiliser un horodatage pour des IDs uniques
 
       // Générer des particules pour foodChange
       if (lastEvent.foodChange) {
-        const numParticles = Math.min(50, Math.ceil(Math.abs(lastEvent.foodChange) / 2));
+        const numParticles = Math.min(100, Math.ceil(Math.abs(lastEvent.foodChange) / 5));
         for (let i = 0; i < numParticles; i++) {
           const translateX = (Math.random() - 0.5) * 100; // Mouvement horizontal aléatoire
           const translateY = -100 - Math.random() * 300; // Mouvement vers le haut
@@ -73,13 +73,13 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
               '--animationDuration': `${animationDuration}s`,
             },
           };
-          particlesArray.push(particle);
+          newParticles.push(particle);
         }
       }
 
       // Générer des particules pour experienceChange
       if (lastEvent.experienceChange) {
-        const numParticles = Math.min(50, Math.ceil(Math.abs(lastEvent.experienceChange) / 2));
+        const numParticles = Math.min(100, Math.ceil(Math.abs(lastEvent.experienceChange) / 5));
         for (let i = 0; i < numParticles; i++) {
           const translateX = (Math.random() - 0.5) * 100; // Mouvement horizontal aléatoire
           const translateY = -100 - Math.random() * 300; // Mouvement vers le haut
@@ -95,30 +95,31 @@ const BackgroundOverlay: React.FC<BackgroundOverlayProps> = ({ dinosaur, lastEve
               '--animationDuration': `${animationDuration}s`,
             },
           };
-          particlesArray.push(particle);
+          newParticles.push(particle);
         }
       }
 
-      setParticles(particlesArray);
+      setParticles(newParticles);
 
-      // Gérer l'effet de karma
+      // Gérer l'effet de karma avec un identifiant unique pour forcer la réanimation
       if (lastEvent.karmaChange) {
-        if (lastEvent.karmaChange > 0) {
-          setKarmaEffectClass('karma-brighten');
-        } else if (lastEvent.karmaChange < 0) {
-          setKarmaEffectClass('karma-darken');
-        }
+        const uniqueClass = lastEvent.karmaChange > 0 ? `karma-brighten-${Date.now()}` : `karma-darken-${Date.now()}`;
+        setKarmaEffectClass(uniqueClass);
       }
 
-      // Supprimer les animations après une courte durée
+      // Supprimer les animations après une durée définie
       const timer = setTimeout(() => {
         setEventClass('');
         setActionClass('');
-        setParticles([]);
         setKarmaEffectClass('');
+        setParticles([]); // Laisser les particules finir leur animation avant de les supprimer
       }, 4000); // Durée étendue
 
-      return () => clearTimeout(timer);
+      // Fonction de nettoyage
+      return () => {
+        clearTimeout(timer);
+        // Ne pas réinitialiser les particules ici pour permettre à l'animation de se terminer
+      };
     }
   }, [lastEvent]);
 
