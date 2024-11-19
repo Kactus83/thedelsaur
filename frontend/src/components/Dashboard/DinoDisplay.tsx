@@ -47,7 +47,7 @@ const DinoDisplay: React.FC<DinoDisplayProps> = ( props : DinoDisplayProps) => {
             break;
     }
 
-    if(props.dinosaur.isSleeping) {
+    if(props.dinosaur.isSleeping && !props.dinosaur.isDead) {
         animation='sleep';
     }
     
