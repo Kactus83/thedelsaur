@@ -102,7 +102,8 @@ const DashboardPage: React.FC = () => {
     /**
      * Fonction pour indiquer le début d'une action.
      */
-    const handleActionStart = () => {
+    const handleActionStart = (action: ActionDetail) => {
+        // passer le type d'action aux composants qui en ont besoin
         setIsActionInProgress(true); // Démarre l'animation du dinosaure
     };
 
@@ -129,7 +130,7 @@ const DashboardPage: React.FC = () => {
         <>
             {/* Overlay d'image dynamique */}
             {dinosaur && (
-                <BackgroundOverlay epoch={dinosaur.epoch} backgroundImages={EPOCH_BACKGROUND_IMAGES} />
+                <BackgroundOverlay dinosaur={dinosaur} actionInProgress={isActionInProgress} event={lastEvent} action />
             )}
             {/* Composant Header commun à toutes les pages */}
             <Header />
