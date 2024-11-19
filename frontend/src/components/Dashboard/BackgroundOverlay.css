@@ -88,5 +88,35 @@
   }
 }
 
+
+
+/* Effet de montée de niveau */
+.background-overlay[class*="level-up"] img {
+  animation: levelUpEffect 2s ease-in-out;
+}
+
+@keyframes levelUpEffect {
+  0% {
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+  }
+  25% {
+    filter: brightness(1.2) saturate(1.2);
+    transform: scale(1.05);
+  }
+  50% {
+    filter: brightness(1.5) saturate(1.5);
+    transform: scale(1.1);
+  }
+  75% {
+    filter: brightness(1.2) saturate(1.2);
+    transform: scale(1.05);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+  }
+}
+
 /* Classes vides pour les animations d'action (à définir) */
 .background-overlay[class*="action-"] img { }

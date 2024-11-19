@@ -52,6 +52,36 @@
         transform: scaleX(1);
     }
 }
+
+
+
+/* Animation de montée de niveau */
+.dino-svg[class*="level-up"] {
+    animation: dinoLevelUp 1s ease-in-out;
+  }
+  
+  @keyframes dinoLevelUp {
+    0% {
+      transform: scale(1) rotate(0deg);
+      filter: drop-shadow(0 0 0px gold);
+    }
+    25% {
+      transform: scale(1.2) rotate(90deg);
+      filter: drop-shadow(0 0 10px gold);
+    }
+    50% {
+      transform: scale(1.5) rotate(180deg);
+      filter: drop-shadow(0 0 20px gold);
+    }
+    75% {
+      transform: scale(1.2) rotate(270deg);
+      filter: drop-shadow(0 0 10px gold);
+    }
+    100% {
+      transform: scale(1) rotate(360deg);
+      filter: drop-shadow(0 0 0px gold);
+    }
+  }
 /* 
 @keyframes dinoActionAnimation {
     0% {
