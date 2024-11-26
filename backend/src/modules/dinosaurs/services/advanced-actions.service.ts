@@ -80,4 +80,21 @@ export class AdvancedActionsService {
         applyEventToDinosaur(dinosaur, DinosaurAction.Discover, event);
         return { dinosaur, event };
     }
+
+    /**
+     * Action pour fair eprier le dinosaure
+     * @param dinosaur Le dinosaure à écrire.
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public prayDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Pray];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas prier.');
+        }
+
+        const event = getRandomEventForAction(DinosaurAction.Pray, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Pray, event);
+        return { dinosaur, event };
+    }
 }
