@@ -53,6 +53,7 @@ export class DinosaurRepository {
           max_food: Math.round(MAX_FOOD * dinosaurData.max_food_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
           max_energy: Math.round(BASE_ENERGY * dinosaurData.max_energy_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
           max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          multipliers: results[0],
         };
   
         return dinosaur;
@@ -97,10 +98,10 @@ export class DinosaurRepository {
         // Calculer et arrondir les valeurs de max_food et max_energy
         const dinosaur: Dinosaur = {
           ...dinosaurData,
-          max_food: Math.round(MAX_FOOD * dinosaurData.max_food_multiplier),
-          max_energy: Math.round(BASE_ENERGY * dinosaurData.max_energy_multiplier),
-          max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier),
-          multipliers: dinosaurData,
+          max_food: Math.round(MAX_FOOD * dinosaurData.max_food_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          max_energy: Math.round(BASE_ENERGY * dinosaurData.max_energy_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          multipliers: results[0],
         };
   
         return dinosaur;
@@ -123,15 +124,6 @@ export class DinosaurRepository {
         if (!currentDinosaur) {
           throw new Error('Dinosaure introuvable');
         }
-  
-        // Utiliser les multiplicateurs actuels si les nouveaux ne sont pas fournis
-        const multipliers = updates.multipliers || currentDinosaur.multipliers;
-        const level = updates.level || currentDinosaur.level;
-  
-        // Recalculer et arrondir max_food et max_energy en utilisant les multiplicateurs finaux
-        updates.max_food = Math.round(MAX_FOOD * multipliers.max_food_multiplier);
-        updates.max_energy = Math.round(BASE_ENERGY * multipliers.max_energy_multiplier);
-        updates.max_hunger = Math.round(BASE_MAX_HUNGER * calculateMaxHungerMultiplier(level));
   
         // Préparer la mise à jour en base de données
         const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');
