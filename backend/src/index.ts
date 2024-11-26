@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { UsersModule } from './modules/users/users.module';
@@ -6,6 +7,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { DinosaursModule } from './modules/dinosaurs/dinosaurs.module';
 import * as Sentry from '@sentry/node';
+import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
+
 
 dotenv.config();
 
@@ -23,16 +26,15 @@ process.on('uncaughtException', (error) => {
   Sentry.captureException(error);
 });
 
-
-
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
 
-// The error handler must be registered before any other error middleware and after all controllers
 Sentry.setupExpressErrorHandler(app);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
 
 // Modules
 const usersModule = new UsersModule();
@@ -45,11 +47,13 @@ app.use('/auth', authModule.router);
 app.use('/users', usersModule.router);
 app.use('/admin', adminModule.router);
 app.use('/dinosaurs', dinosaursModule.router);
-
 app.get("/debug-sentry", function mainHandler(req, res) {
-  throw new Error("My first Sentry error!");
+  const err = new Error("My first Sentry error!");  
+  Sentry.captureException(err);
+  throw err;
 });
 
+app.use(errorHandlerMiddleware);
 
 // Démarrage du serveur
 app.listen(PORT, () => {
