@@ -33,6 +33,8 @@ export class DinosaurMiddleware {
 
       let dinosaur: Dinosaur | null = await this.dinosaurRepository.getDinosaurByUserId(userId);
 
+      console.log('Dinosaur:', dinosaur);
+
       if (!dinosaur) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
         return;
