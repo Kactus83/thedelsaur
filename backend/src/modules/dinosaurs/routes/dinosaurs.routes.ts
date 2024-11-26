@@ -75,5 +75,9 @@ export default function (
     advancedActionsController.discoverDinosaur(req, res)
   );
 
+  router.post('/actions/pray', authenticateJWT, (req, res) =>
+    advancedActionsController.prayDinosaur(req, res)
+  );
+
   return router;
 }

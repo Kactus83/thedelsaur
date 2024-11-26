@@ -5,6 +5,7 @@ import {
   ENERGY_COST_TO_DISCOVER,
   ENERGY_COST_TO_GRAZE,
   ENERGY_COST_TO_HUNT,
+  ENERGY_COST_TO_PRAY,
   ENERGY_COST_TO_STEAL,
   MAX_ENERGY_NO_SLEEP,
   MIN_ENERGY_TO_WAKE_UP,
@@ -132,5 +133,15 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     },
     endpoint: 'dinosaurs/actions/steal',
     image: '/assets/img/actions/steal.png',
+  },
+  [DinosaurAction.Pray]: {
+    levelRequired: 5,
+    name: 'Prier',
+    description: 'Le dinosaure prie pour remonter son karma.',
+    canPerform: (dinosaur: Dinosaur) => {
+      return dinosaur.level >= 5 && !dinosaur.isDead && !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_PRAY;
+    },
+    endpoint: 'dinosaurs/actions/pray',
+    image: '/assets/img/actions/pray.png',
   },
 };
