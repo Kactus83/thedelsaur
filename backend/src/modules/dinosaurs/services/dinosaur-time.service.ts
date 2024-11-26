@@ -52,7 +52,7 @@ export class DinosaurTimeService {
       if (dinosaur.isSleeping) {
         // Régénération de l'énergie pendant le sommeil
         let energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
-        dinosaur.energy = Math.min(dinosaur.max_energy, dinosaur.energy + energyRecovery);
+        dinosaur.energy = Math.round(Math.min(dinosaur.max_energy, dinosaur.energy + energyRecovery));
 
         // Vérifier si le dinosaure a atteint son énergie maximale
         if (dinosaur.energy >= dinosaur.max_energy) {
