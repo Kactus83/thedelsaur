@@ -11,7 +11,7 @@ export const huntEvents: DinosaurEvent[] = [
     foodChange: 5000,
     hungerChange: 0,
     karmaChange: 0,
-    weight: 1,
+    weight: 5,
   },
   {
     name: 'Chasse modérée',
@@ -55,7 +55,7 @@ export const huntEvents: DinosaurEvent[] = [
     foodChange: 0,
     hungerChange: 0,
     karmaChange: 0,
-    weight: 1,
+    weight: 4,
   },
   {
     name: 'Chasse stratégique',

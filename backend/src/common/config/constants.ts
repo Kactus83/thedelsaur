@@ -40,7 +40,7 @@ export const EXP_GROWTH_FACTOR = 1.5;               // Facteur de croissance de 
 export const LEVEL_MODIFIER = 2.0;                  // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
 export const LEVEL_MAX = 100;                       // Niveau maximum où l'influence est effective
 
-export const LEVEL_MULTIPLIER_FOR_MAX_VALUES = 1;  // Multiplicateur pour les valeurs maximales de base (en % par niveau)
+export const LEVEL_MULTIPLIER_FOR_MAX_VALUES = 5;  // Multiplicateur pour les valeurs maximales de base (en % par niveau)
 
 export const LEVEL_HUNGER_MULTIPLIER_CONFIG = {
     start: 1.0,  // Début du multiplicateur de faim
