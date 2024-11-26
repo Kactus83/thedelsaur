@@ -65,23 +65,40 @@
       transform: scale(1) rotate(0deg);
       filter: drop-shadow(0 0 0px gold);
     }
+    12.5% {
+      transform: scale(1.1) rotate(45deg);
+      filter: drop-shadow(0 0 5px gold);
+    }
     25% {
       transform: scale(1.2) rotate(90deg);
       filter: drop-shadow(0 0 10px gold);
+    }
+    37.5% {
+      transform: scale(1.35) rotate(135deg);
+      filter: drop-shadow(0 0 15px gold);
     }
     50% {
       transform: scale(1.5) rotate(180deg);
       filter: drop-shadow(0 0 20px gold);
     }
+    62.5% {
+      transform: scale(1.35) rotate(225deg);
+      filter: drop-shadow(0 0 15px gold);
+    }
     75% {
       transform: scale(1.2) rotate(270deg);
       filter: drop-shadow(0 0 10px gold);
+    }
+    87.5% {
+      transform: scale(1.1) rotate(315deg);
+      filter: drop-shadow(0 0 5px gold);
     }
     100% {
       transform: scale(1) rotate(360deg);
       filter: drop-shadow(0 0 0px gold);
     }
   }
+  
 /* 
 @keyframes dinoActionAnimation {
     0% {
