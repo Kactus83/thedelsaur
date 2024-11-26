@@ -10,6 +10,7 @@ import {
 } from '../../../common/config/constants';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { DinosaurFactory } from '../factories/dinosaur.factory';
+import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
 
 /**
  * Récupère les actions disponibles pour un dinosaure, avec leurs détails pour le frontend.
@@ -121,6 +122,23 @@ export async function applyEventToDinosaur(
 
   if (event.typeChange) {
     dinosaur.type = event.typeChange;
+  }
+
+  // Appliquer les changements aux multiplicateurs
+  if (event.multiplierChanges) {
+    for (const key in event.multiplierChanges) {
+      if (event.multiplierChanges.hasOwnProperty(key)) {
+        const changeValue = event.multiplierChanges[key as keyof DinosaurMultiplier];
+        if (changeValue !== undefined) {
+          dinosaur.multipliers[key as keyof DinosaurMultiplier] += changeValue;
+
+          // Assurer que les multiplicateurs restent dans des bornes acceptables, par exemple >= 0
+          if (dinosaur.multipliers[key as keyof DinosaurMultiplier] < 0) {
+            dinosaur.multipliers[key as keyof DinosaurMultiplier] = 0;
+          }
+        }
+      }
+    }
   }
 
   // Gestion de la montée de niveau en fonction du seuil d'expérience dynamique

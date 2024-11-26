@@ -25,7 +25,7 @@ export const MIN_ENERGY_TO_WAKE_UP = MAX_ENERGY / 2;                  // Seuil m
 // Specific Action Costs and Effects
 export const ENERGY_COST_TO_GRAZE = 1750;                    // Coût énergétique pour l'action de "cueillir"
 export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétique pour l'action de "chasser"
-export const ENERGY_COST_TO_STEAL = 2000;                   // Coût énergétique pour l'action de "voler"
+export const ENERGY_COST_TO_STEAL = 3500;                   // Coût énergétique pour l'action de "voler"
 export const ENERGY_COST_TO_PRAY = 5000;                          // Coût énergétique pour l'action de "prier"
 
 // Epoch thresholds 
