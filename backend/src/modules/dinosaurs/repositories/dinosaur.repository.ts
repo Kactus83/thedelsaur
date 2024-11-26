@@ -1,12 +1,13 @@
 import { Dinosaur } from '../models/dinosaur.interface';
 import pool from '../../../common/database/db';
-import { calculateFinalMultipliers, calculateMaxHungerMultiplier } from '../utils/dinosaurUtils';
+import { calculateMaxHungerMultiplier } from '../utils/dinosaurUtils';
 import { DietType } from '../models/dinosaur-diet.type';
 import { DinosaurType } from '../models/dinosaur-type.type';
 import {
   MAX_FOOD,
   BASE_ENERGY,
   BASE_MAX_HUNGER,
+  LEVEL_MULTIPLIER_FOR_MAX_VALUES,
 } from '../../../common/config/constants';
 
 /**
@@ -41,21 +42,17 @@ export class DinosaurRepository {
   
         // Reconstitution de l'objet Dinosaur avec ses multiplicateurs
         const dinosaurData = dinosaurs[0];
-        const dietType = dinosaurData.diet as DietType;
-        const dinoType = dinosaurData.type as DinosaurType;
         const level = dinosaurData.level as number;
   
         // Calculer les multiplicateurs finaux en fonction du régime alimentaire, du type et du niveau
-        const finalMultipliers = calculateFinalMultipliers(dietType, dinoType, level);
         const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
   
         // Calculer et arrondir les valeurs de max_food et max_energy
         const dinosaur: Dinosaur = {
           ...dinosaurData,
-          max_food: Math.round(MAX_FOOD * finalMultipliers.max_food_multiplier),
-          max_energy: Math.round(BASE_ENERGY * finalMultipliers.max_energy_multiplier),
-          max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier),
-          multipliers: finalMultipliers,
+          max_food: Math.round(MAX_FOOD * dinosaurData.max_food_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          max_energy: Math.round(BASE_ENERGY * dinosaurData.max_energy_multiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
+          max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((dinosaurData.level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))),
         };
   
         return dinosaur;
@@ -93,21 +90,17 @@ export class DinosaurRepository {
   
         // Reconstitution de l'objet Dinosaur avec ses multiplicateurs
         const dinosaurData = dinosaurs[0];
-        const dietType = dinosaurData.diet as DietType;
-        const dinoType = dinosaurData.type as DinosaurType;
         const level = dinosaurData.level as number;
-  
-        // Calculer les multiplicateurs finaux en fonction du régime alimentaire, du type et du niveau
-        const finalMultipliers = calculateFinalMultipliers(dietType, dinoType, level);
+
         const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
   
         // Calculer et arrondir les valeurs de max_food et max_energy
         const dinosaur: Dinosaur = {
           ...dinosaurData,
-          max_food: Math.round(MAX_FOOD * finalMultipliers.max_food_multiplier),
-          max_energy: Math.round(BASE_ENERGY * finalMultipliers.max_energy_multiplier),
+          max_food: Math.round(MAX_FOOD * dinosaurData.max_food_multiplier),
+          max_energy: Math.round(BASE_ENERGY * dinosaurData.max_energy_multiplier),
           max_hunger: Math.round(BASE_MAX_HUNGER * maxHungerMultiplier),
-          multipliers: finalMultipliers,
+          multipliers: dinosaurData,
         };
   
         return dinosaur;

@@ -1,5 +1,4 @@
 import { Response, Request } from 'express';
-import { DinosaursService } from '../services/dinosaurs.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
 import { DinosaurDTO } from '../models/dinosaur.dto';
 import { plainToInstance } from 'class-transformer';

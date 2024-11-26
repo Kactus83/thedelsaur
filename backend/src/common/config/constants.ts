@@ -40,18 +40,17 @@ export const EXP_GROWTH_FACTOR = 1.5;               // Facteur de croissance de 
 export const LEVEL_MODIFIER = 2.0;                  // Ajoute un autre niveau de complexité pour ajustemer finement des valeurs de progression
 export const LEVEL_MAX = 100;                       // Niveau maximum où l'influence est effective
 
-export const LEVEL_MULTIPLIER_CONFIG: Record<keyof DinosaurMultiplier, { start: number, end: number, curve: number }> = {
-    earn_herbi_food_multiplier: { start: 1.0, end: 1.0, curve: 1 },
-    earn_carni_food_multiplier: { start: 1.0, end: 1.0, curve: 1 },
-    earn_food_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
-    earn_energy_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
-    earn_experience_multiplier: { start: 1.0, end: 1.0, curve: 1 },
-    max_energy_multiplier: { start: 1.0, end: 40.0, curve: 0.8 },
-    max_food_multiplier: { start: 1.0, end: 50.0, curve: 0.8 },
-};
+export const LEVEL_MULTIPLIER_FOR_MAX_VALUES = 1;  // Multiplicateur pour les valeurs maximales de base (en % par niveau)
+
 export const LEVEL_HUNGER_MULTIPLIER_CONFIG = {
     start: 1.0,  // Début du multiplicateur de faim
     end: 50.0,   // Fin du multiplicateur de faim
+    curve: 0.8,  // Facteur de courbe pour contrôler l'évolution
+};
+
+export const LEVEL_ENERGY_RECOVERY_MULTIPLIER_CONFIG = {
+    start: 1.0,  // Début du multiplicateur de gain d energie
+    end: 40.0,   // Fin du multiplicateur de gain d energie
     curve: 0.8,  // Facteur de courbe pour contrôler l'évolution
 };
 

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { DinosaursService } from './services/dinosaurs.service';
 import { DinosaurTimeService } from './services/dinosaur-time.service';
 import { BasicActionsService } from './services/basic-actions.service';
 import { CarnivoreActionsService } from './services/carnivore-actions.service';
@@ -22,7 +21,6 @@ export class DinosaursModule {
   public router: Router;
 
   // Services principaux
-  private dinosaursService: DinosaursService;
   private dinosaurTimeService: DinosaurTimeService;
 
   // Services spécifiques
@@ -42,9 +40,6 @@ export class DinosaursModule {
   constructor() {
     // Initialisation du repository
     const dinosaurRepository = new DinosaurRepository();
-
-    // Initialisation du service principal
-    this.dinosaursService = new DinosaursService();
 
     // Initialisation des services spécifiques
     this.basicActionsService = new BasicActionsService(dinosaurRepository);
