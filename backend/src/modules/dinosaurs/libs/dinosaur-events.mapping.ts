@@ -8,6 +8,7 @@ import { grazeEvents } from './events/graze.events';
 import { huntEvents } from './events/hunt.events';
 import { stealEvents } from './events/steal.events';
 import { discoverEvents } from './events/discover.events';
+import { prayEvents } from './events/pray.events';
 
 // Agrégation des événements dans un seul Record
 export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
@@ -19,4 +20,5 @@ export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
   [DinosaurAction.Hunt]: huntEvents,
   [DinosaurAction.Steal]: stealEvents,
   [DinosaurAction.Discover]: discoverEvents,
+  [DinosaurAction.Pray]: prayEvents,
 };
