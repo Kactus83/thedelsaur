@@ -74,7 +74,7 @@ export default function (
   router.post('/actions/discover', authenticateJWT, (req, res) =>
     advancedActionsController.discoverDinosaur(req, res)
   );
-
+// function manquante
   router.post('/actions/pray', authenticateJWT, (req, res) =>
     advancedActionsController.prayDinosaur(req, res)
   );
