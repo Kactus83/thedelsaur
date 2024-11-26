@@ -51,7 +51,7 @@ export class DinosaurTimeService {
     if (timeElapsedInSeconds > 0) {
       if (dinosaur.isSleeping) {
         // Régénération de l'énergie pendant le sommeil
-        let energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier;
+        let energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
         dinosaur.energy = Math.min(dinosaur.max_energy, dinosaur.energy + energyRecovery);
 
         // Vérifier si le dinosaure a atteint son énergie maximale
@@ -72,7 +72,7 @@ export class DinosaurTimeService {
         dinosaur.hunger = Math.min(dinosaur.max_hunger, Math.floor(dinosaur.hunger + hungerIncrease));
 
         // Décroissance d'énergie normale lorsque le dinosaure est éveillé
-        const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND;
+        const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
         dinosaur.energy = Math.max(0, dinosaur.energy - energyDecay);
 
         // Perte d'énergie supplémentaire due à la faim critique
@@ -143,6 +143,21 @@ export class DinosaurTimeService {
       // Calculer le multiplicateur de faim en utilisant les paramètres de courbe
       const { start, end, curve } = LEVEL_HUNGER_MULTIPLIER_CONFIG;
       return start + (end - start) * Math.pow(levelRatio, curve);
+  }
+
+  /**
+   * Calcule le multiplicateur d'énergie pour un dinosaure en fonction de son niveau.
+   * @param level Le niveau du dinosaure.
+   * @returns Le multiplicateur d'énergie ajusté au niveau.
+   */
+  private calculateEnergyMultiplier(level: number): number {
+    // Limiter le niveau entre 2 et LEVEL_MAX
+    const effectiveLevel = Math.max(2, Math.min(level, LEVEL_MAX));
+    const levelRatio = (effectiveLevel - 1) / (LEVEL_MAX - 1);
+
+    // Calculer le multiplicateur de faim en utilisant les paramètres de courbe
+    const { start, end, curve } = LEVEL_HUNGER_MULTIPLIER_CONFIG;
+    return start + (end - start) * Math.pow(levelRatio, curve);
   }
 }
 
