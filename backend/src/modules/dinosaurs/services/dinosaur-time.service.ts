@@ -73,7 +73,7 @@ export class DinosaurTimeService {
 
         // Décroissance d'énergie normale lorsque le dinosaure est éveillé
         const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
-        dinosaur.energy = Math.max(0, dinosaur.energy - energyDecay);
+        dinosaur.energy = Math.round(Math.max(0, dinosaur.energy - energyDecay));
 
         // Perte d'énergie supplémentaire due à la faim critique
         if (dinosaur.hunger >= HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS) {
