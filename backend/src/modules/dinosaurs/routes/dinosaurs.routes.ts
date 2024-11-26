@@ -5,6 +5,7 @@ import { BasicActionsController } from '../controllers/basic-actions.controller'
 import { CarnivoreActionsController } from '../controllers/carnivore-actions.controller';
 import { HerbivoreActionsController } from '../controllers/herbivore-actions.controller';
 import { AdvancedActionsController } from '../controllers/advanced-actions.controller';
+import { DinosaurMiddleware } from '../middlewares/dinosaur.middleware';
 
 /**
  * Définit les routes pour les dinosaures.
@@ -20,7 +21,8 @@ export default function (
   basicActionsController: BasicActionsController,
   carnivoreActionsController: CarnivoreActionsController,
   herbivoreActionsController: HerbivoreActionsController,
-  advancedActionsController: AdvancedActionsController
+  advancedActionsController: AdvancedActionsController,
+  dinosaurMiddleware: DinosaurMiddleware
 ): Router {
   const router = Router();
 
@@ -30,52 +32,52 @@ export default function (
   );
 
   // Routes générales
-  router.get('/my-dinosaur', authenticateJWT, (req, res) =>
+  router.get('/my-dinosaur', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     dinosaursController.getMyDinosaur(req, res)
   );
-  router.patch('/my-dinosaur/change-name', authenticateJWT, (req, res) =>
+  router.patch('/my-dinosaur/change-name', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     dinosaursController.changeDinosaurName(req, res)
   );
-  router.get('/my-dinosaur/next-level-xp', authenticateJWT, (req, res) =>
+  router.get('/my-dinosaur/next-level-xp', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     dinosaursController.getNextLevelXp(req, res)
   );
-  router.get('/my-dinosaur/actions', authenticateJWT, (req, res) =>
+  router.get('/my-dinosaur/actions', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     dinosaursController.getAvailableActionsForDinosaur(req, res)
   );
 
   // Routes des actions basiques
-  router.post('/actions/eat', authenticateJWT, (req, res) =>
+  router.post('/actions/eat', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     basicActionsController.eatDinosaur(req, res)
   );
-  router.post('/actions/sleep', authenticateJWT, (req, res) =>
+  router.post('/actions/sleep', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     basicActionsController.sleepDinosaur(req, res)
   );
-  router.post('/actions/wake', authenticateJWT, (req, res) =>
+  router.post('/actions/wake', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     basicActionsController.wakeDinosaur(req, res)
   );
-  router.post('/actions/resurrect', authenticateJWT, (req, res) =>
+  router.post('/actions/resurrect', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     basicActionsController.resurrectDinosaur(req, res)
   );
 
   // Routes des actions carnivores
-  router.post('/actions/hunt', authenticateJWT, (req, res) =>
+  router.post('/actions/hunt', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     carnivoreActionsController.huntDinosaur(req, res)
   );
 
   // Routes des actions herbivores
-  router.post('/actions/graze', authenticateJWT, (req, res) =>
+  router.post('/actions/graze', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     herbivoreActionsController.grazeDinosaur(req, res)
   );
 
   // Routes des actions avancées
-  router.post('/actions/steal', authenticateJWT, (req, res) =>
+  router.post('/actions/steal', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     advancedActionsController.stealDinosaur(req, res)
   );
-  router.post('/actions/discover', authenticateJWT, (req, res) =>
+  router.post('/actions/discover', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     advancedActionsController.discoverDinosaur(req, res)
   );
 
-  router.post('/actions/pray', authenticateJWT, (req, res) =>
+  router.post('/actions/pray', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     advancedActionsController.prayDinosaur(req, res)
   );
 

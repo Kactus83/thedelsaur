@@ -3,23 +3,19 @@ import { DinosaursService } from '../services/dinosaurs.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
 import { DinosaurDTO } from '../models/dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
-import { Dinosaur } from '../models/dinosaur.interface';
-import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { getAvailableActions, getExperienceThresholdForLevel } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { ChangeDinosaurNameRequestBody } from '../models/change-dinosaur-name.dto';
 import { calculateEpochThresholds } from '../utils/epochUtils';
+import { DinosaurRepository } from '../repositories/dinosaur.repository';
 
 export class DinosaursController {
-  private dinosaursService: DinosaursService;
-  private dinosaurTimeService: DinosaurTimeService;
+  private dinosaurRepository: DinosaurRepository;
 
   constructor(
-    dinosaursService: DinosaursService,
-    dinosaurTimeService: DinosaurTimeService
+    dinosaurRepository: DinosaurRepository
   ) {
-    this.dinosaursService = dinosaursService;
-    this.dinosaurTimeService = dinosaurTimeService;
+    this.dinosaurRepository = dinosaurRepository;
   }
   
   // Nouvelle méthode pour obtenir les seuils des époques
@@ -42,18 +38,14 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
-
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        res.status(404).json({ message: 'Dinosaure non trouvé' });
-        return;
+          res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+          return;
       }
 
-      // Ajuster les statistiques du dinosaure en fonction du temps
-      dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
-
       // Sauvegarder les nouvelles valeurs du dinosaure
-      await this.dinosaursService.updateDinosaur(dinosaur.id, {
+      await this.dinosaurRepository.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
         hunger: dinosaur.hunger,
@@ -86,12 +78,11 @@ export class DinosaursController {
         res.status(400).json({ message: 'Utilisateur non authentifié' });
         return;
       }
-  
-      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
-  
+
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        res.status(404).json({ message: 'Dinosaure non trouvé' });
-        return;
+          res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+          return;
       }
   
       // Calcul de la valeur d'expérience nécessaire pour le prochain niveau
@@ -113,18 +104,14 @@ export class DinosaursController {
         return;
       }
 
-      let dinosaur: Dinosaur | null = await this.dinosaursService.getDinosaurByUserId(userId);
-
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        res.status(404).json({ message: 'Dinosaure non trouvé' });
-        return;
+          res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+          return;
       }
 
-      // Ajuster les statistiques du dinosaure en fonction du temps
-      dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
-
       // Sauvegarder les nouvelles valeurs du dinosaure
-      await this.dinosaursService.updateDinosaur(dinosaur.id, {
+      await this.dinosaurRepository.updateDinosaur(dinosaur.id, {
         food: dinosaur.food,
         energy: dinosaur.energy,
         hunger: dinosaur.hunger,
@@ -164,7 +151,7 @@ export class DinosaursController {
         return;
       }
 
-      const updated = await this.dinosaursService.updateDinosaurName(userId, newName.trim());
+      const updated = await this.dinosaurRepository.updateDinosaurName(userId, newName.trim());
       if (!updated) {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
         return;
