@@ -11,6 +11,8 @@ import { CarnivoreActionsController } from './controllers/carnivore-actions.cont
 import { HerbivoreActionsController } from './controllers/herbivore-actions.controller';
 import { AdvancedActionsController } from './controllers/advanced-actions.controller';
 import dinosaursRoutes from './routes/dinosaurs.routes';
+import { DinosaurRepository } from './repositories/dinosaur.repository';
+import { DinosaurMiddleware } from './middlewares/dinosaur.middleware';
 
 /**
  * Module Dinosaurs.
@@ -35,26 +37,33 @@ export class DinosaursModule {
   private carnivoreActionsController: CarnivoreActionsController;
   private herbivoreActionsController: HerbivoreActionsController;
   private advancedActionsController: AdvancedActionsController;
+  private dinosaurMiddleware: DinosaurMiddleware;
 
   constructor() {
+    // Initialisation du repository
+    const dinosaurRepository = new DinosaurRepository();
+
     // Initialisation du service principal
     this.dinosaursService = new DinosaursService();
 
     // Initialisation des services spécifiques
-    this.basicActionsService = new BasicActionsService(this.dinosaursService);
-    this.carnivoreActionsService = new CarnivoreActionsService(this.dinosaursService);
-    this.herbivoreActionsService = new HerbivoreActionsService(this.dinosaursService);
-    this.advancedActionsService = new AdvancedActionsService(this.dinosaursService);
+    this.basicActionsService = new BasicActionsService(dinosaurRepository);
+    this.carnivoreActionsService = new CarnivoreActionsService(dinosaurRepository);
+    this.herbivoreActionsService = new HerbivoreActionsService(dinosaurRepository);
+    this.advancedActionsService = new AdvancedActionsService(dinosaurRepository);
 
     // Initialisation du time service.
     this.dinosaurTimeService = new DinosaurTimeService(this.basicActionsService);
 
     // Initialisation des contrôleurs
-    this.dinosaursController = new DinosaursController(this.dinosaursService, this.dinosaurTimeService);
+    this.dinosaursController = new DinosaursController(dinosaurRepository);
     this.basicActionsController = new BasicActionsController(this.basicActionsService);
     this.carnivoreActionsController = new CarnivoreActionsController(this.carnivoreActionsService);
     this.herbivoreActionsController = new HerbivoreActionsController(this.herbivoreActionsService);
     this.advancedActionsController = new AdvancedActionsController(this.advancedActionsService);
+
+    // Initialisation du middleware
+    this.dinosaurMiddleware = new DinosaurMiddleware(dinosaurRepository, this.dinosaurTimeService);
 
     // Initialisation du routage avec tous les contrôleurs
     this.router = dinosaursRoutes(
@@ -62,7 +71,8 @@ export class DinosaursModule {
       this.basicActionsController,
       this.carnivoreActionsController,
       this.herbivoreActionsController,
-      this.advancedActionsController
+      this.advancedActionsController,
+      this.dinosaurMiddleware
     );
   }
 }

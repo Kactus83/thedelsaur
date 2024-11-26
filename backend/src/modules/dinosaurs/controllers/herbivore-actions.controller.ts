@@ -25,15 +25,13 @@ export class HerbivoreActionsController {
                 return;
             }
 
-            const dinosaur = await this.herbivoreActionsService.getDinosaurByUserId(userId);
+            const dinosaur = req.dinosaur;
             if (!dinosaur) {
-                res.status(404).json({ message: 'Dinosaure non trouvé' });
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
                 return;
             }
 
             const { dinosaur: updatedDino, event } = this.herbivoreActionsService.grazeDinosaur(dinosaur);
-
-            await this.herbivoreActionsService.updateDinosaur(updatedDino);
 
             const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });

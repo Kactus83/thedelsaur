@@ -25,15 +25,13 @@ export class BasicActionsController {
                 return;
             }
 
-            const dinosaur = await this.basicActionsService.getDinosaurByUserId(userId);
+            const dinosaur = req.dinosaur;
             if (!dinosaur) {
-                res.status(404).json({ message: 'Dinosaure non trouvé' });
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
                 return;
             }
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.eatDinosaur(dinosaur);
-
-            await this.basicActionsService.updateDinosaur(updatedDino);
 
             const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
@@ -54,15 +52,13 @@ export class BasicActionsController {
                 return;
             }
 
-            const dinosaur = await this.basicActionsService.getDinosaurByUserId(userId);
+            const dinosaur = req.dinosaur;
             if (!dinosaur) {
-                res.status(404).json({ message: 'Dinosaure non trouvé' });
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
                 return;
             }
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.sleepDinosaur(dinosaur);
-
-            await this.basicActionsService.updateDinosaur(updatedDino);
 
             const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure est maintenant en sommeil.', dinosaur: dinosaurDTO, event });
@@ -83,15 +79,13 @@ export class BasicActionsController {
                 return;
             }
 
-            const dinosaur = await this.basicActionsService.getDinosaurByUserId(userId);
+            const dinosaur = req.dinosaur;
             if (!dinosaur) {
-                res.status(404).json({ message: 'Dinosaure non trouvé' });
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
                 return;
             }
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.wakeDinosaur(dinosaur);
-
-            await this.basicActionsService.updateDinosaur(updatedDino);
 
             const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure s\'est réveillé.', dinosaur: dinosaurDTO, event });
@@ -112,9 +106,9 @@ export class BasicActionsController {
                 return;
             }
 
-            const dinosaur = await this.basicActionsService.getDinosaurByUserId(userId);
+            const dinosaur = req.dinosaur;
             if (!dinosaur) {
-                res.status(404).json({ message: 'Dinosaure non trouvé' });
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
                 return;
             }
 
@@ -124,8 +118,6 @@ export class BasicActionsController {
             }
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.resurrectDinosaur(dinosaur);
-
-            await this.basicActionsService.updateDinosaur(updatedDino);
 
             const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure a été ressuscité.', dinosaur: dinosaurDTO, event });
