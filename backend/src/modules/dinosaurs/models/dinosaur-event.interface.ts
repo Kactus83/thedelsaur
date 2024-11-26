@@ -1,3 +1,4 @@
+import { DinosaurMultiplier } from "./dinosaur-multiplier.interface";
 import { DinosaurType } from "./dinosaur-type.type";
 
 export interface DinosaurEvent {
@@ -9,6 +10,7 @@ export interface DinosaurEvent {
     experienceChange: number;    // Variation de l'expérience
     karmaChange: number;        // Variation du karma
     typeChange?: DinosaurType;          // Variation du type
+    multiplierChanges?: Partial<DinosaurMultiplier>; // Modifications des multiplicateurs
     minLevel: number,
     weight: number;              // Facteur de probabilité (poids)
   }
