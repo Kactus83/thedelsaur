@@ -24,9 +24,7 @@ export class AuthController {
         return;
       }
 
-      const { username, email, password } = signupDto;
-
-      const { user, dinosaur } = await this.authService.signup(username, email, password);
+      const { user, dinosaur } = await this.authService.signup(signupDto.username, signupDto.email, signupDto.password);
 
       // Transformer les entités en DTOs
       const userDTO = plainToInstance(UserDTO, user);
