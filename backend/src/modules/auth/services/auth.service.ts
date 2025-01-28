@@ -176,9 +176,15 @@ export class AuthService {
   public async signup(username: string, email: string, password: string): Promise<{ user: User; dinosaur: Dinosaur }> {
     try {
       // Vérifier si l'utilisateur existe déjà
-      const existingUser = await this.findUserByEmail(email);
-      if (existingUser) {
+      const existingEmailUser = await this.findUserByEmail(email);
+      if (existingEmailUser) {
         throw new Error('Email déjà utilisé');
+      }
+
+      // Vérifier si l'utilisateur existe déjà
+      const existingUser = await this.findUserByUsername(username);
+      if (existingUser) {
+        throw new Error('Pseudo déjà utilisé');
       }
 
       // Hasher le mot de passe
