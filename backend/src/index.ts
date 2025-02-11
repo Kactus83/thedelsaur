@@ -13,8 +13,9 @@ import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
 dotenv.config();
 
 Sentry.init({
-  dsn: "https://0bbb1c60a514242516015fdab9c2e06f@o4508363323211776.ingest.de.sentry.io/4508363546099792",
-  environment: "development",
+  dsn: "https://71c19a9dfe6a45c5a8f3dabc043ae535@o4508799823314944.ingest.de.sentry.io/4508799849594960",
+  integrations: [],
+  environment: "development",  
   tracesSampleRate: 1.0,
 });
 

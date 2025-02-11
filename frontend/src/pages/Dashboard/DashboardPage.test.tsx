@@ -2,10 +2,29 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DashboardPage from './DashboardPage';
-import MockAxios from 'jest-mock-axios'; // Assurez-vous que MockAxios est correctement importé
+import axios from 'axios';
 
-// Remplacer axios par MockAxios dans vos tests
-jest.mock('axios', () => MockAxios);  // Vous n'avez plus besoin de remplacer directement "axios" par MockAxios.
+let axiosInstance: jest.Mocked<typeof axios>;
+jest.mock('axios', () => {
+  const mockAxios = jest.requireActual('axios');
+
+  return {
+    ...mockAxios,
+    create: jest.fn(() => ({
+      ...mockAxios,
+      interceptors: {
+        request: { use: jest.fn(), eject: jest.fn() },
+        response: { use: jest.fn(), eject: jest.fn() },
+      },
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn(),
+    })),
+  };
+});
+
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('DashboardPage', () => {
   const mockUser = {
@@ -55,10 +74,16 @@ describe('DashboardPage', () => {
     ],
   };
 
+  
   beforeEach(() => {
-    MockAxios.get.mockResolvedValueOnce({ data: mockUser });
-    MockAxios.get.mockResolvedValueOnce({ data: mockDinosaur });
-    MockAxios.get.mockResolvedValueOnce({ data: mockActions });
+    jest.clearAllMocks(); // Nettoyage des mocks avant chaque test
+
+    mockedAxios.get.mockImplementation((url) => {
+      if (url.includes('/user')) return Promise.resolve({ data: mockUser });
+      if (url.includes('/dinosaur')) return Promise.resolve({ data: mockDinosaur });
+      if (url.includes('/actions')) return Promise.resolve({ data: mockActions });
+      return Promise.reject(new Error('404 Not Found'));
+    });
   });
 
   it('devrait afficher les informations de l\'utilisateur et du dinosaure', async () => {
@@ -67,9 +92,6 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(screen.getByText('john_doe')).toBeInTheDocument();
       expect(screen.getByText('john@example.com')).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
       expect(screen.getByText('T-Rex')).toBeInTheDocument();
       expect(screen.getByText('Level: 10')).toBeInTheDocument();
       expect(screen.getByText('Experience: 500')).toBeInTheDocument();
@@ -85,7 +107,7 @@ describe('DashboardPage', () => {
     render(<DashboardPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('level: 10')).toBeInTheDocument();
+      expect(screen.getByText('Level: 10')).toBeInTheDocument();
     });
   });
 
