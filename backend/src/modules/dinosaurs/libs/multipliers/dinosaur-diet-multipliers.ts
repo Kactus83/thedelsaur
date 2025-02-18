@@ -1,4 +1,4 @@
-import { DietType } from "../../models/dinosaur-diet.type";
+import { DietType } from "../../models/dinosaur-diet.interface";
 import { DinosaurMultiplier } from "../../models/dinosaur-multiplier.interface";
 
 export const DietTypeMultipliers: Record<DietType, Partial<Record<keyof DinosaurMultiplier, number>>> = {

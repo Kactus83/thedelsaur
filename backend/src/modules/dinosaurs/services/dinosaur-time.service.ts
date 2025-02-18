@@ -1,4 +1,4 @@
-import { Dinosaur } from '../models/dinosaur.interface';
+import { Dinosaur } from '../models/backend-dinosaur.interface';
 import {
   ENERGY_DECAY_RATE_PER_SECOND,
   ENERGY_RECOVERY_RATE_PER_SECOND,

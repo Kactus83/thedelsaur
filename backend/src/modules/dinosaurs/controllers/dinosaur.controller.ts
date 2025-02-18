@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { DinosaurDTO } from '../models/dinosaur.dto';
+import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { getAvailableActions, getExperienceThresholdForLevel } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';

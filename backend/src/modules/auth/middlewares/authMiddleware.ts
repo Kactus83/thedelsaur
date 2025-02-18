@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../../users/models/user.interface';
 import { UsersService } from '../../users/services/users.service';
-import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
+import { Dinosaur } from '../../dinosaurs/models/backend-dinosaur.interface';
 
 dotenv.config();
 

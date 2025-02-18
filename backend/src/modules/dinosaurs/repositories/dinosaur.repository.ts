@@ -1,4 +1,4 @@
-import { Dinosaur } from '../models/dinosaur.interface';
+import { Dinosaur } from '../models/backend-dinosaur.interface';
 import pool from '../../../common/database/db';
 import { calculateMaxHungerMultiplier } from '../utils/dinosaurUtils';
 import {
@@ -9,8 +9,8 @@ import {
 } from '../../../common/config/constants';
 
 import { RowDataPacket } from 'mysql2';
-import { DietType } from '../models/dinosaur-diet.type';
-import { DinosaurType } from '../models/dinosaur-type.type';
+import { DietType } from '../models/dinosaur-diet.interface';
+import { DinosaurType } from '../models/dinosaur-type.interface';
 import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
 import { Epoch } from '../models/epoch.enum';
 

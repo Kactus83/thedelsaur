@@ -3,7 +3,7 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SignupDto } from '../models/sign-up.dto';
 import { UserDTO } from '../../users/models/user.dto';
-import { DinosaurDTO } from '../../dinosaurs/models/dinosaur.dto';
+import { DinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 import { LoginDto } from '../models/login.dto';
 import { AuthService } from '../services/auth.service';
 

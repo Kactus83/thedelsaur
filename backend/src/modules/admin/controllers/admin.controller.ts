@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { AdminService } from '../services/admin.service';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from '../../users/models/user.dto';
-import { DinosaurDTO } from '../../dinosaurs/models/dinosaur.dto';
+import { DinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 import { getExperienceThresholdForLevel } from '../../dinosaurs/utils/dinosaur-actions.util';
 
 export class AdminController {

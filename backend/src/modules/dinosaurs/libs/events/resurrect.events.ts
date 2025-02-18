@@ -1,6 +1,6 @@
 import { BASE_ENERGY, BASE_FOOD } from "../../../../common/config/constants";
 import { DinosaurEvent } from "../../models/dinosaur-event.interface";
-import { DinosaurType } from "../../models/dinosaur-type.type";
+import { DinosaurType } from "../../models/dinosaur-type.interface";
 
 export const resurrectEvents: DinosaurEvent[] = [
   {
