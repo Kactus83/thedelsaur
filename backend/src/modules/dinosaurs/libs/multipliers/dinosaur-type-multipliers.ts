@@ -1,5 +1,5 @@
 import { DinosaurMultiplier } from "../../models/dinosaur-multiplier.interface";
-import { DinosaurType } from "../../models/dinosaur-type.type";
+import { DinosaurType } from "../../models/dinosaur-type.interface";
 
 export const DinosaurTypeMultipliers: Record<DinosaurType, Partial<Record<keyof DinosaurMultiplier, number>>> = {
     [DinosaurType.LAND]: {

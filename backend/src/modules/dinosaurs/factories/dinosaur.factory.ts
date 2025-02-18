@@ -1,11 +1,11 @@
 import { BASE_ENERGY, BASE_FOOD, BASE_MAX_HUNGER, MAX_ENERGY, MAX_FOOD } from '../../../common/config/constants';
 import { DietTypeMultipliers } from '../libs/multipliers/dinosaur-diet-multipliers';
 import { DinosaurTypeMultipliers } from '../libs/multipliers/dinosaur-type-multipliers';
-import { DietType } from '../models/dinosaur-diet.type';
-import { DinosaurType } from '../models/dinosaur-type.type';
-import { Dinosaur } from '../models/dinosaur.interface';
+import { DietType } from '../models/dinosaur-diet.interface';
+import { DinosaurType } from '../models/dinosaur-type.interface';
+import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
-import { DinosaurDTO } from '../models/dinosaur.dto';
+import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';

@@ -1,4 +1,4 @@
-import { Dinosaur } from '../models/dinosaur.interface';
+import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { DinosaurActionDetails } from '../models/dinosaur-action-details.interface';
 import {

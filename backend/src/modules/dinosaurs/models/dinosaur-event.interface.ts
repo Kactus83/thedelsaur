@@ -1,5 +1,5 @@
 import { DinosaurMultiplier } from "./dinosaur-multiplier.interface";
-import { DinosaurType } from "./dinosaur-type.type";
+import { DinosaurType } from "./dinosaur-type.interface";
 
 export interface DinosaurEvent {
     name: string;                // Nom de l'événement

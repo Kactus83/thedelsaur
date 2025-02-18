@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
-import { Dinosaur } from '../../dinosaurs/models/dinosaur.interface';
+import { Dinosaur } from '../../dinosaurs/models/backend-dinosaur.interface';
 import { DinosaurFactory } from '../../dinosaurs/factories/dinosaur.factory';
 import { formatDateForMySQL } from '../../../common/utils/dateUtils';
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Dinosaur } from '../models/dinosaur.interface';
+import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
