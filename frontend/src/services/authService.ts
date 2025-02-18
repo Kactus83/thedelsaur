@@ -42,6 +42,7 @@ export const signup = async (data: SignupData): Promise<User> => {
 // Fonction asynchrone pour récupérer les informations de l'utilisateur depuis le backend
 export const fetchUserFromBackend = async (): Promise<User> => {
     const response = await api.get('/users/my-profile');
+    console.log("Reponse du my-profile",response);
     return response.data as User;
 };
 
