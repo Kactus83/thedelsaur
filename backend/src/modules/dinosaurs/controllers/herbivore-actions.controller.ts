@@ -31,7 +31,7 @@ export class HerbivoreActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.herbivoreActionsService.grazeDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.herbivoreActionsService.grazeDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });

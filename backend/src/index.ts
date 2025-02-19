@@ -1,3 +1,15 @@
+import 'reflect-metadata'; // Required by class-transformer, should be imported before any other import
+import * as Sentry from '@sentry/node'; // idem
+
+// Init sentry before any other import
+Sentry.init({
+  dsn: "https://71c19a9dfe6a45c5a8f3dabc043ae535@o4508799823314944.ingest.de.sentry.io/4508799849594960",
+  integrations: [],
+  environment: "development",  
+  tracesSampleRate: 1.0,
+});
+
+
 import express, { Application } from 'express';
 import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
@@ -6,18 +18,10 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { DinosaursModule } from './modules/dinosaurs/dinosaurs.module';
-import * as Sentry from '@sentry/node';
 import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
 
 
 dotenv.config();
-
-Sentry.init({
-  dsn: "https://71c19a9dfe6a45c5a8f3dabc043ae535@o4508799823314944.ingest.de.sentry.io/4508799849594960",
-  integrations: [],
-  environment: "development",  
-  tracesSampleRate: 1.0,
-});
 
 process.on('unhandledRejection', (reason) => {
   Sentry.captureException(reason);

@@ -1,15 +1,31 @@
-import { DinosaurEvent } from "../../models/dinosaur-event.interface";
+import { DinosaurAction } from "../../models/dinosaur-action.enum";
+import { DynamicEventData } from "../../models/dynamic-event-data.interface";
 
-export const eatEvents: DinosaurEvent[] = [
+export const eatEvents: DynamicEventData[] = [
   {
-    name: 'Repas normal',
-    description: 'Le dinosaure mange une quantité fixe de nourriture depuis son stock.',
+    id: 0,
+    name: 'Repas dynamique',
+    actionType: DinosaurAction.Eat,
     minLevel: 0,
-    experienceChange: 0,
-    energyChange: 0,
-    foodChange: 0, // défini dans le service
-    hungerChange: -500,
-    karmaChange: 0,
-    weight: 1, 
-  },
+    positivityScore: 0,
+    weight: 1,
+    descriptions: [
+      "Le dinosaure savoure un repas classique.",
+      "Un repas standard calme la faim.",
+      "Le dinosaure mange un repas équilibré.",
+      "Un repas complet pour le dinosaure.",
+      "Le dinosaure se régale d'un repas.",
+    ],
+    baseModifiers: [
+      {
+        source: "eat",
+        target: "hunger",
+        base_value: -500,
+        additiveStep: 0,          // 0 indique pas de scaling additif → effet constant
+        additiveIncrement: -500,   // effet constant de -500
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  }
 ];

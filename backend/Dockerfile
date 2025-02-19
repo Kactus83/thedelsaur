@@ -16,6 +16,9 @@ RUN npm install
 # Copier le reste du projet
 COPY . .
 
+# Créer le dossier "sentryout" attendu par les scripts Sentry
+RUN mkdir -p sentryout
+
 # Compiler le code TypeScript
 RUN npm run build
 

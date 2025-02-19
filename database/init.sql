@@ -3,12 +3,24 @@
 -- Script d'initialisation de la base de données pour le module dinosaures
 -- =============================================================================
 
+-- Création de la table `user`
+CREATE TABLE IF NOT EXISTS user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL UNIQUE,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  isAdmin BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ---------------------------------------------------------
 -- Table des types de dinosaures
 -- Chaque type possède un ensemble de modificateurs génériques stockés en JSON,
--- qui s'appliquent aux caractéristiques de base et aux multiplicateurs d'évolution.
--- Exemple de modificateur : 
--- { "target": "base_energy", "type": "additive", "value": 10, "source": "type" }
+-- qui s'appliquent aux caractéristiques de base.
+-- Pour ce travail, seuls les bonus fixes sont utilisés :
+--   - Land : +5000 à base_max_hunger
+--   - Air  : +5000 à base_max_energy
+--   - Sea  : +5000 à base_max_food
 -- ---------------------------------------------------------
 DROP TABLE IF EXISTS dinosaur_types;
 CREATE TABLE dinosaur_types (
@@ -17,62 +29,33 @@ CREATE TABLE dinosaur_types (
     stat_modifiers JSON NOT NULL
 );
 
--- Insertion exemple pour le type "Land"
+-- Insertion pour "Land"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Land', '[
-    {"target": "base_energy", "type": "additive", "value": 10, "source": "type"},
-    {"target": "base_max_energy", "type": "additive", "value": 15, "source": "type"},
-    {"target": "base_food", "type": "additive", "value": 8, "source": "type"},
-    {"target": "base_max_food", "type": "additive", "value": 12, "source": "type"},
-    {"target": "base_hunger", "type": "additive", "value": 5, "source": "type"},
-    {"target": "base_max_hunger", "type": "additive", "value": 7, "source": "type"},
-    {"target": "energy_recovery_multiplier", "type": "additive", "value": 0.10, "source": "type"},
-    {"target": "energy_decay_multiplier", "type": "additive", "value": 0.05, "source": "type"},
-    {"target": "max_energy_multiplier", "type": "additive", "value": 0.20, "source": "type"},
-    {"target": "max_food_multiplier", "type": "additive", "value": 0.15, "source": "type"},
-    {"target": "max_hunger_multiplier", "type": "additive", "value": 0.10, "source": "type"},
-    {"target": "hunger_increase_multiplier", "type": "additive", "value": 0.05, "source": "type"}
+    {"target": "base_max_hunger", "type": "additive", "value": 5000, "source": "type_bonus"}
 ]');
 
 -- Insertion pour "Air"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Air', '[
-    {"target": "base_energy", "type": "additive", "value": 8, "source": "type"},
-    {"target": "base_max_energy", "type": "additive", "value": 12, "source": "type"},
-    {"target": "base_food", "type": "additive", "value": 10, "source": "type"},
-    {"target": "base_max_food", "type": "additive", "value": 14, "source": "type"},
-    {"target": "base_hunger", "type": "additive", "value": 4, "source": "type"},
-    {"target": "base_max_hunger", "type": "additive", "value": 6, "source": "type"},
-    {"target": "energy_recovery_multiplier", "type": "additive", "value": 0.15, "source": "type"},
-    {"target": "energy_decay_multiplier", "type": "additive", "value": 0.04, "source": "type"},
-    {"target": "max_energy_multiplier", "type": "additive", "value": 0.25, "source": "type"},
-    {"target": "max_food_multiplier", "type": "additive", "value": 0.10, "source": "type"},
-    {"target": "max_hunger_multiplier", "type": "additive", "value": 0.12, "source": "type"},
-    {"target": "hunger_increase_multiplier", "type": "additive", "value": 0.06, "source": "type"}
+    {"target": "base_max_energy", "type": "additive", "value": 5000, "source": "type_bonus"}
 ]');
 
 -- Insertion pour "Sea"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Sea', '[
-    {"target": "base_energy", "type": "additive", "value": 9, "source": "type"},
-    {"target": "base_max_energy", "type": "additive", "value": 13, "source": "type"},
-    {"target": "base_food", "type": "additive", "value": 9, "source": "type"},
-    {"target": "base_max_food", "type": "additive", "value": 13, "source": "type"},
-    {"target": "base_hunger", "type": "additive", "value": 5, "source": "type"},
-    {"target": "base_max_hunger", "type": "additive", "value": 8, "source": "type"},
-    {"target": "energy_recovery_multiplier", "type": "additive", "value": 0.12, "source": "type"},
-    {"target": "energy_decay_multiplier", "type": "additive", "value": 0.06, "source": "type"},
-    {"target": "max_energy_multiplier", "type": "additive", "value": 0.18, "source": "type"},
-    {"target": "max_food_multiplier", "type": "additive", "value": 0.17, "source": "type"},
-    {"target": "max_hunger_multiplier", "type": "additive", "value": 0.14, "source": "type"},
-    {"target": "hunger_increase_multiplier", "type": "additive", "value": 0.07, "source": "type"}
+    {"target": "base_max_food", "type": "additive", "value": 5000, "source": "type_bonus"}
 ]');
+
 
 -- ---------------------------------------------------------
 -- Table des diètes de dinosaures
 -- Chaque diète contient un ensemble de modificateurs génériques stockés en JSON,
 -- s'appliquant aux earn multipliers.
--- Exemple : { "target": "earn_food_global_multiplier", "type": "additive", "value": 0.10, "source": "diet" }
+-- Pour ce travail, seuls les bonus spécifiés sont utilisés :
+--   - Omnivore : +50% sur earn_food_global_multiplier
+--   - Carnivore : +50% sur energy_recovery_multiplier
+--   - Herbivore : -50% sur hunger_increase_multiplier
 -- ---------------------------------------------------------
 DROP TABLE IF EXISTS dinosaur_diets;
 CREATE TABLE dinosaur_diets (
@@ -84,41 +67,21 @@ CREATE TABLE dinosaur_diets (
 -- Insertion pour "Herbivore"
 INSERT INTO dinosaur_diets (name, stat_modifiers) VALUES 
 ('Herbivore', '[
-    {"target": "earn_food_global_multiplier", "type": "additive", "value": 0.10, "source": "diet"},
-    {"target": "earn_food_herbi_multiplier", "type": "additive", "value": 0.20, "source": "diet"},
-    {"target": "earn_food_carni_multiplier", "type": "additive", "value": 0.00, "source": "diet"},
-    {"target": "earn_energy_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_experience_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_skill_point_multiplier", "type": "additive", "value": 0.03, "source": "diet"},
-    {"target": "earn_money_multiplier", "type": "additive", "value": 0.02, "source": "diet"},
-    {"target": "earn_karma_multiplier", "type": "additive", "value": 0.04, "source": "diet"}
+    {"target": "hunger_increase_multiplier", "type": "multiplicative", "value": -0.50, "source": "diet_bonus"}
 ]');
 
 -- Insertion pour "Carnivore"
 INSERT INTO dinosaur_diets (name, stat_modifiers) VALUES 
 ('Carnivore', '[
-    {"target": "earn_food_global_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_food_herbi_multiplier", "type": "additive", "value": 0.00, "source": "diet"},
-    {"target": "earn_food_carni_multiplier", "type": "additive", "value": 0.20, "source": "diet"},
-    {"target": "earn_energy_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_experience_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_skill_point_multiplier", "type": "additive", "value": 0.03, "source": "diet"},
-    {"target": "earn_money_multiplier", "type": "additive", "value": 0.02, "source": "diet"},
-    {"target": "earn_karma_multiplier", "type": "additive", "value": 0.04, "source": "diet"}
+    {"target": "energy_recovery_multiplier", "type": "multiplicative", "value": 0.50, "source": "diet_bonus"}
 ]');
 
 -- Insertion pour "Omnivore"
 INSERT INTO dinosaur_diets (name, stat_modifiers) VALUES 
 ('Omnivore', '[
-    {"target": "earn_food_global_multiplier", "type": "additive", "value": 0.08, "source": "diet"},
-    {"target": "earn_food_herbi_multiplier", "type": "additive", "value": 0.10, "source": "diet"},
-    {"target": "earn_food_carni_multiplier", "type": "additive", "value": 0.10, "source": "diet"},
-    {"target": "earn_energy_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_experience_multiplier", "type": "additive", "value": 0.05, "source": "diet"},
-    {"target": "earn_skill_point_multiplier", "type": "additive", "value": 0.03, "source": "diet"},
-    {"target": "earn_money_multiplier", "type": "additive", "value": 0.02, "source": "diet"},
-    {"target": "earn_karma_multiplier", "type": "additive", "value": 0.04, "source": "diet"}
+    {"target": "earn_food_global_multiplier", "type": "multiplicative", "value": 0.50, "source": "diet_bonus"}
 ]');
+
 
 -- ---------------------------------------------------------
 -- Table principale des dinosaures
@@ -160,4 +123,28 @@ CREATE TABLE dinosaurs (
     -- Clés étrangères
     CONSTRAINT fk_dino_diet FOREIGN KEY (diet_id) REFERENCES dinosaur_diets(id),
     CONSTRAINT fk_dino_type FOREIGN KEY (type_id) REFERENCES dinosaur_types(id)
+);
+
+-- ---------------------------------------------------------
+-- Nouvelle table pour le système Dynamic Events
+-- Cette table stocke les événements dynamiques selon la nouvelle structure :
+--   - id : Identifiant unique (auto-incrémenté)
+--   - name : Nom de l'événement
+--   - description : Description optionnelle
+--   - action_type : Type d'action (correspondant aux valeurs de l'enum DinosaurAction)
+--   - min_level : Niveau minimum requis
+--   - weight : Poids de probabilité
+--   - positivity_score : Score de positivité (peut être négatif pour un effet négatif)
+--   - modifiers : Modificateurs au format JSON, correspondant à un tableau d'EventModifier
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dynamic_events;
+CREATE TABLE dynamic_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    min_level INT NOT NULL,
+    weight INT NOT NULL,
+    positivity_score INT NOT NULL,
+    descriptions JSON NOT NULL,
+    base_modifiers JSON NOT NULL
 );

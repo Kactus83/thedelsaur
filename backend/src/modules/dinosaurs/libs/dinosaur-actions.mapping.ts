@@ -1,4 +1,3 @@
-import { Dinosaur } from '../models/database-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { DinosaurActionDetails } from '../models/dinosaur-action-details.interface';
 import {
@@ -7,9 +6,8 @@ import {
   ENERGY_COST_TO_HUNT,
   ENERGY_COST_TO_PRAY,
   ENERGY_COST_TO_STEAL,
-  MAX_ENERGY_NO_SLEEP,
-  MIN_ENERGY_TO_WAKE_UP,
-} from '../../../common/config/constants';
+} from '../../../common/config/actions.constants';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 type DinosaurActionsMapType = {
   [key in DinosaurAction]: DinosaurActionDetails;
@@ -20,11 +18,11 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Manger',
     description: 'Le dinosaure mange pour récupérer de la nourriture.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 1 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
         dinosaur.food > 0 &&
         dinosaur.hunger > 0
       );
@@ -36,12 +34,12 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Dormir',
     description: 'Le dinosaure se met en sommeil pour récupérer de l\'énergie.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 1 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
-        dinosaur.energy <= MAX_ENERGY_NO_SLEEP
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
+        dinosaur.energy <= dinosaur.base_max_energy / 4
       );
     },
     endpoint: 'dinosaurs/actions/sleep',
@@ -51,12 +49,11 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Se Réveiller',
     description: 'Le dinosaure se réveille après avoir dormi.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 1 &&
-        !dinosaur.isDead &&
-        dinosaur.isSleeping &&
-        dinosaur.energy >= MIN_ENERGY_TO_WAKE_UP
+        !dinosaur.is_dead &&
+        dinosaur.is_sleeping
       );
     },
     endpoint: 'dinosaurs/actions/wake',
@@ -66,8 +63,8 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Ressusciter',
     description: 'Le dinosaure est ressuscité après sa mort.',
-    canPerform: (dinosaur: Dinosaur) => {
-      return dinosaur.isDead;
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.is_dead;
     },
     endpoint: 'dinosaurs/actions/resurrect',
     image: '/assets/img/actions/resurrect.png',
@@ -76,13 +73,13 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Cueillir',
     description: 'Le dinosaure cueille des plantes pour récupérer de la nourriture.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 1 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_GRAZE &&
-        dinosaur.diet !== 'carnivore'
+        dinosaur.diet.name !== 'carnivore'
       );
     },
     endpoint: 'dinosaurs/actions/graze',
@@ -92,13 +89,13 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 1,
     name: 'Chasser',
     description: 'Le dinosaure chasse pour obtenir de la nourriture.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 1 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_HUNT &&
-        dinosaur.diet !== 'herbivore'
+        dinosaur.diet.name !== 'herbivore'
       );
     },
     endpoint: 'dinosaurs/actions/hunt',
@@ -108,11 +105,11 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 2,
     name: 'Découvrir',
     description: 'Le dinosaure découvre de nouvelles choses.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 2 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_DISCOVER
       );
     },
@@ -123,11 +120,11 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 4,
     name: 'Voler',
     description: 'Le dinosaure vole des ressources à un autre dinosaure.',
-    canPerform: (dinosaur: Dinosaur) => {
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
       return (
         dinosaur.level >= 4 &&
-        !dinosaur.isDead &&
-        !dinosaur.isSleeping &&
+        !dinosaur.is_dead &&
+        !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_STEAL
       );
     },
@@ -138,8 +135,8 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     levelRequired: 5,
     name: 'Prier',
     description: 'Le dinosaure prie pour remonter son karma.',
-    canPerform: (dinosaur: Dinosaur) => {
-      return dinosaur.level >= 5 && !dinosaur.isDead && !dinosaur.isSleeping && dinosaur.energy >= ENERGY_COST_TO_PRAY;
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 5 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_TO_PRAY;
     },
     endpoint: 'dinosaurs/actions/pray',
     image: '/assets/img/actions/pray.png',

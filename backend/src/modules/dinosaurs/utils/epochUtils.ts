@@ -1,5 +1,5 @@
 import { Epoch } from '../models/epoch.enum';
-import { MIN_EPOCH_DURATION, MAX_EPOCH_DURATION, CURVE_STEEPNESS } from '../../../common/config/constants';
+import { EPOCH_CONSTANTS } from '../../../common/config/epoch.constants';
 
 /**
  * Calcul des seuils de temps pour chaque époque en fonction de la fonction mathématique.
@@ -13,7 +13,7 @@ export function calculateEpochThresholds(): { epoch: Epoch, threshold: number }[
     for (let i = 0; i < epochValues.length; i++) {
         // Calcul de la durée de chaque époque selon une courbe progressive
         const normalizedIndex = i / (epochValues.length - 1);
-        const epochDuration = MIN_EPOCH_DURATION + (MAX_EPOCH_DURATION - MIN_EPOCH_DURATION) * (1 - Math.exp(-CURVE_STEEPNESS * normalizedIndex));
+        const epochDuration = EPOCH_CONSTANTS.MIN_EPOCH_DURATION + (EPOCH_CONSTANTS.MAX_EPOCH_DURATION - EPOCH_CONSTANTS.MIN_EPOCH_DURATION) * (1 - Math.exp(-EPOCH_CONSTANTS.CURVE_STEEPNESS * normalizedIndex));
         
         cumulativeTime += epochDuration;
 

@@ -1,10 +1,3 @@
-// src/modules/dinosaurs/factories/dinosaur.factory.ts
-
-import {
-  INITIAL_ENERGY,
-  INITIAL_FOOD,
-  INITIAL_HUNGER,
-} from '../../../common/config/constants';
 import { DINOSAUR_CONSTANTS } from '../../../common/config/dinosaur.constants';
 import { DatabaseDinosaur } from '../models/database-dinosaur.interface';
 import { DinosaurType } from '../models/dinosaur-type.interface';
@@ -13,6 +6,7 @@ import { Epoch } from '../models/epoch.enum';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
+import { StatModifier } from '../models/stats-modifiers.types';
 
 /**
  * Extrait la valeur d'un modificateur ciblant une propriété donnée.
@@ -46,6 +40,45 @@ const generateRandomName = (): string => {
 };
 
 /**
+ * Calcule une statistique finale en appliquant des modificateurs.
+ * @param base La valeur de base.
+ * @param modifiers Les modificateurs à appliquer.
+ * @returns La valeur finale.
+ */
+const calculateFinalStat = (base: number, modifiers: StatModifier[]): number => {
+  let additive = 0;
+  let multiplicative = 1;
+  modifiers.forEach(mod => {
+    if (mod.type === 'additive') {
+      additive += mod.value;
+    } else if (mod.type === 'multiplicative') {
+      multiplicative *= (1 + mod.value);
+    }
+  });
+  return (base + additive) * multiplicative;
+};
+
+/**
+ * 
+ * @param level 
+ * @returns 
+ */
+const getLevelModifiers = (level: number): StatModifier[] => {
+  if (level <= 1) return [];
+  const factor = 0.05 * (level - 1);
+  return [
+    { source: "level", type: "multiplicative", value: factor, target: "base_max_energy" },
+    { source: "level", type: "multiplicative", value: factor, target: "base_max_food" },
+    { source: "level", type: "multiplicative", value: factor, target: "base_max_hunger" },
+    { source: "level", type: "multiplicative", value: factor, target: "energy_recovery_multiplier" },
+    { source: "level", type: "multiplicative", value: factor, target: "hunger_increase_multiplier" },
+    // Logique réelle a définir et  implementer.
+  ];
+};
+
+
+
+/**
  * Factory pour créer un nouveau dinosaure (DatabaseDinosaur).
  * 
  * Processus en 3 étapes :
@@ -69,9 +102,9 @@ export class DinosaurFactory {
     const name = generateRandomName();
 
     // Valeurs initiales (courantes)
-    const energy = INITIAL_ENERGY;
-    const food = INITIAL_FOOD;
-    const hunger = INITIAL_HUNGER;
+    const energy = DINOSAUR_CONSTANTS.INITIAL_ENERGY;
+    const food = DINOSAUR_CONSTANTS.INITIAL_FOOD;
+    const hunger = DINOSAUR_CONSTANTS.INITIAL_HUNGER;
 
     // Valeurs de référence pour les max (constantes + modificateurs du type)
     const base_max_energy = DINOSAUR_CONSTANTS.BASE_MAX_ENERGY + getModifierValue(type.statModifiers, 'base_max_energy');
@@ -100,6 +133,7 @@ export class DinosaurFactory {
       base_max_food,
       base_max_hunger,
       hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+      hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
       karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH, 
       created_at: new Date(),
       last_reborn: new Date(),
@@ -121,40 +155,42 @@ export class DinosaurFactory {
    * @returns Le dinosaure ressuscité sous forme de FrontendDinosaurDTO.
    */
   public static async resurrectDinosaur(
-    dinosaur: FrontendDinosaurDTO,
-    event: DinosaurEvent
+    dinosaur: FrontendDinosaurDTO
   ): Promise<FrontendDinosaurDTO> {
     const dinosaurRepo = new DinosaurRepository();
-    // Si l'événement n'indique pas de type, on garde le type actuel ; sinon, on l'applique.
-    const newType: DinosaurType = event.typeChange ?? dinosaur.type;
-    // Générer une nouvelle diète au hasard :
+    // Sélectionner aléatoirement un nouveau type et une nouvelle diète
+    const allTypes = await dinosaurRepo.getAllDinosaurTypes();
+    const newType = allTypes[Math.floor(Math.random() * allTypes.length)];
     const allDiets = await dinosaurRepo.getAllDinosaurDiets();
-    const newDiet: DinosaurDiet = allDiets[Math.floor(Math.random() * allDiets.length)];
+    const newDiet = allDiets[Math.floor(Math.random() * allDiets.length)];
 
-    // Reconstruire un objet DatabaseDinosaur à partir du DTO existant et des nouvelles données
+    // Construction d'un nouvel objet DatabaseDinosaur en réinitialisant les valeurs
     const resurrectedDatabaseDino: DatabaseDinosaur = {
       id: dinosaur.id,
-      name: generateRandomName(), // Nouveau nom
+      name: generateRandomName(), // Nouveau nom aléatoire
       userId: dinosaur.userId,
       type: newType,
       diet: newDiet,
-      energy: event.energyChange,
-      food: event.foodChange,
-      hunger: event.hungerChange,
-      karma: Math.max(-dinosaur.karma_width, Math.min(dinosaur.karma + event.karmaChange, dinosaur.karma_width)),
+      // Réinitialisation aux valeurs initiales
+      energy: DINOSAUR_CONSTANTS.INITIAL_ENERGY,
+      food: DINOSAUR_CONSTANTS.INITIAL_FOOD,
+      hunger: DINOSAUR_CONSTANTS.INITIAL_HUNGER,
+      // Karma augmenté d'un bonus
+      karma: dinosaur.karma + DINOSAUR_CONSTANTS.KARMA_GAIN_AFTER_DEATH,
       experience: 0,
       level: 1,
-      money: dinosaur.money,
-      skill_points: dinosaur.skill_points,
+      money: 0,
+      skill_points: 0,
       epoch: Epoch.Ancient_Epoch1,
       // Recalcul des valeurs de référence à partir du nouveau type
       base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY + getModifierValue(newType.statModifiers, 'base_max_energy'),
-      energy_decay_per_second: dinosaur.energy_decay_per_second,
-      energy_recovery_per_second: dinosaur.energy_recovery_per_second,
+      energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
+      energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
       base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD + getModifierValue(newType.statModifiers, 'base_max_food'),
       base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER + getModifierValue(newType.statModifiers, 'base_max_hunger'),
-      hunger_increase_per_second: dinosaur.hunger_increase_per_second,
-      karma_width: dinosaur.karma_width,
+      hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+      hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
+      karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
       created_at: dinosaur.created_at,
       last_reborn: new Date(),
       reborn_amount: dinosaur.reborn_amount + 1,
@@ -175,23 +211,32 @@ export class DinosaurFactory {
    * @returns Un objet FrontendDinosaurDTO.
    */
   public static convertToFrontendDinosaur(dbDino: DatabaseDinosaur): FrontendDinosaurDTO {
-    // Multiplicateur de niveau (exemple : +5% par niveau au-delà de 1)
-    const levelMultiplier = 1 + (dbDino.level - 1) * 0.05;
-
-    // Calcul des valeurs finales
-    const final_max_energy = dbDino.base_max_energy * levelMultiplier;
-    const final_max_food = dbDino.base_max_food * levelMultiplier;
-    const final_max_hunger = dbDino.base_max_hunger * levelMultiplier;
-    const final_energy_recovery = dbDino.energy_recovery_per_second * levelMultiplier;
-    const final_energy_decay = dbDino.energy_decay_per_second * levelMultiplier;
-    const final_hunger_increase = dbDino.hunger_increase_per_second * levelMultiplier;
-
-    // Regrouper les modificateurs issus du type et de la diète
-    const stats_modifiers = [
+    // Récupérer les modificateurs de niveau
+    const levelModifiers = getLevelModifiers(dbDino.level);
+    // Combiner les modificateurs issus du type, de la diète et du niveau
+    const allModifiers: StatModifier[] = [
       ...dbDino.type.statModifiers,
-      ...dbDino.diet.statModifiers
-      // On pourra ajouter d'autres modificateurs dynamiques (niveau, karma, etc.)
+      ...dbDino.diet.statModifiers,
+      ...levelModifiers
     ];
+
+    // Calcul des valeurs finales pour les capacités et taux
+    const final_max_energy = calculateFinalStat(dbDino.base_max_energy, allModifiers.filter(mod => mod.target === "base_max_energy"));
+    const final_max_food = calculateFinalStat(dbDino.base_max_food, allModifiers.filter(mod => mod.target === "base_max_food"));
+    const final_max_hunger = calculateFinalStat(dbDino.base_max_hunger, allModifiers.filter(mod => mod.target === "base_max_hunger"));
+    const final_energy_recovery = calculateFinalStat(dbDino.energy_recovery_per_second, allModifiers.filter(mod => mod.target === "energy_recovery_multiplier"));
+    const final_energy_decay = calculateFinalStat(dbDino.energy_decay_per_second, allModifiers.filter(mod => mod.target === "energy_decay_multiplier"));
+    const final_hunger_increase = calculateFinalStat(dbDino.hunger_increase_per_second, allModifiers.filter(mod => mod.target === "hunger_increase_multiplier"));
+    const final_hunger_increase_when_recovery = calculateFinalStat(dbDino.hunger_increase_per_second_when_recovery, allModifiers.filter(mod => mod.target === "hunger_increase_multiplier"));
+
+    // Calcul des earn multipliers (base = 1)
+    const final_earn_food_global_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_food_global_multiplier"));
+    const final_earn_food_herbi_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_food_herbi_multiplier"));
+    const final_earn_food_carni_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_food_carni_multiplier"));
+    const final_earn_experience_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_experience_multiplier"));
+    const final_earn_skill_point_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_skill_point_multiplier"));
+    const final_earn_money_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_money_multiplier"));
+    const final_earn_karma_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_karma_multiplier"));
 
     // Construction du DTO Frontend
     const frontendDino: FrontendDinosaurDTO = {
@@ -203,8 +248,9 @@ export class DinosaurFactory {
       energy_decay_per_second: dbDino.energy_decay_per_second,
       energy_recovery_per_second: dbDino.energy_recovery_per_second,
       base_max_food: dbDino.base_max_food,
-      base_max_hunger: dbDino.base_max_hunger,
+      base_max_hunger: dbDino.base_max_hunger, 
       hunger_increase_per_second: dbDino.hunger_increase_per_second,
+      hunger_increase_per_second_when_recovery: dbDino.hunger_increase_per_second_when_recovery,
       karma_width: dbDino.karma_width, 
       // Détails techniques
       created_at: dbDino.created_at,
@@ -226,8 +272,11 @@ export class DinosaurFactory {
       // Génétique
       type: dbDino.type,
       diet: dbDino.diet,
-      // Modificateurs additionnels
-      stats_modifiers,
+      // Modificateurs additionnels (seuls ceux originaires du type et de la diète)
+      stats_modifiers: [
+        ...dbDino.type.statModifiers,
+        ...dbDino.diet.statModifiers
+      ],
       // Multiplicateurs finaux calculés
       final_max_energy,
       final_max_food,
@@ -235,13 +284,14 @@ export class DinosaurFactory {
       final_energy_recovery,
       final_energy_decay,
       final_hunger_increase,
-      final_earn_food_global_multiplier: 1, 
-      final_earn_food_herbi_multiplier: 1,
-      final_earn_food_carni_multiplier: 1,
-      final_earn_experience_multiplier: 1,
-      final_earn_skill_point_multiplier: 1,
-      final_earn_money_multiplier: 1,
-      final_earn_karma_multiplier: 1
+      final_hunger_increase_when_recovery,
+      final_earn_food_global_multiplier,
+      final_earn_food_herbi_multiplier,
+      final_earn_food_carni_multiplier,
+      final_earn_experience_multiplier,
+      final_earn_skill_point_multiplier,
+      final_earn_money_multiplier,
+      final_earn_karma_multiplier
     };
 
     return frontendDino;

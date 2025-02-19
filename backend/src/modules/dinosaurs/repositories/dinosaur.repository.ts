@@ -60,8 +60,9 @@ export class DinosaurRepository {
         energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
         energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
         base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
-        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
+        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER, // Assurez-vous que le nom correspond à votre configuration
         hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+        hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
         karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
@@ -123,6 +124,7 @@ export class DinosaurRepository {
         base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
         base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
         hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+        hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
         karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
@@ -140,14 +142,55 @@ export class DinosaurRepository {
   
   public async updateDinosaur(dinosaurId: number, updates: Partial<DatabaseDinosaur>): Promise<boolean> {
     try {
+      // Liste des clés autorisées (ce sont celles qui existent dans la table "dinosaurs")
+      // Devrait etre remplacé par l'utilisation de class-transformer pour plus de simplicité.
+      // Travail a faire !!!!
+      const allowedKeys = new Set([
+        "name",
+        "userId",
+        "energy",
+        "food",
+        "hunger",
+        "karma",
+        "experience",
+        "level",
+        "money",
+        "skill_points",
+        "epoch",
+        "created_at",
+        "last_reborn",
+        "reborn_amount",
+        "last_update_by_time_service",
+        "is_sleeping",
+        "is_dead"
+      ]);
+      
+      // On copie l'objet updates et on retire les propriétés complexes qui ne seront pas mises à jour ici
       const updatesFiltered = { ...updates };
       delete updatesFiltered.type;
       delete updatesFiltered.diet;
       
-      const fields = Object.keys(updatesFiltered)
+      // Pour forcer l'accès aux clés non déclarées, on cast en Record<string, any>
+      const updatesFilteredAny = updatesFiltered as Record<string, any>;
+      
+      // Construire un nouvel objet qui ne contient que les clés autorisées, avec leurs clés converties en snake_case.
+      const toSnakeCase = (str: string): string => {
+        return str.replace(/([A-Z])/g, '_$1').toLowerCase();
+      };
+      
+      const mappedUpdates: Record<string, any> = {};
+      for (const key in updatesFilteredAny) {
+        if (Object.prototype.hasOwnProperty.call(updatesFilteredAny, key) && allowedKeys.has(key)) {
+          const snakeKey = toSnakeCase(key);
+          mappedUpdates[snakeKey] = updatesFilteredAny[key];
+        }
+      }
+      
+      // Construction de la requête UPDATE
+      const fields = Object.keys(mappedUpdates)
         .map(key => `${key} = ?`)
         .join(', ');
-      const values = Object.values(updatesFiltered);
+      const values = Object.values(mappedUpdates);
       const query = `UPDATE dinosaurs SET ${fields} WHERE id = ?`;
       values.push(dinosaurId);
       
@@ -158,8 +201,8 @@ export class DinosaurRepository {
       console.error('Erreur lors de la mise à jour du dinosaure:', err);
       throw err;
     }
-  }
-  
+  }  
+    
   public async updateDinosaurName(userId: number, newName: string): Promise<boolean> {
     try {
       const query = `UPDATE dinosaurs SET name = ? WHERE user_id = ?`;

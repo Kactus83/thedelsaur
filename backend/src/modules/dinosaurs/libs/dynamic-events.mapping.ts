@@ -9,9 +9,10 @@ import { huntEvents } from './events/hunt.events';
 import { stealEvents } from './events/steal.events';
 import { discoverEvents } from './events/discover.events';
 import { prayEvents } from './events/pray.events';
+import { DynamicEventData } from '../models/dynamic-event-data.interface';
 
 // Agrégation des événements dans un seul Record
-export const DinosaurEventsMap: Record<DinosaurAction, DinosaurEvent[]> = {
+export const DynamicEventsMap: Record<DinosaurAction, DynamicEventData[]> = {
   [DinosaurAction.Eat]: eatEvents,
   [DinosaurAction.Sleep]: sleepEvents,
   [DinosaurAction.WakeUp]: wakeUpEvents,

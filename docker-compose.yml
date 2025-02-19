@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   mariadb:
     build: ./database
@@ -28,10 +30,16 @@ services:
     networks:
       - backend-network
 
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "8080:80"
+  #   networks:
+  #     - backend-network
+
 volumes:
   mariadb-data:
 
 networks:
   backend-network:
     driver: bridge
-    
