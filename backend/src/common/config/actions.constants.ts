@@ -13,5 +13,6 @@ export const HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS = 7000;    // Seuil de faim au-
 export const ENERGY_COST_TO_GRAZE = 1750;                    // Coût énergétique pour l'action de "cueillir"
 export const ENERGY_COST_TO_HUNT = 2500;                    // Coût énergétique pour l'action de "chasser"
 export const ENERGY_COST_TO_STEAL = 3500;                   // Coût énergétique pour l'action de "voler"
-export const ENERGY_COST_TO_PRAY = 5000;                          // Coût énergétique pour l'action de "prier"
+export const ENERGY_COST_TO_PRAY = 4000;                          // Coût énergétique pour l'action de "prier"
+export const ENERGY_COST_TO_WORK = 8000;
 

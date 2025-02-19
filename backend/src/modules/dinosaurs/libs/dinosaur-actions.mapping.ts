@@ -6,6 +6,7 @@ import {
   ENERGY_COST_TO_HUNT,
   ENERGY_COST_TO_PRAY,
   ENERGY_COST_TO_STEAL,
+  ENERGY_COST_TO_WORK,
 } from '../../../common/config/actions.constants';
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
@@ -140,5 +141,25 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     },
     endpoint: 'dinosaurs/actions/pray',
     image: '/assets/img/actions/pray.png',
+  },
+  [DinosaurAction.Bodyguard]: {
+    levelRequired: 7,
+    name: 'Garde du corps',
+    description: 'Le dinosaure protège un autre dinosaure.',
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 7 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_TO_WORK;
+    },
+    endpoint: 'dinosaurs/actions/bodyguard',
+    image: '/assets/img/actions/bodyguard.png',
+  },
+  [DinosaurAction.Babysitter]: {
+    levelRequired: 7,
+    name: 'Garde d\'enfants',
+    description: 'Le dinosaure garde les enfants d\'un autre dinosaure.',
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 7 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_TO_WORK;
+    },
+    endpoint: 'dinosaurs/actions/babysitter',
+    image: '/assets/img/actions/babysitter.png',
   },
 };
