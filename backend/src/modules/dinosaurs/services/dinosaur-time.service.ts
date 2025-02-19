@@ -79,7 +79,7 @@ export class DinosaurTimeService {
         dino.energy = Math.min(dino.final_max_energy, dino.energy + energyRecovered);
 
         // Augmentation de la faim pendant le sommeil (à un taux réduit)
-        const hungerIncrease = elapsedSeconds * (dino.hunger_increase_per_second * 0.5);
+        const hungerIncrease = elapsedSeconds * (dino.hunger_increase_per_second_when_recovery);
         dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
 
         // Si l'énergie atteint son maximum, réveiller le dinosaure via le BasicActionsService

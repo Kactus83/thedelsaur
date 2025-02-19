@@ -300,5 +300,110 @@ export const discoverEvents: DynamicEventData[] = [
         multiplicativeIncrement: 0
       }
     ]
+  },
+  {
+    id: 0,
+    name: "Trésor de poche",
+    actionType: DinosaurAction.Discover,
+    minLevel: 3,
+    positivityScore: 5,
+    weight: 10,
+    descriptions: [
+      "En fouillant dans une vieille cachette, le dinosaure déterre quelques pièces, comme un trésor de poche sorti d'une tirelire oubliée.",
+      "Une trouvaille modeste, digne d'une collection insolite, qui fait sourire le dinosaure.",
+      "Il met la main sur un petit pactole, aussi surprenant qu'une pièce de monnaie en chocolat.",
+      "Un butin discret qui, malgré son aspect dérisoire, apporte son lot de bonne humeur.",
+      "Le dinosaure découvre un trésor de poche qui aurait fait rougir un simple cochon-tirelire."
+    ],
+    baseModifiers: [
+      {
+        source: "discover",
+        target: "money",
+        base_value: 500,
+        additiveStep: 10,
+        additiveIncrement: 500,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "discover",
+        target: "energy",
+        base_value: -ENERGY_COST_TO_DISCOVER,
+        additiveStep: 0,
+        additiveIncrement: -ENERGY_COST_TO_DISCOVER,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Trésor légendaire",
+    actionType: DinosaurAction.Discover,
+    minLevel: 8,
+    positivityScore: 10,
+    weight: 5,
+    descriptions: [
+      "Le dinosaure découvre un coffre oublié, débordant d'or et d'objets mystérieux, digne des plus grandes légendes jurassiques.",
+      "Une trouvaille épique qui ferait pâlir d'envie n'importe quel pirate, un jackpot sorti tout droit d'une aventure mythique.",
+      "Dans une caverne secrète, il met la main sur un trésor si colossal qu'il semble défier l'imagination.",
+      "Un coffre légendaire se dévoile, mêlant richesses étincelantes et objets insolites, dans un style résolument déjanté.",
+      "Le dinosaure déterre un trésor épique, un véritable coup de maître qui réécrit les annales du larcin."
+    ],
+    baseModifiers: [
+      {
+        source: "discover",
+        target: "money",
+        base_value: 1000,
+        additiveStep: 10,
+        additiveIncrement: 2000,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "discover",
+        target: "energy",
+        base_value: -ENERGY_COST_TO_DISCOVER,
+        additiveStep: 0,
+        additiveIncrement: -ENERGY_COST_TO_DISCOVER,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Inspiration soudaine",
+    actionType: DinosaurAction.Discover,
+    minLevel: 5,
+    positivityScore: 8,
+    weight: 10,
+    descriptions: [
+      "En explorant une zone oubliée, le dinosaure reçoit un éclair de génie décalé qui booste ses compétences de façon inattendue.",
+      "Une trouvaille farfelue lui confère un bonus de compétences, comme si l'univers lui faisait un clin d'œil humoristique.",
+      "Il découvre un ancien parchemin révélant des techniques de combat improbables, qui lui valent un bonus de points de compétence.",
+      "Un moment de pure inspiration, aussi surprenant qu'inexplicable, lui offre une nouvelle compétence secrète.",
+      "Au détour d'une exploration loufoque, le dinosaure gagne un point de compétence, fruit d'une révélation aussi étrange qu'amusante."
+    ],
+    baseModifiers: [
+      {
+        source: "discover",
+        target: "skillPoints",
+        base_value: 0,
+        additiveStep: 5,
+        additiveIncrement: 10,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "discover",
+        target: "energy",
+        base_value: -ENERGY_COST_TO_DISCOVER,
+        additiveStep: 0,
+        additiveIncrement: -ENERGY_COST_TO_DISCOVER,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
   }
 ];

@@ -1,3 +1,4 @@
+// src/models/stealEvents.ts
 import { ENERGY_COST_TO_STEAL } from "../../../../common/config/actions.constants";
 import { DinosaurAction } from "../../models/dinosaur-action.enum";
 import { DynamicEventData } from "../../models/dynamic-event-data.interface";
@@ -307,6 +308,94 @@ export const stealEvents: DynamicEventData[] = [
         base_value: -1000,
         additiveStep: 20,
         additiveIncrement: -500,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Vol de portefeuille",
+    actionType: DinosaurAction.Steal,
+    minLevel: 3,
+    positivityScore: 3,
+    weight: 4,
+    descriptions: [
+      "Le dinosaure dérobe habilement un portefeuille oublié, remplissant ses poches d'une maigre somme.",
+      "Un vol discret, digne d'un pickpocket, qui laisse son propriétaire sans un sou.",
+      "Avec finesse, il s'empare d'un portefeuille, un coup bas qui rapporte modérément.",
+      "Le vol de portefeuille, une opération rapide qui lui permet de se faire un petit extra.",
+      "Il réussit à subtiliser un portefeuille, une preuve que l'art du vol n'a pas d'âge."
+    ],
+    baseModifiers: [
+      {
+        source: "steal",
+        target: "money",
+        base_value: 200,
+        additiveStep: 5,
+        additiveIncrement: 50,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "steal",
+        target: "energy",
+        base_value: -ENERGY_COST_TO_STEAL,
+        additiveStep: 0,
+        additiveIncrement: -ENERGY_COST_TO_STEAL,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "steal",
+        target: "karma",
+        base_value: -100,
+        additiveStep: 5,
+        additiveIncrement: -50,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Vol de banque",
+    actionType: DinosaurAction.Steal,
+    minLevel: 8,
+    positivityScore: 12,
+    weight: 2,
+    descriptions: [
+      "Le dinosaure orchestre un vol audacieux dans une véritable banque jurassique, raflant une fortune inimaginable.",
+      "Un coup d'éclat, digne des plus grands casseurs, qui lui permet de s'emparer d'une somme colossale.",
+      "Avec une audace sans pareille, il réalise un vol de banque, défiant toutes les lois de l'improbabilité.",
+      "Le vol de banque, une opération spectaculaire qui transforme le dinosaure en légende urbaine.",
+      "Dans une mise en scène digne d'un film d'action, il déroge à la loi pour rafler une montagne d'argent."
+    ],
+    baseModifiers: [
+      {
+        source: "steal",
+        target: "money",
+        base_value: 5000,
+        additiveStep: 10,
+        additiveIncrement: 1000,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "steal",
+        target: "energy",
+        base_value: -ENERGY_COST_TO_STEAL,
+        additiveStep: 0,
+        additiveIncrement: -ENERGY_COST_TO_STEAL,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      },
+      {
+        source: "steal",
+        target: "karma",
+        base_value: -500,
+        additiveStep: 5,
+        additiveIncrement: -250,
         multiplicativeStep: 0,
         multiplicativeIncrement: 0
       }
