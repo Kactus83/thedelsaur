@@ -1,6 +1,6 @@
 import pool from '../../../common/database/db';
+import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 import { User } from '../../users/models/user.interface';
-import { Dinosaur } from '../../dinosaurs/models/database-dinosaur.interface';
 
 export class AdminService {
 
@@ -68,10 +68,10 @@ export class AdminService {
   // -------- FONCTIONS RELATIVES AUX DINOSAURES -------- //
 
   // Récupérer tous les dinosaures
-  public async getAllDinosaurs(): Promise<Dinosaur[]> {
+  public async getAllDinosaurs(): Promise<FrontendDinosaurDTO[]> {
     try {
       const [results] = await pool.query('SELECT * FROM dinosaur');
-      return results as Dinosaur[];
+      return results as FrontendDinosaurDTO[];
     } catch (err) {
       console.error('Erreur lors de la récupération des dinosaures:', err);
       throw err;
@@ -79,10 +79,10 @@ export class AdminService {
   }
 
   // Récupérer un dinosaure par ID
-  public async getDinosaurById(dinosaurId: number): Promise<Dinosaur | null> {
+  public async getDinosaurById(dinosaurId: number): Promise<FrontendDinosaurDTO | null> {
     try {
       const [results] = await pool.query('SELECT * FROM dinosaur WHERE id = ?', [dinosaurId]);
-      const dinosaurs = results as Dinosaur[];
+      const dinosaurs = results as FrontendDinosaurDTO[];
       return dinosaurs.length > 0 ? dinosaurs[0] : null;
     } catch (err) {
       console.error('Erreur lors de la récupération du dinosaure par ID:', err);
@@ -114,7 +114,7 @@ export class AdminService {
   }
 
   // Mettre à jour un dinosaure par ID
-  public async updateDinosaurById(dinosaurId: number, updates: Partial<Dinosaur>): Promise<boolean> {
+  public async updateDinosaurById(dinosaurId: number, updates: Partial<FrontendDinosaurDTO>): Promise<boolean> {
     try {
       const fields = Object.keys(updates).map(key => `${key} = ?`).join(', ');
       const values = Object.values(updates);

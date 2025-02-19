@@ -1,14 +1,17 @@
-import { DinosaurType } from "./dinosaur-type.type";
+import { DinosaurAction } from './DinosaurAction';
+import { EventModifier } from './EventModifier';
 
+/**
+ * Interface représentant un événement appliqué à un dinosaure.
+ * Elle reflète la structure envoyée par le backend.
+ */
 export interface DinosaurEvent {
-    name: string;                // Nom de l'événement
-    description: string;         // Description de l'événement
-    energyChange: number;        // Variation de l'énergie
-    foodChange: number;          // Variation de la nourriture
-    hungerChange: number;        // Variation de la faim
-    experienceChange: number;    // Variation de l'expérience
-    karmaChange: number;        // Variation du karma
-    typeChange?: DinosaurType;          // Variation du type
-    minLevel: number,
-    weight: number;              // Facteur de probabilité (poids)
-  }
+  id: number;
+  name: string;
+  description?: string;
+  actionType: DinosaurAction;
+  minLevel: number;
+  weight: number;
+  positivityScore: number;
+  modifiers: EventModifier[];
+}

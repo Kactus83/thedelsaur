@@ -14,7 +14,6 @@ import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import DinoDisplay from '../../components/Dashboard/DinoDisplay';
 
-
 /**
  * Composant fonctionnel représentant la page Dashboard.
  * Affiche les informations de l'utilisateur, les informations du dinosaure, et les actions possibles.
@@ -72,9 +71,9 @@ const DashboardPage: React.FC = () => {
                 setLevelUp(true);
                 setTimeout(() => {
                     console.log('leveled up !!!')
-                  setLevelUp(false);
+                    setLevelUp(false);
                 }, 2000); // Durée de l'animation
-              }              
+            }              
 
             setDinosaur(updatedDinosaur);
             setAvailableActions(updatedActions.availableActions);
@@ -101,7 +100,6 @@ const DashboardPage: React.FC = () => {
      * Fonction pour indiquer le début d'une action.
      */
     const handleActionStart = (action: ActionDetail) => {
-        
         setIsActionInProgress(action); // Démarre l'animation du dinosaure
     };
 
@@ -114,7 +112,7 @@ const DashboardPage: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             if(isActionInProgress || levelUp) {
-                return; // Pour éviter els conflts
+                return; // Pour éviter les conflits
             }
             refreshDinosaur();
         }, 1100);
@@ -123,8 +121,6 @@ const DashboardPage: React.FC = () => {
 
     // Calcul de l'expérience actuelle pour la jauge
     const experience = dinosaur ? dinosaur.experience : 0;
-
-
 
     return (
         <>
@@ -155,7 +151,7 @@ const DashboardPage: React.FC = () => {
                             current={experience}
                             max={max_experience}
                             color="blue"
-                            tooltipText={`Multiplicateur d'expérience : ${dinosaur?.multipliers.earn_experience_multiplier}x`}
+                            tooltipText={`Multiplicateur d'expérience : ${dinosaur?.final_earn_experience_multiplier}x`}
                         />
                 
                         {/* Bouton pour afficher l'overlay en mode mobile */}

@@ -1,6 +1,7 @@
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { Epoch } from '../models/epoch.enum';
 import { calculateEpochThresholds } from '../utils/epochUtils';
+import { BasicActionsService } from './basic-actions.service';
 
 /**
  * Service chargé d'ajuster les statistiques d'un dinosaure en fonction du temps écoulé.
@@ -10,6 +11,14 @@ import { calculateEpochThresholds } from '../utils/epochUtils';
 export class DinosaurTimeService {
   // Tableau des seuils d'époque, par exemple issu d'un utilitaire de calcul (à adapter)
   private epochThresholds = calculateEpochThresholds();
+  private basicActionsService: BasicActionsService;
+
+  /**
+   * @param basicActionsService Service permettant d'exécuter les actions de base sur le dinosaure (par ex. réveil automatique).
+   */
+  constructor(basicActionsService: BasicActionsService) {
+    this.basicActionsService = basicActionsService;
+  }
 
   /**
    * Calcule l'époque du dinosaure en fonction du temps écoulé depuis sa dernière renaissance.
@@ -73,10 +82,10 @@ export class DinosaurTimeService {
         const hungerIncrease = elapsedSeconds * (dino.hunger_increase_per_second * 0.5);
         dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
 
-        // Si l'énergie atteint son maximum, le dinosaure se réveille
+        // Si l'énergie atteint son maximum, réveiller le dinosaure via le BasicActionsService
         if (dino.energy >= dino.final_max_energy) {
-          dino.is_sleeping = false;
           console.log('Dinosaure réveillé automatiquement (énergie maximale atteinte).');
+          this.basicActionsService.wakeDinosaur(dino);
         }
       } else {
         // Perte d'énergie en état éveillé

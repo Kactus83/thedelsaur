@@ -20,14 +20,14 @@ export class HerbivoreActionsService {
      * @param dinosaur Le dinosaure à cueillir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public grazeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async grazeDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas cueillir.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

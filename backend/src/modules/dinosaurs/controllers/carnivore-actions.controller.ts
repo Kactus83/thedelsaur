@@ -31,7 +31,7 @@ export class CarnivoreActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.carnivoreActionsService.huntDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.carnivoreActionsService.huntDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });

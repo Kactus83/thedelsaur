@@ -41,6 +41,7 @@ export interface DatabaseDinosaur {
   base_max_food: number;
   base_max_hunger: number;
   hunger_increase_per_second: number;
+  hunger_increase_per_second_when_recovery: number;
   karma_width: number;
   
   // Informations techniques

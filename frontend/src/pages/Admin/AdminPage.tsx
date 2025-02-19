@@ -179,7 +179,7 @@ const AdminPage: React.FC = () => {
                                 <h2>Détails du Dinosaure</h2>
                                 <p><strong>ID:</strong> {selectedDinosaur.id}</p>
                                 <p><strong>Nom:</strong> {selectedDinosaur.name}</p>
-                                <p><strong>Régime Alimentaire:</strong> {capitalizeFirstLetter(selectedDinosaur.diet)}</p>
+                                <p><strong>Régime Alimentaire:</strong> {capitalizeFirstLetter(selectedDinosaur.diet.name)}</p>
                                 <p><strong>Énergie:</strong> {selectedDinosaur.energy}</p>
                                 <p><strong>Nourriture:</strong> {selectedDinosaur.food}</p>
                                 <p><strong>Expérience:</strong> {selectedDinosaur.experience}</p>

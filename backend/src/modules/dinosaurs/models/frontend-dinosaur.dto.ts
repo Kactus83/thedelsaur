@@ -30,6 +30,7 @@ export class FrontendDinosaurDTO {
   @Expose() base_max_food!: number;
   @Expose() base_max_hunger!: number;
   @Expose() hunger_increase_per_second!: number;
+  @Expose() hunger_increase_per_second_when_recovery!: number;
   @Expose() karma_width!: number;
   
   /*
@@ -85,6 +86,7 @@ export class FrontendDinosaurDTO {
   @Expose() final_energy_recovery!: number;
   @Expose() final_energy_decay!: number;
   @Expose() final_hunger_increase!: number;
+  @Expose() final_hunger_increase_when_recovery!: number;
 
   @Expose() final_earn_food_global_multiplier!: number;
   @Expose() final_earn_food_herbi_multiplier!: number;

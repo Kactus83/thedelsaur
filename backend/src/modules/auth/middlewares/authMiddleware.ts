@@ -3,13 +3,13 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../../users/models/user.interface';
 import { UsersService } from '../../users/services/users.service';
-import { Dinosaur } from '../../dinosaurs/models/database-dinosaur.interface';
+import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 
 dotenv.config();
 
 export interface AuthenticatedRequest extends Request {
   user?: User;
-  dinosaur?: Dinosaur;
+  dinosaur?: FrontendDinosaurDTO;
 }
 
 export const authenticateJWT = async (

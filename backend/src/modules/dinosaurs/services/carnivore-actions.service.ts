@@ -20,14 +20,14 @@ export class CarnivoreActionsService {
      * @param dinosaur Le dinosaure à chasser.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public huntDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async huntDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Hunt];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas chasser.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Hunt, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Hunt, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Hunt, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

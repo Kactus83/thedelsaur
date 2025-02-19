@@ -20,14 +20,14 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à voler.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public stealDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async stealDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Steal];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas voler.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Steal, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -40,14 +40,14 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à découvrir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public discoverDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async discoverDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Discover];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas découvrir.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Discover, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -60,14 +60,14 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à écrire.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public prayDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async prayDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Pray];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas prier.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Pray, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Pray, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Pray, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

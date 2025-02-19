@@ -31,7 +31,7 @@ export class BasicActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.basicActionsService.eatDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.basicActionsService.eatDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
@@ -58,7 +58,7 @@ export class BasicActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.basicActionsService.sleepDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.basicActionsService.sleepDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure est maintenant en sommeil.', dinosaur: dinosaurDTO, event });
@@ -85,7 +85,7 @@ export class BasicActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.basicActionsService.wakeDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.basicActionsService.wakeDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure s\'est réveillé.', dinosaur: dinosaurDTO, event });
@@ -112,12 +112,12 @@ export class BasicActionsController {
                 return;
             }
 
-            if (!dinosaur.isDead) {
+            if (!dinosaur.is_dead) {
                 res.status(400).json({ message: 'Le dinosaure n\'est pas mort.' });
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.basicActionsService.resurrectDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.basicActionsService.resurrectDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure a été ressuscité.', dinosaur: dinosaurDTO, event });

@@ -31,7 +31,7 @@ export class AdvancedActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.advancedActionsService.stealDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.stealDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
@@ -58,7 +58,7 @@ export class AdvancedActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.advancedActionsService.discoverDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.discoverDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
@@ -85,7 +85,7 @@ export class AdvancedActionsController {
                 return;
             }
 
-            const { dinosaur: updatedDino, event } = this.advancedActionsService.prayDinosaur(dinosaur);
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.prayDinosaur(dinosaur);
 
             const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });

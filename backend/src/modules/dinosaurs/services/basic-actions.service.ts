@@ -27,43 +27,47 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas manger.');
         }
 
-        // Calcule la quantité de nourriture à consommer pour réduire la faim autant que possible
+        // Calculer la quantité de nourriture à consommer (ne pas consommer plus que la faim ni que la nourriture disponible)
         const foodNeeded = Math.min(dinosaur.hunger, dinosaur.food);
 
-        // Si aucune nourriture n'est disponible ou aucune faim n'est présente, renvoie un événement indiquant l'échec
+        // Si aucune nourriture n'est disponible ou aucune faim n'est présente, renvoyer un event sans modifier le dinosaure
         if (foodNeeded <= 0) {
-            return {
-                dinosaur,
-                event: {
-                    name: 'Pas de nourriture suffisante',
-                    description: 'Le dinosaure n\'a pas assez de nourriture pour satisfaire sa faim.',
-                    minLevel: 0,
-                    experienceChange: 0,
-                    energyChange: 0,
-                    foodChange: 0,
-                    hungerChange: 0,
-                    karmaChange: 0,
-                    weight: 1,
-                },
+            const event: DinosaurEvent = {
+                id: 0,
+                actionType: DinosaurAction.Eat,
+                positivityScore: 0,
+                name: 'Pas de nourriture suffisante',
+                description: 'Le dinosaure n\'a pas assez de nourriture pour satisfaire sa faim.',
+                minLevel: 0,
+                weight: 1,
+                // Aucun modifier à appliquer
+                modifiers: []
             };
+            return { dinosaur, event };
         }
 
-        // Crée l'événement basé sur la consommation réelle de nourriture
+        // Créer l'événement basé sur la consommation réelle
         const event: DinosaurEvent = {
+            id: 0,
+            actionType: DinosaurAction.Eat,
+            positivityScore: 0,
             name: 'Repas optimisé',
             description: 'Le dinosaure utilise la nourriture disponible pour réduire sa faim.',
             minLevel: 0,
-            experienceChange: 0,
-            energyChange: 0,
-            foodChange: -foodNeeded,  // Consomme la quantité calculée de nourriture
-            hungerChange: -foodNeeded, // Réduit la faim par la même quantité
-            karmaChange: 0,
             weight: 1,
+            // Appliquer deux modifiers : 
+            // - Consommation de nourriture : soustraction de la quantité consommée sur "food"
+            // - Réduction de la faim : soustraction de la même quantité sur "hunger"
+            modifiers: [
+                { source: 'action', type: 'additive', value: -foodNeeded, target: 'food' },
+                { source: 'action', type: 'additive', value: -foodNeeded, target: 'hunger' }
+            ]
         };
 
-        // Applique l'événement au dinosaure
+        // Appliquer l'événement au dinosaure (les modifiers seront traités dans la fonction d'application)
         applyEventToDinosaur(dinosaur, DinosaurAction.Eat, event);
 
+        // Mettre à jour le dinosaure en base
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
 
         return { dinosaur, event };
@@ -74,14 +78,14 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à faire dormir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public sleepDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async sleepDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Sleep];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas dormir.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
 
         dinosaur.is_sleeping = true;
         applyEventToDinosaur(dinosaur, DinosaurAction.Sleep, event);
@@ -95,14 +99,14 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à réveiller.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public wakeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async wakeDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.WakeUp];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas se réveiller.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
 
         dinosaur.is_sleeping = false;
         applyEventToDinosaur(dinosaur, DinosaurAction.WakeUp, event);
@@ -116,14 +120,14 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à ressusciter.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public resurrectDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async resurrectDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Resurrect];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas ressusciter.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
 
         applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event);
 
@@ -136,14 +140,14 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à cueillir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public grazeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
+    public async grazeDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
 
         if (!actionDetails.canPerform(dinosaur)) {
             throw new Error('Le dinosaure ne peut pas brouter.');
         }
 
-        const event = getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
+        const event = await getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
         applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

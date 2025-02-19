@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import { AdminService } from '../services/admin.service';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from '../../users/models/user.dto';
-import { DinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 import { getExperienceThresholdForLevel } from '../../dinosaurs/utils/dinosaur-actions.util';
+import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 
 export class AdminController {
   private adminService: AdminService;
@@ -118,7 +118,7 @@ export class AdminController {
   public getAllDinosaurs = async (req: Request, res: Response) => {
     try {
       const dinosaurs = await this.adminService.getAllDinosaurs();
-      const dinosaursDTO = dinosaurs.map(dino => plainToInstance(DinosaurDTO, dino));
+      const dinosaursDTO = dinosaurs.map(dino => plainToInstance(FrontendDinosaurDTO, dino));
       res.status(200).json(dinosaursDTO);
       return;
     } catch (error) {
@@ -137,7 +137,7 @@ export class AdminController {
         res.status(404).json({ message: 'Dinosaure non trouvé' });
         return;
       }
-      const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
+      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, dinosaur);
       res.status(200).json(dinosaurDTO);
       return;
     } catch (error) {
@@ -166,7 +166,7 @@ export class AdminController {
         return;
       }
 
-      const dinosaurDTO = plainToInstance(DinosaurDTO, newDinosaur);
+      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, newDinosaur);
 
       res.status(201).json(dinosaurDTO);
       return;
@@ -195,7 +195,7 @@ export class AdminController {
         return;
       }
 
-      const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDinosaur);
+      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDinosaur);
       res.status(200).json(dinosaurDTO);
       return;
     } catch (error) {
