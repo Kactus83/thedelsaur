@@ -80,7 +80,7 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
         !dinosaur.is_dead &&
         !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_GRAZE &&
-        dinosaur.diet.name == 'Herbivore'
+        (dinosaur.diet.name == 'Herbivore' || dinosaur.diet.name == 'Omnivore')
       );
     },
     endpoint: 'dinosaurs/actions/graze',
@@ -96,7 +96,7 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
         !dinosaur.is_dead &&
         !dinosaur.is_sleeping &&
         dinosaur.energy >= ENERGY_COST_TO_HUNT &&
-        dinosaur.diet.name == 'Carnivore'
+        (dinosaur.diet.name == 'Carnivore' || dinosaur.diet.name == 'Omnivore')
       );
     },
     endpoint: 'dinosaurs/actions/hunt',
