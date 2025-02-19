@@ -1,4 +1,3 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
@@ -10,12 +9,13 @@ import {
 } from '../../../common/config/constants';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { DinosaurFactory } from '../factories/dinosaur.factory';
-import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
- * Récupère les actions disponibles pour un dinosaure, avec leurs détails pour le frontend.
+ * Retourne la liste des actions disponibles pour le dinosaure,
+ * chaque action étant encapsulée dans un DinosaurActionDTO.
  */
-export function getAvailableActions(dinosaur: Dinosaur) {
+export function getAvailableActions(dinosaur: FrontendDinosaurDTO): DinosaurActionDTO[] {
   return Object.values(DinosaurActionsMap).map((actionDetails) => {
     const canPerform = actionDetails.canPerform(dinosaur);
     return new DinosaurActionDTO(
@@ -30,133 +30,111 @@ export function getAvailableActions(dinosaur: Dinosaur) {
 }
 
 /**
- * Sélectionne un événement aléatoire pour une action donnée, en tenant compte des poids
- * et du niveau du dinosaure.
+ * Sélectionne aléatoirement un événement pour une action donnée, en tenant compte du niveau du dinosaure.
+ * @param action L'action effectuée.
+ * @param dinosaurLevel Le niveau du dinosaure.
+ * @returns L'événement sélectionné.
  */
 export function getRandomEventForAction(action: DinosaurAction, dinosaurLevel: number): DinosaurEvent {
-  // Filtrer les événements selon le niveau du dinosaure
   const events = DinosaurEventsMap[action].filter(event => event.minLevel <= dinosaurLevel);
-
   if (events.length === 0) {
     throw new Error(`Aucun événement disponible pour l'action ${action} et le niveau ${dinosaurLevel}`);
   }
-
-  // Calculer le poids total des événements disponibles
   const totalWeight = events.reduce((sum, event) => sum + event.weight, 0);
-
-  // Sélectionner un poids aléatoire entre 0 et totalWeight
   let randomWeight = Math.random() * totalWeight;
-
-  // Parcourir les événements pour sélectionner celui correspondant au poids aléatoire
   for (const event of events) {
     if (randomWeight < event.weight) {
       return event;
     }
     randomWeight -= event.weight;
   }
-
-  // Retour de secours si aucun événement n'a été sélectionné
   return events[events.length - 1];
 }
 
 /**
- * Applique les effets d'un événement au dinosaure en modifiant ses statistiques et son niveau.
- * @param dinosaur Le dinosaure à mettre à jour.
+ * Applique les effets d'un événement au dinosaure en modifiant ses statistiques.
+ * Pour l'action "Resurrect", la fonction délègue à la fonction de résurrection de la factory.
+ * Pour les autres actions, les ajustements sont appliqués en utilisant les multiplicateurs finaux présents dans le DTO.
+ * 
+ * @param dinosaur Le dinosaure (FrontendDinosaurDTO) à mettre à jour.
  * @param action L'action effectuée.
  * @param event L'événement à appliquer.
- * @returns Le dinosaure mis à jour (nouvelle instance si ressuscité).
+ * @returns Le dinosaure mis à jour.
  */
 export async function applyEventToDinosaur(
-  dinosaur: Dinosaur,
+  dinosaur: FrontendDinosaurDTO,
   action: DinosaurAction,
   event: DinosaurEvent
-): Promise<Dinosaur> {
+): Promise<FrontendDinosaurDTO> {
+
+  // Pour l'action de résurrection, déléguer à la factory avec 2 arguments
   if (action === DinosaurAction.Resurrect) {
-    // Utiliser la factory pour ressusciter le dinosaure
     return await DinosaurFactory.resurrectDinosaur(dinosaur, event);
   }
 
+  // Initialiser les ajustements
   let adjustedFoodChange = event.foodChange;
   let adjustedEnergyChange = event.energyChange;
   let adjustedHungerChange = event.hungerChange;
   let adjustedExperienceChange = event.experienceChange;
   let adjustedKarmaChange = event.karmaChange;
+  const adjustedMoneyChange = event.moneyChange;
+  const adjustedSkillPointsChange = event.skillPointsChange;
 
-  // Utilisation des multiplicateurs du dinosaure
-  const multipliers = dinosaur.multipliers;
-
-  // Application des multiplicateurs spécifiques selon l'action
+  // Ajustements spécifiques pour Graze et Hunt
   switch (action) {
     case DinosaurAction.Graze:
-      // Appliquer le multiplicateur global et spécifique herbivore si gain de nourriture
       if (adjustedFoodChange > 0) {
-        adjustedFoodChange *= multipliers.earn_food_multiplier + multipliers.earn_herbi_food_multiplier - 1;
+        adjustedFoodChange *= (dinosaur.final_earn_food_global_multiplier + dinosaur.final_earn_food_herbi_multiplier - 1);
       }
       break;
-
     case DinosaurAction.Hunt:
-      // Appliquer le multiplicateur global et spécifique carnivore si gain de nourriture
       if (adjustedFoodChange > 0) {
-        adjustedFoodChange *= multipliers.earn_food_multiplier + multipliers.earn_carni_food_multiplier - 1;
+        adjustedFoodChange *= (dinosaur.final_earn_food_global_multiplier + dinosaur.final_earn_food_carni_multiplier - 1);
       }
       break;
+    // Autres cas spécifiques...
   }
 
-  // Appliquer le multiplicateur d'expérience si le changement est positif
+  // Appliquer les multiplicateurs pour l'expérience (et éventuellement money/skill_points si besoin)
   if (adjustedExperienceChange > 0) {
-    adjustedExperienceChange *= multipliers.earn_experience_multiplier;
+    adjustedExperienceChange *= dinosaur.final_earn_experience_multiplier;
   }
+  // Pour l'énergie, aucun multiplicateur spécifique n'est défini dans le DTO
+  // donc nous utilisons le changement tel quel.
 
-  // Appliquer le multiplicateur d'énergie uniquement si le changement est positif
-  if (adjustedEnergyChange > 0) {
-    adjustedEnergyChange *= multipliers.earn_energy_multiplier;
-  }
-
-  // Appliquer les changements ajustés
-  dinosaur.food = Math.min(dinosaur.food + adjustedFoodChange, dinosaur.max_food);
+  // Mise à jour des statistiques, en respectant les bornes finales
+  dinosaur.food = Math.min(dinosaur.food + adjustedFoodChange, dinosaur.final_max_food);
   dinosaur.energy = Math.max(dinosaur.energy + adjustedEnergyChange, 0);
   dinosaur.hunger = Math.max(dinosaur.hunger + adjustedHungerChange, 0);
   dinosaur.karma += adjustedKarmaChange;
-
   dinosaur.experience += adjustedExperienceChange;
+  dinosaur.money += adjustedMoneyChange;
+  dinosaur.skill_points += adjustedSkillPointsChange;
 
-  if (event.typeChange) {
+  // Si l'événement spécifie un changement de type, l'appliquer (en s'assurant que ce n'est pas undefined)
+  if (event.typeChange !== undefined) {
     dinosaur.type = event.typeChange;
   }
 
-  // Appliquer les changements aux multiplicateurs
-  if (event.multiplierChanges) {
-    for (const key in event.multiplierChanges) {
-      if (event.multiplierChanges.hasOwnProperty(key)) {
-        const changeValue = event.multiplierChanges[key as keyof DinosaurMultiplier];
-        if (changeValue !== undefined) {
-          dinosaur.multipliers[key as keyof DinosaurMultiplier] += changeValue;
-
-          // Assurer que les multiplicateurs restent dans des bornes acceptables, par exemple >= 0
-          if (dinosaur.multipliers[key as keyof DinosaurMultiplier] < 0) {
-            dinosaur.multipliers[key as keyof DinosaurMultiplier] = 0;
-          }
-        }
-      }
-    }
-  }
-
-  // Gestion de la montée de niveau en fonction du seuil d'expérience dynamique
+  // Gestion de la montée de niveau
   let experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
-
   while (dinosaur.experience >= experienceThreshold) {
     dinosaur.level += 1;
     dinosaur.experience -= experienceThreshold;
     experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
   }
 
+  // Plafonner le karma selon la propriété karma_width
+  dinosaur.karma = Math.max(-dinosaur.karma_width, Math.min(dinosaur.karma, dinosaur.karma_width));
+
   return dinosaur;
 }
 
 /**
- * Calcul le seuil d'expérience nécessaire pour atteindre un niveau donné.
- * @param level Niveau du dinosaure pour lequel on veut calculer le seuil d'expérience.
- * @returns Le seuil d'expérience pour le niveau donné.
+ * Calcule le seuil d'expérience nécessaire pour atteindre un niveau donné.
+ * @param level Le niveau pour lequel on calcule le seuil.
+ * @returns Le seuil d'expérience requis.
  */
 export function getExperienceThresholdForLevel(level: number): number {
   return Math.floor(BASE_EXP_REQUIRED * Math.pow(level, EXP_GROWTH_FACTOR) * LEVEL_MODIFIER);

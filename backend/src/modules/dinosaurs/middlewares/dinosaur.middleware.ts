@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
 import { DinosaurTimeService } from '../services/dinosaur-time.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
+import { DinosaurFactory } from '../factories/dinosaur.factory';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
+import { DatabaseDinosaur } from '../models/database-dinosaur.interface';
 
 /**
- * Middleware pour récupérer et mettre à jour le dinosaure avant chaque requête.
+ * Middleware pour récupérer, créer (si nécessaire) et mettre à jour le dinosaure avant chaque requête.
  */
 export class DinosaurMiddleware {
   private dinosaurRepository: DinosaurRepository;
@@ -31,32 +33,32 @@ export class DinosaurMiddleware {
         return;
       }
 
-      let dinosaur: Dinosaur | null = await this.dinosaurRepository.getDinosaurByUserId(userId);
+      let databaseDinosaur: DatabaseDinosaur | null = await this.dinosaurRepository.getDinosaurByUserId(userId);
 
-      if (!dinosaur) {
-        res.status(404).json({ message: 'Dinosaure non trouvé' });
+      // Si aucun dinosaure n'existe, le créer via la factory et l'insérer en base
+      if (!databaseDinosaur) {
+        const newDino = await DinosaurFactory.createDinosaur(userId);
+        databaseDinosaur = await this.dinosaurRepository.createDinosaur(newDino);
+        if (!databaseDinosaur) {
+          res.status(500).json({ message: 'Échec de la création du dinosaure' });
+          return;
+        }
+      }
+
+      const dinosaur: FrontendDinosaurDTO = DinosaurFactory.convertToFrontendDinosaur(databaseDinosaur);
+
+      // Ajuster les statistiques du dinosaure en fonction du temps via le service
+      const adjustedDino = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
+
+      // Sauvegarder les nouvelles valeurs en base
+      const updateSuccess = await this.dinosaurRepository.updateDinosaur(adjustedDino.id, adjustedDino);
+      if (!updateSuccess) {
+        res.status(500).json({ message: 'Échec de la mise à jour du dinosaure' });
         return;
       }
 
-      // Ajuster les statistiques du dinosaure en fonction du temps
-      dinosaur = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
-
-      // Sauvegarder les nouvelles valeurs du dinosaure
-      await this.dinosaurRepository.updateDinosaur(dinosaur.id, {
-        food: dinosaur.food,
-        energy: dinosaur.energy,
-        hunger: dinosaur.hunger,
-        max_hunger: dinosaur.max_hunger,
-        last_update_by_time_service: dinosaur.last_update_by_time_service,
-        isDead: dinosaur.isDead,
-        isSleeping: dinosaur.isSleeping,
-        level: dinosaur.level,
-        epoch: dinosaur.epoch,
-        experience: dinosaur.experience,
-      });
-
       // Attacher le dinosaure mis à jour à la requête
-      req.dinosaur = dinosaur;
+      req.dinosaur = adjustedDino;
       next();
     } catch (error) {
       console.error('Erreur dans le middleware de dinosaure:', error);

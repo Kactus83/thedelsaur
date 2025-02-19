@@ -1,9 +1,9 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Service pour gérer les actions spécifiques aux dinosaures carnivores (chasser).
@@ -20,7 +20,7 @@ export class CarnivoreActionsService {
      * @param dinosaur Le dinosaure à chasser.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public huntDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public huntDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Hunt];
 
         if (!actionDetails.canPerform(dinosaur)) {

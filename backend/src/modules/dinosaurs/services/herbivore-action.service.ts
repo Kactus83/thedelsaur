@@ -1,9 +1,9 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Service pour gérer les actions spécifiques aux dinosaures herbivores (cueillir).
@@ -20,7 +20,7 @@ export class HerbivoreActionsService {
      * @param dinosaur Le dinosaure à cueillir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public grazeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public grazeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
 
         if (!actionDetails.canPerform(dinosaur)) {

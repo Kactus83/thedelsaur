@@ -1,249 +1,168 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
+import { DatabaseDinosaur } from '../models/database-dinosaur.interface';
 import pool from '../../../common/database/db';
-import { calculateMaxHungerMultiplier } from '../utils/dinosaurUtils';
-import {
-  MAX_FOOD,
-  BASE_ENERGY,
-  BASE_MAX_HUNGER,
-  LEVEL_MULTIPLIER_FOR_MAX_VALUES,
-} from '../../../common/config/constants';
-
 import { RowDataPacket } from 'mysql2';
-import { DietType } from '../models/dinosaur-diet.interface';
-import { DinosaurType } from '../models/dinosaur-type.interface';
-import { DinosaurMultiplier } from '../models/dinosaur-multiplier.interface';
 import { Epoch } from '../models/epoch.enum';
+import { DinosaurType } from '../models/dinosaur-type.interface';
+import { DinosaurDiet } from '../models/dinosaur-diet.interface';
+import { DINOSAUR_CONSTANTS } from '../../../common/config/dinosaur.constants';
 
 /**
- * Dépôt pour gérer les opérations de base de données liées aux dinosaures.
+ * Repository pour gérer les opérations sur la table des dinosaures.
+ * Les requêtes effectuent une jointure avec les tables dinosaur_types et dinosaur_diets
+ * afin d'obtenir les objets complets (incluant leurs modificateurs en JSON).
  */
 export class DinosaurRepository {
-  /**
-   * Récupère un dinosaure par son ID, incluant les multiplicateurs et niveau.
-   * @param dinosaurId L'ID du dinosaure.
-   * @returns Le dinosaure ou null s'il n'est pas trouvé.
-   */
-  public async getDinosaurById(dinosaurId: number): Promise<Dinosaur | null> {
+  public async getDinosaurById(dinosaurId: number): Promise<DatabaseDinosaur | null> {
     try {
-      const [results] = await pool.query<DinosaurDataRow[]>(
+      const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
         `SELECT d.*, 
-                dm.earn_herbi_food_multiplier, 
-                dm.earn_carni_food_multiplier, 
-                dm.earn_food_multiplier, 
-                dm.earn_energy_multiplier, 
-                dm.earn_experience_multiplier, 
-                dm.max_energy_multiplier, 
-                dm.max_food_multiplier
-        FROM dinosaur d
-        LEFT JOIN dinosaur_multiplier dm ON d.id = dm.dinosaur_id
-        WHERE d.id = ?`,
+                dt.name AS type_name, dt.stat_modifiers AS type_stat_modifiers, 
+                dd.name AS diet_name, dd.stat_modifiers AS diet_stat_modifiers
+         FROM dinosaurs d
+         JOIN dinosaur_types dt ON d.type_id = dt.id
+         JOIN dinosaur_diets dd ON d.diet_id = dd.id
+         WHERE d.id = ?`,
         [dinosaurId]
       );
-
       if (results.length === 0) return null;
-
-      const dinosaurData = results[0];
-
-      // Extract the multipliers, using default values if null
-      const multipliers: DinosaurMultiplier = {
-        earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier ?? 1,
-        earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier ?? 1,
-        earn_food_multiplier: dinosaurData.earn_food_multiplier ?? 1,
-        earn_energy_multiplier: dinosaurData.earn_energy_multiplier ?? 1,
-        earn_experience_multiplier: dinosaurData.earn_experience_multiplier ?? 1,
-        max_energy_multiplier: dinosaurData.max_energy_multiplier ?? 1,
-        max_food_multiplier: dinosaurData.max_food_multiplier ?? 1,
+      const row = results[0];
+      
+      // Parser les modificateurs stockés en JSON
+      const typeModifiers = JSON.parse(row.type_stat_modifiers) as any[];
+      const dietModifiers = JSON.parse(row.diet_stat_modifiers) as any[];
+      
+      // Construire l'objet DatabaseDinosaur en complétant les constantes
+      const dinosaur: DatabaseDinosaur = {
+        id: row.id,
+        name: row.name,
+        userId: row.user_id,
+        type: {
+          id: row.type_id,
+          name: row.type_name,
+          statModifiers: typeModifiers
+        },
+        diet: {
+          id: row.diet_id,
+          name: row.diet_name,
+          statModifiers: dietModifiers
+        },
+        energy: row.energy,
+        food: row.food,
+        hunger: row.hunger,
+        karma: row.karma,
+        experience: row.experience,
+        level: row.level,
+        money: row.money,
+        skill_points: row.skill_points,
+        epoch: row.epoch as Epoch,
+        // Compléter les valeurs de base à partir des constantes (non stockées en DB)
+        base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
+        energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
+        energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
+        base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
+        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
+        hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+        karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
+        created_at: row.created_at,
+        last_reborn: new Date(row.last_reborn),
+        reborn_amount: row.reborn_amount,
+        last_update_by_time_service: new Date(row.last_update_by_time_service),
+        is_sleeping: row.is_sleeping,
+        is_dead: row.is_dead
       };
-
-      const level = dinosaurData.level;
-
-      const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
-
-      // Calculate max_food, max_energy, max_hunger
-      const max_food = Math.round(
-        MAX_FOOD * multipliers.max_food_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-      const max_energy = Math.round(
-        BASE_ENERGY * multipliers.max_energy_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-      const max_hunger = Math.round(
-        BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-
-      // Construct the Dinosaur object
-      const dinosaur: Dinosaur = {
-        id: dinosaurData.id,
-        name: dinosaurData.name,
-        diet: dinosaurData.diet as DietType,
-        type: dinosaurData.type as DinosaurType,
-        energy: dinosaurData.energy,
-        max_energy: max_energy,
-        food: dinosaurData.food,
-        max_food: max_food,
-        hunger: dinosaurData.hunger,
-        max_hunger: max_hunger,
-        experience: dinosaurData.experience,
-        level: level,
-        epoch: dinosaurData.epoch, 
-        created_at: dinosaurData.created_at,
-        last_reborn: dinosaurData.last_reborn,
-        karma: dinosaurData.karma,
-        last_update_by_time_service: dinosaurData.last_update_by_time_service,
-        reborn_amount: dinosaurData.reborn_amount,
-        isSleeping: dinosaurData.isSleeping,
-        isDead: dinosaurData.isDead,
-        user_id: dinosaurData.user_id,
-        multipliers: multipliers,
-      };
-
+      
       return dinosaur;
     } catch (err) {
-      console.error('Erreur lors de la récupération du dinosaure avec multiplicateurs:', err);
+      console.error('Erreur lors de la récupération du dinosaure par ID:', err);
       throw err;
     }
   }
-
-  /**
-   * Récupère le dinosaure associé à un utilisateur, incluant les multiplicateurs et niveau.
-   * @param userId L'ID de l'utilisateur.
-   * @returns Le dinosaure ou null s'il n'est pas trouvé.
-   */
-  public async getDinosaurByUserId(userId: number): Promise<Dinosaur | null> {
+  
+  public async getDinosaurByUserId(userId: number): Promise<DatabaseDinosaur | null> {
     try {
-      const [results] = await pool.query<DinosaurDataRow[]>(
+      const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
         `SELECT d.*, 
-                dm.earn_herbi_food_multiplier, 
-                dm.earn_carni_food_multiplier, 
-                dm.earn_food_multiplier, 
-                dm.earn_energy_multiplier, 
-                dm.earn_experience_multiplier, 
-                dm.max_energy_multiplier, 
-                dm.max_food_multiplier
-         FROM dinosaur d
-         LEFT JOIN dinosaur_multiplier dm ON d.id = dm.dinosaur_id
+                dt.name AS type_name, dt.stat_modifiers AS type_stat_modifiers, 
+                dd.name AS diet_name, dd.stat_modifiers AS diet_stat_modifiers
+         FROM dinosaurs d
+         JOIN dinosaur_types dt ON d.type_id = dt.id
+         JOIN dinosaur_diets dd ON d.diet_id = dd.id
          WHERE d.user_id = ?`,
         [userId]
       );
-
       if (results.length === 0) return null;
-
-      const dinosaurData = results[0];
-
-      // Extract the multipliers, using default values if null
-      const multipliers: DinosaurMultiplier = {
-        earn_herbi_food_multiplier: dinosaurData.earn_herbi_food_multiplier ?? 1,
-        earn_carni_food_multiplier: dinosaurData.earn_carni_food_multiplier ?? 1,
-        earn_food_multiplier: dinosaurData.earn_food_multiplier ?? 1,
-        earn_energy_multiplier: dinosaurData.earn_energy_multiplier ?? 1,
-        earn_experience_multiplier: dinosaurData.earn_experience_multiplier ?? 1,
-        max_energy_multiplier: dinosaurData.max_energy_multiplier ?? 1,
-        max_food_multiplier: dinosaurData.max_food_multiplier ?? 1,
+      const row = results[0];
+      const typeModifiers = JSON.parse(row.type_stat_modifiers) as any[];
+      const dietModifiers = JSON.parse(row.diet_stat_modifiers) as any[];
+      const dinosaur: DatabaseDinosaur = {
+        id: row.id,
+        name: row.name,
+        userId: row.user_id,
+        type: {
+          id: row.type_id,
+          name: row.type_name,
+          statModifiers: typeModifiers
+        },
+        diet: {
+          id: row.diet_id,
+          name: row.diet_name,
+          statModifiers: dietModifiers
+        },
+        energy: row.energy,
+        food: row.food,
+        hunger: row.hunger,
+        karma: row.karma,
+        experience: row.experience,
+        level: row.level,
+        money: row.money,
+        skill_points: row.skill_points,
+        epoch: row.epoch as Epoch,
+        base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
+        energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
+        energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
+        base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
+        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
+        hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
+        karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
+        created_at: row.created_at,
+        last_reborn: new Date(row.last_reborn),
+        reborn_amount: row.reborn_amount,
+        last_update_by_time_service: new Date(row.last_update_by_time_service),
+        is_sleeping: row.is_sleeping,
+        is_dead: row.is_dead
       };
-
-      const level = dinosaurData.level;
-
-      const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
-
-      // Calculate max_food, max_energy, max_hunger
-      const max_food = Math.round(
-        MAX_FOOD * multipliers.max_food_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-      const max_energy = Math.round(
-        BASE_ENERGY * multipliers.max_energy_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-      const max_hunger = Math.round(
-        BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-      );
-
-      // Construct the Dinosaur object
-      const dinosaur: Dinosaur = {
-        id: dinosaurData.id,
-        name: dinosaurData.name,
-        diet: dinosaurData.diet as DietType,
-        type: dinosaurData.type as DinosaurType,
-        energy: dinosaurData.energy,
-        max_energy: max_energy,
-        food: dinosaurData.food,
-        max_food: max_food,
-        hunger: dinosaurData.hunger,
-        max_hunger: max_hunger,
-        experience: dinosaurData.experience,
-        level: level,
-        epoch: dinosaurData.epoch, 
-        created_at: dinosaurData.created_at,
-        last_reborn: dinosaurData.last_reborn,
-        karma: dinosaurData.karma,
-        last_update_by_time_service: dinosaurData.last_update_by_time_service,
-        reborn_amount: dinosaurData.reborn_amount,
-        isSleeping: dinosaurData.isSleeping,
-        isDead: dinosaurData.isDead,
-        user_id: dinosaurData.user_id,
-        multipliers: multipliers,
-      };
-
       return dinosaur;
     } catch (err) {
-      console.error('Erreur lors de la récupération du dinosaure avec multiplicateurs:', err);
+      console.error('Erreur lors de la récupération du dinosaure par userId:', err);
       throw err;
     }
   }
-
-  /**
-   * Met à jour un dinosaure.
-   * @param dinosaurId L'ID du dinosaure.
-   * @param updates Les mises à jour à appliquer.
-   * @returns true si la mise à jour a réussi, false sinon.
-   */
-  public async updateDinosaur(dinosaurId: number, updates: Partial<Dinosaur>): Promise<boolean> {
+  
+  public async updateDinosaur(dinosaurId: number, updates: Partial<DatabaseDinosaur>): Promise<boolean> {
     try {
-      // Récupérer le dinosaure actuel pour obtenir les multiplicateurs existants si nécessaires
-      const currentDinosaur = await this.getDinosaurById(dinosaurId);
-      if (!currentDinosaur) {
-        throw new Error('Dinosaure introuvable');
-      }
-
-      const level = updates.level || currentDinosaur.level;
-
-      // Recalculate and round max_food, max_energy, max_hunger if necessary
-      if (updates.multipliers || updates.level) {
-        const multipliers = updates.multipliers || currentDinosaur.multipliers;
-        updates.max_food = Math.round(
-          MAX_FOOD * multipliers.max_food_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-        );
-        updates.max_energy = Math.round(
-          BASE_ENERGY * multipliers.max_energy_multiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-        );
-        const maxHungerMultiplier = calculateMaxHungerMultiplier(level);
-        updates.max_hunger = Math.round(
-          BASE_MAX_HUNGER * maxHungerMultiplier * (1 + ((level / 100) * LEVEL_MULTIPLIER_FOR_MAX_VALUES))
-        );
-      }
-
-      // Update dinosaur data
-      const updatedDinosaur = await this.updateDinosaurData(dinosaurId, updates);
-
-      // Update multipliers if necessary
-      let updatedMultipliers = true;
-      if (updates.multipliers) {
-        updatedMultipliers = await this.updateDinosaurMultipliers(dinosaurId, updates.multipliers);
-      }
-
-      return updatedDinosaur && updatedMultipliers;
+      const updatesFiltered = { ...updates };
+      delete updatesFiltered.type;
+      delete updatesFiltered.diet;
+      
+      const fields = Object.keys(updatesFiltered)
+        .map(key => `${key} = ?`)
+        .join(', ');
+      const values = Object.values(updatesFiltered);
+      const query = `UPDATE dinosaurs SET ${fields} WHERE id = ?`;
+      values.push(dinosaurId);
+      
+      const [result] = await pool.query(query, values);
+      const res = result as any;
+      return res.affectedRows > 0;
     } catch (err) {
       console.error('Erreur lors de la mise à jour du dinosaure:', err);
       throw err;
     }
   }
-
-  /**
-   * Met à jour le nom d'un dinosaure par l'ID utilisateur.
-   * @param userId L'ID de l'utilisateur.
-   * @param newName Le nouveau nom du dinosaure.
-   * @returns true si la mise à jour a réussi, false sinon.
-   */
+  
   public async updateDinosaurName(userId: number, newName: string): Promise<boolean> {
     try {
-      const query = `UPDATE dinosaur SET name = ? WHERE user_id = ?`;
+      const query = `UPDATE dinosaurs SET name = ? WHERE user_id = ?`;
       const [result] = await pool.query(query, [newName, userId]);
       const res = result as any;
       return res.affectedRows > 0;
@@ -252,75 +171,91 @@ export class DinosaurRepository {
       throw err;
     }
   }
-
-  // Private methods for SRP
-
-  private async updateDinosaurData(dinosaurId: number, updates: Partial<Dinosaur>): Promise<boolean> {
-    try {
-      const dinosaurFields = Object.keys(updates)
-        .filter((key) => key !== 'multipliers')
-        .map((key) => `${key} = ?`)
-        .join(', ');
-      const dinosaurValues = Object.entries(updates)
-        .filter(([key]) => key !== 'multipliers')
-        .map(([, value]) => value);
-      const query = `UPDATE dinosaur SET ${dinosaurFields} WHERE id = ?`;
-      dinosaurValues.push(dinosaurId);
-      const [dinosaurResult] = await pool.query(query, dinosaurValues);
-      const dinosaurRes = dinosaurResult as any;
-      return dinosaurRes.affectedRows > 0;
-    } catch (err) {
-      console.error('Erreur lors de la mise à jour du dinosaure:', err);
-      throw err;
-    }
+  
+  public async getAllDinosaurTypes(): Promise<DinosaurType[]> {
+    const [rows] = await pool.query('SELECT * FROM dinosaur_types');
+    return (rows as any[]).map(row => ({
+      id: row.id,
+      name: row.name,
+      statModifiers: JSON.parse(row.stat_modifiers)
+    }));
   }
-
-  private async updateDinosaurMultipliers(dinosaurId: number, multipliers: Partial<DinosaurMultiplier>): Promise<boolean> {
-    try {
-      const multiplierFields = Object.keys(multipliers)
-        .map((key) => `${key} = ?`)
-        .join(', ');
-      const multiplierValues = Object.values(multipliers);
-      const query = `UPDATE dinosaur_multiplier SET ${multiplierFields} WHERE dinosaur_id = ?`;
-      multiplierValues.push(dinosaurId);
-      const [multiplierResult] = await pool.query(query, multiplierValues);
-      const multiplierRes = multiplierResult as any;
-      return multiplierRes.affectedRows > 0;
-    } catch (err) {
-      console.error('Erreur lors de la mise à jour des multiplicateurs du dinosaure:', err);
-      throw err;
+  
+  public async getAllDinosaurDiets(): Promise<DinosaurDiet[]> {
+    const [rows] = await pool.query('SELECT * FROM dinosaur_diets');
+    return (rows as any[]).map(row => ({
+      id: row.id,
+      name: row.name,
+      statModifiers: JSON.parse(row.stat_modifiers)
+    }));
+  }
+  
+  public async createDinosaur(dinosaur: DatabaseDinosaur): Promise<DatabaseDinosaur | null> {
+    const query = `INSERT INTO dinosaurs 
+      (name, user_id, diet_id, type_id, energy, food, hunger, karma, experience, level, money, skill_points, epoch,
+       created_at, last_reborn, reborn_amount, last_update_by_time_service, is_sleeping, is_dead)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+              ?, ?, ?, ?, ?, ?)`;
+  
+    const values = [
+      dinosaur.name,
+      dinosaur.userId,
+      dinosaur.diet.id,
+      dinosaur.type.id,
+      dinosaur.energy,
+      dinosaur.food,
+      dinosaur.hunger,
+      dinosaur.karma,
+      dinosaur.experience,
+      dinosaur.level,
+      dinosaur.money,
+      dinosaur.skill_points,
+      dinosaur.epoch,
+      dinosaur.created_at,
+      dinosaur.last_reborn,
+      dinosaur.reborn_amount,
+      dinosaur.last_update_by_time_service,
+      dinosaur.is_sleeping,
+      dinosaur.is_dead
+    ];
+  
+    const [result] = await pool.query(query, values);
+    const resAny = result as any;
+    if (resAny.insertId) {
+      return this.getDinosaurById(resAny.insertId);
     }
+    return null;
   }
 }
 
-// DinosaurDataRow interface (correspond au retour brut depuis la abse de donnée)
-interface DinosaurDataRow extends RowDataPacket {
-  // Dinosaur fields
+// Interface décrivant la structure brute retournée par la jointure
+interface DatabaseDinosaurDataRow extends RowDataPacket {
   id: number;
   name: string;
-  diet: DietType;
-  type: DinosaurType;
+  user_id: number;
+  diet_id: number;
+  type_id: number;
+  
   energy: number;
   food: number;
   hunger: number;
+  
+  karma: number;
   experience: number;
   level: number;
-  epoch: Epoch;
+  money: number;
+  skill_points: number;
+  epoch: string;
+  
   created_at: Date;
   last_reborn: string;
-  karma: number;
-  last_update_by_time_service: string;
   reborn_amount: number;
-  isSleeping: boolean;
-  isDead: boolean;
-  user_id: number;
-
-  // Multiplier fields (may be null if no record in 'dinosaur_multiplier')
-  earn_herbi_food_multiplier: number | null;
-  earn_carni_food_multiplier: number | null;
-  earn_food_multiplier: number | null;
-  earn_energy_multiplier: number | null;
-  earn_experience_multiplier: number | null;
-  max_energy_multiplier: number | null;
-  max_food_multiplier: number | null;
+  last_update_by_time_service: string;
+  is_sleeping: boolean;
+  is_dead: boolean;
+  
+  type_name: string;
+  type_stat_modifiers: string;
+  diet_name: string;
+  diet_stat_modifiers: string;
 }

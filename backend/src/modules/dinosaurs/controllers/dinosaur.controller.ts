@@ -1,12 +1,12 @@
 import { Response, Request } from 'express';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { getAvailableActions, getExperienceThresholdForLevel } from '../utils/dinosaur-actions.util';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { ChangeDinosaurNameRequestBody } from '../models/change-dinosaur-name.dto';
 import { calculateEpochThresholds } from '../utils/epochUtils';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 export class DinosaursController {
   private dinosaurRepository: DinosaurRepository;
@@ -43,25 +43,11 @@ export class DinosaursController {
           return;
       }
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
-      await this.dinosaurRepository.updateDinosaur(dinosaur.id, {
-        food: dinosaur.food,
-        energy: dinosaur.energy,
-        hunger: dinosaur.hunger,
-        max_hunger: dinosaur.max_hunger,
-        last_update_by_time_service: dinosaur.last_update_by_time_service,
-        isDead: dinosaur.isDead,
-        isSleeping: dinosaur.isSleeping,
-        level: dinosaur.level,
-        epoch: dinosaur.epoch,
-        experience: dinosaur.experience,
-      });
-
       // Obtenir les actions disponibles avec leurs détails
       const availableActions = getAvailableActions(dinosaur);
 
       res.status(200).json({
-        dinosaur: plainToInstance(DinosaurDTO, dinosaur),
+        dinosaur: plainToInstance(FrontendDinosaurDTO, dinosaur),
         availableActions: plainToInstance(DinosaurActionDTO, availableActions),
       });
     } catch (error) {
@@ -109,21 +95,7 @@ export class DinosaursController {
           return;
       }
 
-      // Sauvegarder les nouvelles valeurs du dinosaure
-      await this.dinosaurRepository.updateDinosaur(dinosaur.id, {
-        food: dinosaur.food,
-        energy: dinosaur.energy,
-        hunger: dinosaur.hunger,
-        max_hunger: dinosaur.max_hunger,
-        last_update_by_time_service: dinosaur.last_update_by_time_service,
-        isDead: dinosaur.isDead,
-        isSleeping: dinosaur.isSleeping,
-        level: dinosaur.level,
-        epoch: dinosaur.epoch,
-        experience: dinosaur.experience,
-      });
-
-      const dinosaurDTO = plainToInstance(DinosaurDTO, dinosaur);
+      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, dinosaur);
       res.status(200).json(dinosaurDTO);
     } catch (error) {
       console.error('Erreur lors de la récupération du dinosaure:', error);

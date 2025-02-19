@@ -9,6 +9,8 @@ export interface DinosaurEvent {
     hungerChange: number;        // Variation de la faim
     experienceChange: number;    // Variation de l'expérience
     karmaChange: number;        // Variation du karma
+    moneyChange: number;         // Variation de l'argent
+    skillPointsChange: number;   // Variation des points de compétences
     typeChange?: DinosaurType;          // Variation du type
     multiplierChanges?: Partial<DinosaurMultiplier>; // Modifications des multiplicateurs
     minLevel: number,

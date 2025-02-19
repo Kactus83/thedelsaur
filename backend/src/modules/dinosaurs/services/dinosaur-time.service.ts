@@ -1,163 +1,102 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
-import {
-  ENERGY_DECAY_RATE_PER_SECOND,
-  ENERGY_RECOVERY_RATE_PER_SECOND,
-  HUNGER_INCREASE_PER_SECOND,
-  HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING,
-  HUNGER_ENERGY_LOSS_RATE_PER_SECOND,
-  HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS,
-  LEVEL_MAX,
-  LEVEL_HUNGER_MULTIPLIER_CONFIG,
-} from '../../../common/config/constants';
-import { formatDateForMySQL } from '../../../common/utils/dateUtils';
-import { BasicActionsService } from './basic-actions.service';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { Epoch } from '../models/epoch.enum';
 import { calculateEpochThresholds } from '../utils/epochUtils';
 
 /**
- * Service pour ajuster les statistiques d'un dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
+ * Service chargé d'ajuster les statistiques d'un dinosaure en fonction du temps écoulé.
+ * Ce service travaille sur l'objet FrontendDinosaurDTO qui contient à la fois les valeurs persistantes
+ * et les valeurs finales calculées (comme final_max_energy, etc.).
  */
 export class DinosaurTimeService {
-  private basicActionsService: BasicActionsService;
-  private epochThresholds: { epoch: Epoch, threshold: number }[];
-
-  constructor(basicActionsService: BasicActionsService) {
-    this.basicActionsService = basicActionsService;
-    this.epochThresholds = calculateEpochThresholds();
-  }
-
-  public adjustDinosaurStats(dinosaur: Dinosaur): Dinosaur {
-    if (!dinosaur || !dinosaur.last_update_by_time_service || dinosaur.food === undefined || dinosaur.energy === undefined || dinosaur.hunger === undefined) {
-      console.error('Les informations du dinosaure sont incomplètes ou invalides.');
-      return dinosaur;
-    }
-
-    if (dinosaur.isDead) {
-      console.log('Le dinosaure est mort. Les stats sont maintenues à zéro.');
-      dinosaur.food = 0;
-      dinosaur.energy = 0;
-      dinosaur.hunger = dinosaur.max_hunger;
-      return dinosaur;
-    }
-
-    // Calculer l'époque du dinosaure
-    dinosaur.epoch = this.calculateEpoch(dinosaur.last_reborn);
-
-    const lastUpdated = new Date(dinosaur.last_update_by_time_service);
-    const now = new Date();
-    const timeElapsedInSeconds = Math.floor((now.getTime() - lastUpdated.getTime()) / 1000);
-    const hungerMultiplier = this.calculateHungerMultiplier(dinosaur.level);
-
-    if (timeElapsedInSeconds > 0) {
-      if (dinosaur.isSleeping) {
-        // Régénération de l'énergie pendant le sommeil
-        let energyRecovery = timeElapsedInSeconds * ENERGY_RECOVERY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
-        dinosaur.energy = Math.round(Math.min(dinosaur.max_energy, dinosaur.energy + energyRecovery));
-
-        // Vérifier si le dinosaure a atteint son énergie maximale
-        if (dinosaur.energy >= dinosaur.max_energy) {
-          // Réveil automatique du dinosaure
-          console.log('Le dinosaure a atteint son énergie maximale et se réveille automatiquement.');
-
-          this.basicActionsService.wakeDinosaur(dinosaur);
-        }
-
-        // Augmentation plus lente de la faim pendant le sommeil
-        const hungerIncreaseWhileSleeping = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND_WHILE_SLEEPING * hungerMultiplier;
-        dinosaur.hunger = Math.min(dinosaur.max_hunger, Math.floor(dinosaur.hunger + hungerIncreaseWhileSleeping));
-
-      } else {
-        // Augmentation de la faim quand le dinosaure est éveillé
-        const hungerIncrease = timeElapsedInSeconds * HUNGER_INCREASE_PER_SECOND * hungerMultiplier;
-        dinosaur.hunger = Math.min(dinosaur.max_hunger, Math.floor(dinosaur.hunger + hungerIncrease));
-
-        // Décroissance d'énergie normale lorsque le dinosaure est éveillé
-        const energyDecay = timeElapsedInSeconds * ENERGY_DECAY_RATE_PER_SECOND * dinosaur.multipliers.earn_energy_multiplier * this.calculateEnergyMultiplier(dinosaur.level);
-        dinosaur.energy = Math.round(Math.max(0, dinosaur.energy - energyDecay));
-
-        // Perte d'énergie supplémentaire due à la faim critique
-        if (dinosaur.hunger >= HUNGER_THRESHOLD_BEFORE_ENERGY_LOSS) {
-          const hungerEnergyLoss = timeElapsedInSeconds * HUNGER_ENERGY_LOSS_RATE_PER_SECOND;
-          dinosaur.energy = Math.max(0, dinosaur.energy - hungerEnergyLoss);
-        }
-
-        // Si l'énergie atteint zéro, le dinosaure tombe en sommeil
-        if (dinosaur.energy === 0 && !dinosaur.isDead) {
-          dinosaur.isSleeping = true;
-          console.log('Le dinosaure est épuisé et se met en sommeil.');
-        }
-      }
-
-      // Vérifier la faim maximale et la consommation automatique de nourriture
-      while (dinosaur.hunger >= dinosaur.max_hunger && dinosaur.food > 0) {
-        const foodToConsume = Math.min(dinosaur.food, dinosaur.hunger);
-        dinosaur.food -= foodToConsume;
-        dinosaur.hunger -= foodToConsume;
-        console.log(`Le dinosaure consomme automatiquement ${foodToConsume} unités de nourriture pour réduire sa faim.`);
-      }
-
-      // Vérifier la mort par faim seulement si aucune nourriture n'est disponible
-      if (dinosaur.hunger >= dinosaur.max_hunger && dinosaur.food <= 0) {
-        dinosaur.isDead = true;
-        dinosaur.energy = 0;
-        console.log('Le dinosaure est mort de faim.');
-      }
-
-      // Mise à jour de la dernière date de mise à jour en format SQL
-      dinosaur.last_update_by_time_service = formatDateForMySQL(now);
-    }
-
-    return dinosaur;
-  }
+  // Tableau des seuils d'époque, par exemple issu d'un utilitaire de calcul (à adapter)
+  private epochThresholds = calculateEpochThresholds();
 
   /**
-   * Calcul l'époque d'un dinosaure en fonction du temps écoulé depuis sa dernière renaissance.
-   * @param lastReborn La date du dernier reborn du dinosaure.
-   * @returns Le type d'époque ('past', 'present', 'future').
+   * Calcule l'époque du dinosaure en fonction du temps écoulé depuis sa dernière renaissance.
+   * @param lastReborn Date de la dernière renaissance du dinosaure.
+   * @returns L'époque calculée.
    */
-  public calculateEpoch(lastReborn: string): Epoch {
-    const rebornDate = new Date(lastReborn);
+  private calculateEpoch(lastReborn: Date): Epoch {
     const now = new Date();
-    const timeElapsedInSeconds = (now.getTime() - rebornDate.getTime()) / 1000;
+    const elapsedSeconds = (now.getTime() - lastReborn.getTime()) / 1000;
 
-    // Utilisation des seuils calculés pour déterminer l'époque
+    // Parcours des seuils pour déterminer l'époque
     for (const { epoch, threshold } of this.epochThresholds) {
-      if (timeElapsedInSeconds < threshold) {
+      if (elapsedSeconds < threshold) {
         return epoch;
       }
     }
-
-    return this.epochThresholds[this.epochThresholds.length - 1].epoch; // Dernière époque si toutes les autres sont dépassées
+    // Si tous les seuils sont dépassés, renvoyer le dernier
+    return this.epochThresholds[this.epochThresholds.length - 1].epoch;
   }
 
   /**
-   * Calcule le multiplicateur de faim pour un dinosaure en fonction de son niveau.
-   * @param level Le niveau du dinosaure.
-   * @returns Le multiplicateur de faim ajusté au niveau.
+   * Ajuste les statistiques du dinosaure en fonction du temps écoulé depuis la dernière mise à jour.
+   * 
+   * - En sommeil, le dinosaure récupère de l'énergie (à un taux défini dans energy_recovery_per_second)
+   *   et sa faim augmente à un taux réduit.
+   * - En état éveillé, le dinosaure perd de l'énergie (energy_decay_per_second) et sa faim augmente normalement.
+   * - Si l'énergie atteint 0, le dinosaure est mis en sommeil.
+   * - Si l'énergie atteint son maximum (final_max_energy), le dinosaure se réveille automatiquement.
+   * - L'époque est recalculée en fonction de last_reborn.
+   * - La date de dernière mise à jour est rafraîchie.
+   * 
+   * @param dino L'objet FrontendDinosaurDTO à mettre à jour.
+   * @returns Le dinosaure ajusté.
    */
-  private calculateHungerMultiplier(level: number): number {
-      // Limiter le niveau entre 2 et LEVEL_MAX
-      const effectiveLevel = Math.max(2, Math.min(level, LEVEL_MAX));
-      const levelRatio = (effectiveLevel - 1) / (LEVEL_MAX - 1);
-  
-      // Calculer le multiplicateur de faim en utilisant les paramètres de courbe
-      const { start, end, curve } = LEVEL_HUNGER_MULTIPLIER_CONFIG;
-      return start + (end - start) * Math.pow(levelRatio, curve);
-  }
+  public adjustDinosaurStats(dino: FrontendDinosaurDTO): FrontendDinosaurDTO {
+    if (!dino || !dino.last_update_by_time_service) {
+      console.error('Informations insuffisantes pour ajuster les statistiques du dinosaure.');
+      return dino;
+    }
 
-  /**
-   * Calcule le multiplicateur d'énergie pour un dinosaure en fonction de son niveau.
-   * @param level Le niveau du dinosaure.
-   * @returns Le multiplicateur d'énergie ajusté au niveau.
-   */
-  private calculateEnergyMultiplier(level: number): number {
-    // Limiter le niveau entre 2 et LEVEL_MAX
-    const effectiveLevel = Math.max(2, Math.min(level, LEVEL_MAX));
-    const levelRatio = (effectiveLevel - 1) / (LEVEL_MAX - 1);
+    // Si le dinosaure est mort, aucune modification n'est effectuée.
+    if (dino.is_dead) {
+      console.log('Dinosaure mort, aucune mise à jour effectuée.');
+      return dino;
+    }
 
-    // Calculer le multiplicateur de faim en utilisant les paramètres de courbe
-    const { start, end, curve } = LEVEL_HUNGER_MULTIPLIER_CONFIG;
-    return start + (end - start) * Math.pow(levelRatio, curve);
+    const lastUpdate = new Date(dino.last_update_by_time_service);
+    const now = new Date();
+    const elapsedSeconds = Math.floor((now.getTime() - lastUpdate.getTime()) / 1000);
+
+    // Mise à jour de l'époque en fonction du temps écoulé depuis le dernier reborn
+    dino.epoch = this.calculateEpoch(dino.last_reborn);
+
+    if (elapsedSeconds > 0) {
+      if (dino.is_sleeping) {
+        // Récupération d'énergie pendant le sommeil
+        const energyRecovered = elapsedSeconds * dino.energy_recovery_per_second;
+        dino.energy = Math.min(dino.final_max_energy, dino.energy + energyRecovered);
+
+        // Augmentation de la faim pendant le sommeil (à un taux réduit)
+        const hungerIncrease = elapsedSeconds * (dino.hunger_increase_per_second * 0.5);
+        dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
+
+        // Si l'énergie atteint son maximum, le dinosaure se réveille
+        if (dino.energy >= dino.final_max_energy) {
+          dino.is_sleeping = false;
+          console.log('Dinosaure réveillé automatiquement (énergie maximale atteinte).');
+        }
+      } else {
+        // Perte d'énergie en état éveillé
+        const energyLost = elapsedSeconds * dino.energy_decay_per_second;
+        dino.energy = Math.max(0, dino.energy - energyLost);
+
+        // Augmentation de la faim en état éveillé
+        const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second;
+        dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
+
+        // Si l'énergie tombe à zéro, passage en sommeil
+        if (dino.energy === 0) {
+          dino.is_sleeping = true;
+          console.log('Dinosaure épuisé, passage en sommeil.');
+        }
+      }
+      // Mise à jour de la date de dernière mise à jour
+      dino.last_update_by_time_service = now;
+    }
+
+    return dino;
   }
 }
-

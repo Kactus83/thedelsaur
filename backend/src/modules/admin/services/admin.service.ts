@@ -1,6 +1,6 @@
 import pool from '../../../common/database/db';
 import { User } from '../../users/models/user.interface';
-import { Dinosaur } from '../../dinosaurs/models/backend-dinosaur.interface';
+import { Dinosaur } from '../../dinosaurs/models/database-dinosaur.interface';
 
 export class AdminService {
 

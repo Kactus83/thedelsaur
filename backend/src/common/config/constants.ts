@@ -1,10 +1,11 @@
 import { DinosaurMultiplier } from "../../modules/dinosaurs/models/dinosaur-multiplier.interface";
 
 // Constants for Dinosaur Base Stats
-export const BASE_FOOD = 5000;                             // Stock de nourriture initial
-export const MAX_FOOD = 10000;
-export const BASE_ENERGY = 10000;  
-export const MAX_ENERGY = 10000;                           // Énergie de départ maximale
+export const INITIAL_FOOD = 5000;                             // Stock de nourriture initial
+export const BASE_MAX_FOOD = 10000;
+export const INITIAL_ENERGY = 10000;  
+export const BASE_MAX_ENERGY = 10000;                           // Énergie de départ maximale
+export const INITIAL_HUNGER = 0; 
 export const BASE_MAX_HUNGER = 10000;                       // Niveau maximal de faim
 
 // Energy Consumption and Recovery Rates

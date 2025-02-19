@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { AdvancedActionsService } from '../services/advanced-actions.service';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Contrôleur pour les actions avancées du dinosaure (voler, découvrir).
@@ -33,7 +33,7 @@ export class AdvancedActionsController {
 
             const { dinosaur: updatedDino, event } = this.advancedActionsService.stealDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action voler du dinosaure:', error);
@@ -60,7 +60,7 @@ export class AdvancedActionsController {
 
             const { dinosaur: updatedDino, event } = this.advancedActionsService.discoverDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action découvrir du dinosaure:', error);
@@ -87,7 +87,7 @@ export class AdvancedActionsController {
 
             const { dinosaur: updatedDino, event } = this.advancedActionsService.prayDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action prier du dinosaure:', error);
