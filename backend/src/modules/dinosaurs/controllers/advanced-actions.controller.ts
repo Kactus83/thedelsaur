@@ -94,4 +94,58 @@ export class AdvancedActionsController {
             res.status(500).json({ message: 'Erreur interne du serveur' });
         }
     }
+
+    /**
+     * Action pour quele dinosaure travaille comme garde du corps
+     */
+    public bodyguardDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                res.status(400).json({ message: 'Utilisateur non authentifié' });
+                return;
+            }
+
+            const dinosaur = req.dinosaur;
+            if (!dinosaur) {
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+                return;
+            }
+
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.bodyguardDinosaur(dinosaur);
+
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
+            res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+        } catch (error) {
+            console.error('Erreur lors de l\'action garder du dinosaure:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    }
+
+    /**
+     * Action pour que le dinosaure travaille comme garde d'enfants
+     */
+    public babysitterDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                res.status(400).json({ message: 'Utilisateur non authentifié' });
+                return;
+            }
+
+            const dinosaur = req.dinosaur;
+            if (!dinosaur) {
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+                return;
+            }
+
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.babysitterDinosaur(dinosaur);
+
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
+            res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+        } catch (error) {
+            console.error('Erreur lors de l\'action garder du dinosaure:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    }
 }

@@ -8,5 +8,7 @@ export enum DinosaurAction {
     Discover = 'discover',
     Steal = 'steal',
     Pray = 'pray',
+    Bodyguard = 'bodyguard',
+    Babysitter = 'babysitter',
   }
   

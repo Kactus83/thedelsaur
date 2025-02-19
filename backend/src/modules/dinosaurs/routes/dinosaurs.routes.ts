@@ -81,5 +81,13 @@ export default function (
     advancedActionsController.prayDinosaur(req, res)
   );
 
+  router.post('/actions/bodyguard', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+    advancedActionsController.bodyguardDinosaur(req, res)
+  );
+
+  router.post('/actions/babysitter', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+    advancedActionsController.babysitterDinosaur(req, res)
+  );
+
   return router;
 }

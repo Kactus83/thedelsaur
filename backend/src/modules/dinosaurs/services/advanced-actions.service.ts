@@ -74,4 +74,44 @@ export class AdvancedActionsService {
         
         return { dinosaur, event };
     }
+
+    /**
+     * Action pour que le dinosaure aille travailler en tant que garde du corps.
+     * @param dinosaur Le dinosaure qui vatravailler
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public async bodyguardDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Bodyguard];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas travailler comme garde du corps.');
+        }
+
+        const event = await getRandomEventForAction(DinosaurAction.Bodyguard, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Bodyguard, event);
+
+        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+
+        return { dinosaur, event };
+    }
+
+    /**
+     * Action pour que le dinosaure garde les enfants d'un autre dinosaure.
+     * @param dinosaur Le dinosaure qui va garder les enfants.
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public async babysitterDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Babysitter];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas garder les enfants.');
+        }
+
+        const event = await getRandomEventForAction(DinosaurAction.Babysitter, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Babysitter, event);
+
+        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+
+        return { dinosaur, event };
+    }
 }
