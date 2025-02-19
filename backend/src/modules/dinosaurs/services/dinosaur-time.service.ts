@@ -47,6 +47,8 @@ export class DinosaurTimeService {
    * - En état éveillé, le dinosaure perd de l'énergie (energy_decay_per_second) et sa faim augmente normalement.
    * - Si l'énergie atteint 0, le dinosaure est mis en sommeil.
    * - Si l'énergie atteint son maximum (final_max_energy), le dinosaure se réveille automatiquement.
+   * - Si la faim atteint son maximum et qu'il dispose encore de nourriture, il mange automatiquement.
+   *   Sinon, il meurt de faim.
    * - L'époque est recalculée en fonction de last_reborn.
    * - La date de dernière mise à jour est rafraîchie.
    * 
@@ -79,7 +81,7 @@ export class DinosaurTimeService {
         dino.energy = Math.min(dino.final_max_energy, dino.energy + energyRecovered);
 
         // Augmentation de la faim pendant le sommeil (à un taux réduit)
-        const hungerIncrease = elapsedSeconds * (dino.hunger_increase_per_second_when_recovery);
+        const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second_when_recovery;
         dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
 
         // Si l'énergie atteint son maximum, réveiller le dinosaure via le BasicActionsService
@@ -104,6 +106,20 @@ export class DinosaurTimeService {
       }
       // Mise à jour de la date de dernière mise à jour
       dino.last_update_by_time_service = now;
+    }
+
+    // Vérifier si la faim est au maximum
+    if (dino.hunger >= dino.final_max_hunger) {
+      if (dino.food > 0) {
+        // Si de la nourriture est disponible, le dinosaure mange automatiquement
+        console.log('Faim maximale détectée, auto-alimentation du dinosaure.');
+        const result = this.basicActionsService.eatDinosaur(dino);
+        dino = result.dinosaur;
+      } else {
+        // Sinon, le dinosaure meurt de faim
+        console.log('Dinosaure meurt de faim (aucune nourriture disponible).');
+        dino.is_dead = true;
+      }
     }
 
     return dino;

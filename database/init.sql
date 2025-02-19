@@ -108,7 +108,7 @@ CREATE TABLE dinosaurs (
     karma INT NOT NULL,
     experience INT NOT NULL,
     level INT NOT NULL,
-    money DECIMAL(10,2) NOT NULL,
+    money INT NOT NULL,
     skill_points INT NOT NULL,
     epoch VARCHAR(50) NOT NULL,
     
