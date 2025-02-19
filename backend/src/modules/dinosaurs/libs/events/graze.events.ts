@@ -21,7 +21,7 @@ export const grazeEvents: DynamicEventData[] = [
       {
         source: "graze",
         target: "experience",
-        base_value: 250,
+        base_value: 200,
         additiveStep: 5,
         additiveIncrement: 50,
         multiplicativeStep: 0,
@@ -39,7 +39,7 @@ export const grazeEvents: DynamicEventData[] = [
       {
         source: "graze",
         target: "food",
-        base_value: 1000,
+        base_value: 800,
         additiveStep: 1,
         additiveIncrement: 100,
         multiplicativeStep: 10,
@@ -83,7 +83,7 @@ export const grazeEvents: DynamicEventData[] = [
       {
         source: "graze",
         target: "food",
-        base_value: 1500,
+        base_value: 1250,
         additiveStep: 2,
         additiveIncrement: 250,
         multiplicativeStep: 10,
@@ -109,7 +109,7 @@ export const grazeEvents: DynamicEventData[] = [
       {
         source: "graze",
         target: "experience",
-        base_value: 300,
+        base_value: 400,
         additiveStep: 2,
         additiveIncrement: 50,
         multiplicativeStep: 0,
@@ -206,7 +206,7 @@ export const grazeEvents: DynamicEventData[] = [
       {
         source: "graze",
         target: "food",
-        base_value: 1500,
+        base_value: 1300,
         additiveStep: 5,
         additiveIncrement: 500,
         multiplicativeStep: 10,
