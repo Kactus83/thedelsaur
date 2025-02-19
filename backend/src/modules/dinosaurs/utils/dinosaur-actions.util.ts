@@ -3,8 +3,16 @@ import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import {
   BASE_EXP_REQUIRED,
-  EXP_GROWTH_FACTOR,
-  LEVEL_MODIFIER,
+  EXP_ADDITIONAL_PER_TEN_LEVEL,
+  EXP_ADDITIONAL_STEP,
+  EXP_ADDITIONAL_FACTOR,
+  EXP_ADDITIONAL_FACTOR_STEP,
+  LEVEL_MAX,
+  SKILL_POINTS_EARNING_BASE,
+  SKILL_POINTS_EARNING_ADDITIONAL,
+  SKILL_POINTS_EARNING_ADDITIONAL_STEP,
+  SKILL_POINT_ADDITIONAL_FACTOR_STEP,
+  SKILL_POINTS_EARNING_ADDITIONAL_FACTOR
 } from '../../../common/config/leveling.constants';
 import { DinosaurActionDTO } from '../models/dinosaur-action.dto';
 import { DinosaurFactory } from '../factories/dinosaur.factory';
@@ -82,7 +90,7 @@ export async function getRandomEventForAction(
  * Une table de correspondance (targetMapping) permet de faire le lien entre le target du modifier
  * et la propriété du FrontendDinosaurDTO.
  * 
- * Après application des modifiers, la fonction gère la montée de niveau et le plafonnement des valeurs.
+ * Après application des modifiers, la fonction gère la montée de niveau et l'ajout des skill points.
  * 
  * @param dinosaur Le DTO du dinosaure à mettre à jour.
  * @param action L'action effectuée.
@@ -96,7 +104,6 @@ export async function applyEventToDinosaur(
   ): Promise<FrontendDinosaurDTO> {
     // Pour l'action de résurrection, déléguer à la factory
     if (action === DinosaurAction.Resurrect) {
-      // Plus besoin d'veent de resurection a priori, a revoir dans le futur
       return await DinosaurFactory.resurrectDinosaur(dinosaur);
     }
 
@@ -130,11 +137,12 @@ export async function applyEventToDinosaur(
     dinosaurRecord[targetProperty] = newValue;
   }
 
-  // Gestion de la montée de niveau basée sur l'expérience
+  // Gestion de la montée de niveau et gain de skill points
   let experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
   while (dinosaur.experience >= experienceThreshold) {
     dinosaur.level += 1;
     dinosaur.experience -= experienceThreshold;
+    dinosaur.skill_points += getSkillPointsForLevel(dinosaur.level);
     experienceThreshold = getExperienceThresholdForLevel(dinosaur.level + 1);
   }
 
@@ -153,5 +161,26 @@ export async function applyEventToDinosaur(
  * @returns Le seuil d'expérience requis.
  */
 export function getExperienceThresholdForLevel(level: number): number {
-  return Math.floor(BASE_EXP_REQUIRED * Math.pow(level, EXP_GROWTH_FACTOR) * LEVEL_MODIFIER);
+  if (level > LEVEL_MAX) level = LEVEL_MAX;
+
+  return Math.floor(
+    BASE_EXP_REQUIRED +
+    Math.floor(level / EXP_ADDITIONAL_STEP) * EXP_ADDITIONAL_PER_TEN_LEVEL +
+    Math.floor(level / EXP_ADDITIONAL_FACTOR_STEP) * BASE_EXP_REQUIRED * EXP_ADDITIONAL_FACTOR
+  );
+}
+
+/**
+ * Calcule le nombre de skill points gagnés lors de la montée en niveau.
+ * @param level Le niveau atteint.
+ * @returns Le nombre de skill points à ajouter.
+ */
+export function getSkillPointsForLevel(level: number): number {
+  if (level > LEVEL_MAX) level = LEVEL_MAX;
+
+  return Math.floor(
+    SKILL_POINTS_EARNING_BASE +
+    Math.floor(level / SKILL_POINTS_EARNING_ADDITIONAL_STEP) * SKILL_POINTS_EARNING_ADDITIONAL +
+    Math.floor(level / SKILL_POINT_ADDITIONAL_FACTOR_STEP) * SKILL_POINTS_EARNING_BASE * SKILL_POINTS_EARNING_ADDITIONAL_FACTOR
+  );
 }
