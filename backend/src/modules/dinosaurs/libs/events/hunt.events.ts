@@ -23,9 +23,9 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "experience",
-        base_value: 250,
+        base_value: 300,
         additiveStep: 5,
-        additiveIncrement: 50,
+        additiveIncrement: 75,
         multiplicativeStep: 0,
         multiplicativeIncrement: 0
       },
@@ -41,7 +41,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "food",
-        base_value: 1000,
+        base_value: 1200,
         additiveStep: 1,
         additiveIncrement: 100,
         multiplicativeStep: 10,
@@ -67,9 +67,9 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "experience",
-        base_value: 250,
+        base_value: 350,
         additiveStep: 10,
-        additiveIncrement: 250,
+        additiveIncrement: 350,
         multiplicativeStep: 0,
         multiplicativeIncrement: 0
       },
@@ -85,7 +85,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "food",
-        base_value: 1500,
+        base_value: 2000,
         additiveStep: 2,
         additiveIncrement: 250,
         multiplicativeStep: 10,
@@ -111,7 +111,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "experience",
-        base_value: 300,
+        base_value: 500,
         additiveStep: 2,
         additiveIncrement: 50,
         multiplicativeStep: 0,
@@ -129,7 +129,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "food",
-        base_value: 500,
+        base_value: 300,
         additiveStep: 1,
         additiveIncrement: 100,
         multiplicativeStep: 10,
@@ -190,7 +190,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "experience",
-        base_value: 750,
+        base_value: 1000,
         additiveStep: 25,
         additiveIncrement: 750,
         multiplicativeStep: 0,
@@ -252,7 +252,7 @@ export const huntEvents: DynamicEventData[] = [
       {
         source: "hunt",
         target: "food",
-        base_value: 2000,
+        base_value: 4000,
         additiveStep: 5,
         additiveIncrement: 1000,
         multiplicativeStep: 10,
