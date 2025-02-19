@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { BasicActionsService } from '../services/basic-actions.service';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Contrôleur pour les actions basiques du dinosaure (manger, dormir, se réveiller, ressusciter).
@@ -33,7 +33,7 @@ export class BasicActionsController {
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.eatDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action manger du dinosaure:', error);
@@ -60,7 +60,7 @@ export class BasicActionsController {
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.sleepDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure est maintenant en sommeil.', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action dormir du dinosaure:', error);
@@ -87,7 +87,7 @@ export class BasicActionsController {
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.wakeDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure s\'est réveillé.', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action réveiller du dinosaure:', error);
@@ -119,7 +119,7 @@ export class BasicActionsController {
 
             const { dinosaur: updatedDino, event } = this.basicActionsService.resurrectDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Le dinosaure a été ressuscité.', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action ressusciter du dinosaure:', error);

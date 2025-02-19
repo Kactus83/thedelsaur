@@ -1,4 +1,4 @@
-import { Dinosaur } from './backend-dinosaur.interface';
+import { Dinosaur } from './database-dinosaur.interface';
 
 export interface DinosaurActionDetails {
   name: string;

@@ -1,9 +1,9 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Service pour gérer les actions avancées du dinosaure (voler, découvrir).
@@ -20,7 +20,7 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à voler.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public stealDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public stealDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Steal];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -40,7 +40,7 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à découvrir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public discoverDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public discoverDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Discover];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -60,7 +60,7 @@ export class AdvancedActionsService {
      * @param dinosaur Le dinosaure à écrire.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public prayDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public prayDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Pray];
 
         if (!actionDetails.canPerform(dinosaur)) {

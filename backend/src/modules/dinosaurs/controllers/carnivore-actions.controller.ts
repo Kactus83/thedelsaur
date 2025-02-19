@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { DinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { plainToInstance } from 'class-transformer';
 import { CarnivoreActionsService } from '../services/carnivore-actions.service';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Contrôleur pour les actions spécifiques aux dinosaures carnivores (chasser).
@@ -33,7 +33,7 @@ export class CarnivoreActionsController {
 
             const { dinosaur: updatedDino, event } = this.carnivoreActionsService.huntDinosaur(dinosaur);
 
-            const dinosaurDTO = plainToInstance(DinosaurDTO, updatedDino);
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
             res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
         } catch (error) {
             console.error('Erreur lors de l\'action chasser du dinosaure:', error);

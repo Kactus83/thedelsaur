@@ -1,9 +1,9 @@
-import { Dinosaur } from '../models/backend-dinosaur.interface';
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { getRandomEventForAction, applyEventToDinosaur } from '../utils/dinosaur-actions.util';
 import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 
 /**
  * Service pour gérer les actions basiques du dinosaure (manger, dormir, se réveiller, ressusciter).
@@ -20,7 +20,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à manger.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public eatDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public eatDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Eat];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -74,7 +74,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à faire dormir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public sleepDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public sleepDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Sleep];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -83,7 +83,7 @@ export class BasicActionsService {
 
         const event = getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
 
-        dinosaur.isSleeping = true;
+        dinosaur.is_sleeping = true;
         applyEventToDinosaur(dinosaur, DinosaurAction.Sleep, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -95,7 +95,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à réveiller.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public wakeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public wakeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.WakeUp];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -104,7 +104,7 @@ export class BasicActionsService {
 
         const event = getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
 
-        dinosaur.isSleeping = false;
+        dinosaur.is_sleeping = false;
         applyEventToDinosaur(dinosaur, DinosaurAction.WakeUp, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -116,7 +116,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à ressusciter.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public resurrectDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public resurrectDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Resurrect];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -136,7 +136,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à cueillir.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public grazeDinosaur(dinosaur: Dinosaur): { dinosaur: Dinosaur, event: DinosaurEvent } {
+    public grazeDinosaur(dinosaur: FrontendDinosaurDTO): { dinosaur: FrontendDinosaurDTO, event: DinosaurEvent } {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Graze];
 
         if (!actionDetails.canPerform(dinosaur)) {
