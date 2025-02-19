@@ -51,14 +51,15 @@ export class DinosaurMiddleware {
       const adjustedDino = this.dinosaurTimeService.adjustDinosaurStats(dinosaur);
 
       // Sauvegarder les nouvelles valeurs en base
-      const updateSuccess = await this.dinosaurRepository.updateDinosaur(adjustedDino.id, adjustedDino);
+      const resolvedDino = await adjustedDino;
+      const updateSuccess = await this.dinosaurRepository.updateDinosaur(resolvedDino.id, resolvedDino);
       if (!updateSuccess) {
         res.status(500).json({ message: 'Échec de la mise à jour du dinosaure' });
         return;
       }
 
       // Attacher le dinosaure mis à jour à la requête
-      req.dinosaur = adjustedDino;
+      req.dinosaur = await adjustedDino;
       next();
     } catch (error) {
       console.error('Erreur dans le middleware de dinosaure:', error);

@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS user (
 -- Chaque type possède un ensemble de modificateurs génériques stockés en JSON,
 -- qui s'appliquent aux caractéristiques de base.
 -- Pour ce travail, seuls les bonus fixes sont utilisés :
---   - Land : +5000 à base_max_hunger
+--   - Land : +2500 à base_max_hunger, +2500 à base_max_energy
 --   - Air  : +5000 à base_max_energy
 --   - Sea  : +5000 à base_max_food
 -- ---------------------------------------------------------
@@ -32,7 +32,8 @@ CREATE TABLE dinosaur_types (
 -- Insertion pour "Land"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Land', '[
-    {"target": "base_max_hunger", "type": "additive", "value": 5000, "source": "type_bonus"}
+    {"target": "base_max_hunger", "type": "additive", "value": 2500, "source": "type_bonus"},
+    {"target": "base_max_energy", "type": "additive", "value": 2500, "source": "type_bonus"}
 ]');
 
 -- Insertion pour "Air"
