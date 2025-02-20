@@ -44,8 +44,8 @@ export class DinosaurBuildingRepository {
           for (const building of buildingArray) {
             const query = `
               INSERT INTO dinosaur_buildings 
-                (name, description, price, min_level_to_buy, current_level, max_level, improvement_tree, stat_modifiers)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (name, description, price, min_level_to_buy, max_level, improvement_tree, stat_modifiers)
+              VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
             const values = [
               building.name,

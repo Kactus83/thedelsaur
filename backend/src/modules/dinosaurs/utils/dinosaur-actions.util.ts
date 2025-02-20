@@ -19,6 +19,8 @@ import { DinosaurFactory } from '../factories/dinosaur.factory';
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { DynamicEventRepository } from '../repositories/dynamic-event.repository';
 import { DynamicEvent } from '../models/dynamic-event';
+import { DinosaurRepository } from '../repositories/dinosaur.repository';
+import { DinosaurGameAssetsRepository } from '../repositories/dinosaur-game-assets.repository';
 
 /**
  * Retourne la liste des actions disponibles pour le dinosaure,
@@ -104,7 +106,10 @@ export async function applyEventToDinosaur(
   ): Promise<FrontendDinosaurDTO> {
     // Pour l'action de résurrection, déléguer à la factory
     if (action === DinosaurAction.Resurrect) {
-      return await DinosaurFactory.resurrectDinosaur(dinosaur);
+      // TODO: Remplacer ces instanciations locales par une injection de dépendances en production
+      const repo = new DinosaurRepository(new DinosaurGameAssetsRepository());
+      const factory = new DinosaurFactory(repo);
+      return await factory.resurrectDinosaur(dinosaur);
     }
 
   // Table de correspondance entre le target du modifier et la propriété du DTO

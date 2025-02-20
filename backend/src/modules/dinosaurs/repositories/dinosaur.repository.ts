@@ -4,7 +4,6 @@ import { RowDataPacket } from 'mysql2';
 import { Epoch } from '../models/epoch.enum';
 import { DinosaurType } from '../models/dinosaur-type.interface';
 import { DinosaurDiet } from '../models/dinosaur-diet.interface';
-import { DINOSAUR_CONSTANTS } from '../../../common/config/dinosaur.constants';
 import { DinosaurGameAssetsRepository } from './dinosaur-game-assets.repository';
 
 /**
@@ -63,14 +62,6 @@ export class DinosaurRepository {
         money: row.money,
         skill_points: row.skill_points,
         epoch: row.epoch as Epoch,
-        base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
-        energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
-        energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
-        base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
-        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
-        hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
-        hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
-        karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
         reborn_amount: row.reborn_amount,
@@ -138,14 +129,6 @@ export class DinosaurRepository {
         money: row.money,
         skill_points: row.skill_points,
         epoch: row.epoch as Epoch,
-        base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
-        energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
-        energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
-        base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
-        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
-        hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
-        hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
-        karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
         reborn_amount: row.reborn_amount,
