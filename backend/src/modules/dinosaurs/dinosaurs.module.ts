@@ -12,6 +12,7 @@ import { AdvancedActionsController } from './controllers/advanced-actions.contro
 import dinosaursRoutes from './routes/dinosaurs.routes';
 import { DinosaurRepository } from './repositories/dinosaur.repository';
 import { DinosaurMiddleware } from './middlewares/dinosaur.middleware';
+import { DynamicEventRepository } from './repositories/dynamic-event.repository';
 
 /**
  * Module Dinosaurs.
@@ -36,6 +37,9 @@ export class DinosaursModule {
   private herbivoreActionsController: HerbivoreActionsController;
   private advancedActionsController: AdvancedActionsController;
   private dinosaurMiddleware: DinosaurMiddleware;
+
+  // Repository pour le seed des dynamic events
+  private dynamicEventRepository: DynamicEventRepository;
 
   constructor() {
     // Initialisation du repository
@@ -69,5 +73,16 @@ export class DinosaursModule {
       this.advancedActionsController,
       this.dinosaurMiddleware
     );
+
+    // Instanciation du repository pour les dynamic events
+    this.dynamicEventRepository = new DynamicEventRepository();
+  }
+
+  /**
+   * Effectue le peuplage des dynamic events si la table est vide.
+   */
+  public async seedDinosaurs(): Promise<void> {
+    await this.dynamicEventRepository.seedDynamicEventsIfEmpty();
+    console.log('Dynamic events in Dinosaurs module have been seeded.');
   }
 }
