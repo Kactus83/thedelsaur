@@ -1,6 +1,7 @@
 import { DinosaurAction } from '../models/dinosaur-action.enum';
 import { DinosaurActionDetails } from '../models/dinosaur-action-details.interface';
 import {
+  ENERGY_COST_SPECIAL_ACTION,
   ENERGY_COST_TO_DISCOVER,
   ENERGY_COST_TO_GRAZE,
   ENERGY_COST_TO_HUNT,
@@ -161,5 +162,35 @@ export const DinosaurActionsMap: DinosaurActionsMapType = {
     },
     endpoint: 'dinosaurs/actions/babysitter',
     image: '/assets/img/actions/babysitter.png',
+  },
+  [DinosaurAction.Dive]: {
+    levelRequired: 10,
+    name: 'Plonger',
+    description: 'Le dinosaure plonge pour récupérer des ressources.',
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 10 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_SPECIAL_ACTION && dinosaur.type.name == "Sea";
+    },
+    endpoint: 'dinosaurs/actions/dive',
+    image: '/assets/img/actions/dive.png',
+  },
+  [DinosaurAction.Fly]: {
+    levelRequired: 10,
+    name: 'Voler',
+    description: 'Le dinosaure vole pour récupérer des ressources.',
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 10 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_SPECIAL_ACTION && dinosaur.type.name == "Air";
+    },
+    endpoint: 'dinosaurs/actions/fly',
+    image: '/assets/img/actions/fly.png',
+  },
+  [DinosaurAction.Dig]: {
+    levelRequired: 10,
+    name: 'Creuser',
+    description: 'Le dinosaure creuse pour récupérer des ressources.',
+    canPerform: (dinosaur: FrontendDinosaurDTO) => {
+      return dinosaur.level >= 10 && !dinosaur.is_dead && !dinosaur.is_sleeping && dinosaur.energy >= ENERGY_COST_SPECIAL_ACTION && dinosaur.type.name == "Land";
+    },
+    endpoint: 'dinosaurs/actions/dig',
+    image: '/assets/img/actions/dig.png',
   },
 };

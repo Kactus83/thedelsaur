@@ -3,8 +3,8 @@ import { StatModifier } from './stats-modifiers.types';
 /**
  * Interface représentant une compétence (skill) pour un dinosaure.
  * Les compétences sont accessibles via un arbre de compétences et s'achètent avec des points de compétence.
- * Chaque compétence peut appartenir à une grande famille et possède un niveau hiérarchique (tier) dans cette famille.
- * De plus, une compétence peut avoir des compétences prérequises.
+ * Chaque compétence appartient à une famille et possède un niveau hiérarchique (tier) dans cette famille.
+ * Le prérequis est d'avoir acheté toutes les compétences du tier précédent dans la même famille.
  */
 export interface DinosaurSkill {
   /**
