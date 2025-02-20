@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import { ShopService } from '../services/shop.service';
 import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
-import { plainToInstance } from 'class-transformer';
 import { ShopAssetsDTO } from '../models/shop-assets.dto';
-import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 
 /**
  * Contrôleur dédié aux opérations de la boutique pour l'ensemble des game assets.
@@ -15,13 +13,13 @@ export class ShopController {
    * Récupère tous les assets disponibles.
    * Route : GET /shop/assets
    */
-  public getAllAssets = async (req: Request, res: Response) => {
+  public getAllAssets = async (req: Request, res: Response): Promise<void> => {
     try {
       const assets: ShopAssetsDTO = await this.shopService.getAllAssets();
-      return res.status(200).json(assets);
+      res.status(200).json(assets);
     } catch (error: any) {
       console.error('Erreur lors de la récupération des assets :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 
@@ -29,22 +27,23 @@ export class ShopController {
    * Achat d'une compétence.
    * Route : POST /shop/skills/:skillId
    */
-  public purchaseSkill = async (req: AuthenticatedRequest, res: Response) => {
+  public purchaseSkill = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-      const dinosaur = req.dinosaur as FrontendDinosaurDTO;
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        return res.status(400).json({ message: 'Dinosaure non trouvé' });
+        res.status(400).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const skillId = Number(req.params.skillId);
       if (isNaN(skillId)) {
-        return res.status(400).json({ message: 'Identifiant de compétence invalide' });
+        res.status(400).json({ message: 'Identifiant de compétence invalide' });
+        return;
       }
       const { dinosaur: updatedDino, message } = await this.shopService.purchaseSkill(dinosaur, skillId);
-      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
-      return res.status(200).json({ message, dinosaur: dinosaurDTO });
+      res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'achat de la compétence :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 
@@ -52,22 +51,23 @@ export class ShopController {
    * Achat d'un item.
    * Route : POST /shop/items/:itemId
    */
-  public purchaseItem = async (req: AuthenticatedRequest, res: Response) => {
+  public purchaseItem = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-      const dinosaur = req.dinosaur as FrontendDinosaurDTO;
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        return res.status(400).json({ message: 'Dinosaure non trouvé' });
+        res.status(400).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const itemId = Number(req.params.itemId);
       if (isNaN(itemId)) {
-        return res.status(400).json({ message: 'Identifiant d\'item invalide' });
+        res.status(400).json({ message: 'Identifiant d\'item invalide' });
+        return;
       }
       const { dinosaur: updatedDino, message } = await this.shopService.purchaseItem(dinosaur, itemId);
-      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
-      return res.status(200).json({ message, dinosaur: dinosaurDTO });
+      res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'achat de l\'item :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 
@@ -75,22 +75,23 @@ export class ShopController {
    * Upgrade d'un item.
    * Route : PATCH /shop/items/:itemId/upgrade
    */
-  public upgradeItem = async (req: AuthenticatedRequest, res: Response) => {
+  public upgradeItem = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-      const dinosaur = req.dinosaur as FrontendDinosaurDTO;
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        return res.status(400).json({ message: 'Dinosaure non trouvé' });
+        res.status(400).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const itemId = Number(req.params.itemId);
       if (isNaN(itemId)) {
-        return res.status(400).json({ message: 'Identifiant d\'item invalide' });
+        res.status(400).json({ message: 'Identifiant d\'item invalide' });
+        return;
       }
       const { dinosaur: updatedDino, message } = await this.shopService.upgradeItem(dinosaur, itemId);
-      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
-      return res.status(200).json({ message, dinosaur: dinosaurDTO });
+      res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'upgrade de l\'item :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 
@@ -98,22 +99,23 @@ export class ShopController {
    * Achat d'un bâtiment.
    * Route : POST /shop/buildings/:buildingId
    */
-  public purchaseBuilding = async (req: AuthenticatedRequest, res: Response) => {
+  public purchaseBuilding = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-      const dinosaur = req.dinosaur as FrontendDinosaurDTO;
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        return res.status(400).json({ message: 'Dinosaure non trouvé' });
+        res.status(400).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const buildingId = Number(req.params.buildingId);
       if (isNaN(buildingId)) {
-        return res.status(400).json({ message: 'Identifiant de bâtiment invalide' });
+        res.status(400).json({ message: 'Identifiant de bâtiment invalide' });
+        return;
       }
       const { dinosaur: updatedDino, message } = await this.shopService.purchaseBuilding(dinosaur, buildingId);
-      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
-      return res.status(200).json({ message, dinosaur: dinosaurDTO });
+      res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'achat du bâtiment :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 
@@ -121,23 +123,24 @@ export class ShopController {
    * Upgrade d'un bâtiment (achat d'un upgrade spécifique).
    * Route : PATCH /shop/buildings/:buildingId/upgrade/:upgradeId
    */
-  public upgradeBuilding = async (req: AuthenticatedRequest, res: Response) => {
+  public upgradeBuilding = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     try {
-      const dinosaur = req.dinosaur as FrontendDinosaurDTO;
+      const dinosaur = req.dinosaur;
       if (!dinosaur) {
-        return res.status(400).json({ message: 'Dinosaure non trouvé' });
+        res.status(400).json({ message: 'Dinosaure non trouvé' });
+        return;
       }
       const buildingId = Number(req.params.buildingId);
       const upgradeId = Number(req.params.upgradeId);
       if (isNaN(buildingId) || isNaN(upgradeId)) {
-        return res.status(400).json({ message: 'Identifiants invalides' });
+        res.status(400).json({ message: 'Identifiants invalides' });
+        return;
       }
       const { dinosaur: updatedDino, message } = await this.shopService.upgradeBuilding(dinosaur, buildingId, upgradeId);
-      const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
-      return res.status(200).json({ message, dinosaur: dinosaurDTO });
+      res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'upgrade du bâtiment :', error);
-      return res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };
 }

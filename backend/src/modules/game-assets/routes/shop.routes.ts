@@ -4,7 +4,7 @@ import { ShopController } from '../controllers/shop.controller';
 import { DinosaurMiddleware } from '../../dinosaurs/middlewares/dinosaur.middleware';
 
 /**
- * Définit les routes du module Shop pour l'ensemble des game assets.
+ * Définit les routes du shop pour l'ensemble des game assets.
  *
  * @param shopController Instance de ShopController.
  * @param dinosaurMiddleware Middleware pour récupérer et mettre à jour le dinosaure.
