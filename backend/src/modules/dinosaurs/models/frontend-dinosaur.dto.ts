@@ -3,6 +3,9 @@ import { Epoch } from './epoch.enum';
 import { DinosaurType } from './dinosaur-type.interface';
 import { DinosaurDiet } from './dinosaur-diet.interface';
 import { StatModifier } from './stats-modifiers.types';
+import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
+import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
+import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
 
 /**
  * DTO destiné au frontend.
@@ -18,6 +21,12 @@ export class FrontendDinosaurDTO {
   @Expose() id!: number;
   @Expose() userId!: number;
   @Expose() name!: string;
+  
+
+  // Assets détenus par le dinosaure ajouté recemments
+  @Expose() @Type(() => DinosaurSkillInstanceDTO) skills!: DinosaurSkillInstanceDTO[];
+  @Expose() @Type(() => DinosaurItemInstanceDTO) items!: DinosaurItemInstanceDTO[];
+  @Expose() @Type(() => DinosaurBuildingInstanceDTO) buildings!: DinosaurBuildingInstanceDTO[];
 
   /*
   * Valeurs de bases du dinosaure

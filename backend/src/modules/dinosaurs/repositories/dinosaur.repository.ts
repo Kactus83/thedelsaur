@@ -5,13 +5,21 @@ import { Epoch } from '../models/epoch.enum';
 import { DinosaurType } from '../models/dinosaur-type.interface';
 import { DinosaurDiet } from '../models/dinosaur-diet.interface';
 import { DINOSAUR_CONSTANTS } from '../../../common/config/dinosaur.constants';
+import { DinosaurGameAssetsRepository } from './dinosaur-game-assets.repository';
 
 /**
  * Repository pour gérer les opérations sur la table des dinosaures.
  * Les requêtes effectuent une jointure avec les tables dinosaur_types et dinosaur_diets
  * afin d'obtenir les objets complets (incluant leurs modificateurs en JSON).
+ * Ce repository intègre également les assets (skills, items, buildings) possédés par le dinosaure.
  */
 export class DinosaurRepository {
+  private gameAssetsRepo: DinosaurGameAssetsRepository;
+
+  constructor(gameAssetsRepo: DinosaurGameAssetsRepository) {
+    this.gameAssetsRepo = gameAssetsRepo;
+  }
+
   public async getDinosaurById(dinosaurId: number): Promise<DatabaseDinosaur | null> {
     try {
       const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
@@ -26,12 +34,11 @@ export class DinosaurRepository {
       );
       if (results.length === 0) return null;
       const row = results[0];
-      
+
       // Parser les modificateurs stockés en JSON
       const typeModifiers = JSON.parse(row.type_stat_modifiers) as any[];
       const dietModifiers = JSON.parse(row.diet_stat_modifiers) as any[];
-      
-      // Construire l'objet DatabaseDinosaur en complétant les constantes
+
       const dinosaur: DatabaseDinosaur = {
         id: row.id,
         name: row.name,
@@ -55,12 +62,11 @@ export class DinosaurRepository {
         money: row.money,
         skill_points: row.skill_points,
         epoch: row.epoch as Epoch,
-        // Compléter les valeurs de base à partir des constantes (non stockées en DB)
         base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
         energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
         energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
         base_max_food: DINOSAUR_CONSTANTS.BASE_MAX_FOOD,
-        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER, // Assurez-vous que le nom correspond à votre configuration
+        base_max_hunger: DINOSAUR_CONSTANTS.BASE_MAX_HUNGER,
         hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
         hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
         karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
@@ -69,16 +75,29 @@ export class DinosaurRepository {
         reborn_amount: row.reborn_amount,
         last_update_by_time_service: new Date(row.last_update_by_time_service),
         is_sleeping: row.is_sleeping,
-        is_dead: row.is_dead
+        is_dead: row.is_dead,
+        skills: [],
+        items: [],
+        buildings: []
       };
-      
+
+      // Récupérer les assets du dinosaure via le repository dédié
+      const [skillInstances, itemInstances, buildingInstances] = await Promise.all([
+        this.gameAssetsRepo.getSkillInstancesByDinosaurId(dinosaurId),
+        this.gameAssetsRepo.getItemInstancesByDinosaurId(dinosaurId),
+        this.gameAssetsRepo.getBuildingInstancesByDinosaurId(dinosaurId)
+      ]);
+      dinosaur.skills = skillInstances;
+      dinosaur.items = itemInstances;
+      dinosaur.buildings = buildingInstances;
+
       return dinosaur;
     } catch (err) {
       console.error('Erreur lors de la récupération du dinosaure par ID:', err);
       throw err;
     }
   }
-  
+
   public async getDinosaurByUserId(userId: number): Promise<DatabaseDinosaur | null> {
     try {
       const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
@@ -131,20 +150,28 @@ export class DinosaurRepository {
         reborn_amount: row.reborn_amount,
         last_update_by_time_service: new Date(row.last_update_by_time_service),
         is_sleeping: row.is_sleeping,
-        is_dead: row.is_dead
+        is_dead: row.is_dead,
+        skills: [],
+        items: [],
+        buildings: []
       };
+      const [skillInstances, itemInstances, buildingInstances] = await Promise.all([
+        this.gameAssetsRepo.getSkillInstancesByDinosaurId(row.id),
+        this.gameAssetsRepo.getItemInstancesByDinosaurId(row.id),
+        this.gameAssetsRepo.getBuildingInstancesByDinosaurId(row.id)
+      ]);
+      dinosaur.skills = skillInstances;
+      dinosaur.items = itemInstances;
+      dinosaur.buildings = buildingInstances;
       return dinosaur;
     } catch (err) {
       console.error('Erreur lors de la récupération du dinosaure par userId:', err);
       throw err;
     }
   }
-  
+
   public async updateDinosaur(dinosaurId: number, updates: Partial<DatabaseDinosaur>): Promise<boolean> {
     try {
-      // Liste des clés autorisées (ce sont celles qui existent dans la table "dinosaurs")
-      // Devrait etre remplacé par l'utilisation de class-transformer pour plus de simplicité.
-      // Travail a faire !!!!
       const allowedKeys = new Set([
         "name",
         "userId",
@@ -165,19 +192,12 @@ export class DinosaurRepository {
         "is_dead"
       ]);
       
-      // On copie l'objet updates et on retire les propriétés complexes qui ne seront pas mises à jour ici
       const updatesFiltered = { ...updates };
       delete updatesFiltered.type;
       delete updatesFiltered.diet;
       
-      // Pour forcer l'accès aux clés non déclarées, on cast en Record<string, any>
       const updatesFilteredAny = updatesFiltered as Record<string, any>;
-      
-      // Construire un nouvel objet qui ne contient que les clés autorisées, avec leurs clés converties en snake_case.
-      const toSnakeCase = (str: string): string => {
-        return str.replace(/([A-Z])/g, '_$1').toLowerCase();
-      };
-      
+      const toSnakeCase = (str: string): string => str.replace(/([A-Z])/g, '_$1').toLowerCase();
       const mappedUpdates: Record<string, any> = {};
       for (const key in updatesFilteredAny) {
         if (Object.prototype.hasOwnProperty.call(updatesFilteredAny, key) && allowedKeys.has(key)) {
@@ -186,35 +206,32 @@ export class DinosaurRepository {
         }
       }
       
-      // Construction de la requête UPDATE
-      const fields = Object.keys(mappedUpdates)
-        .map(key => `${key} = ?`)
-        .join(', ');
+      const fields = Object.keys(mappedUpdates).map(key => `${key} = ?`).join(', ');
       const values = Object.values(mappedUpdates);
       const query = `UPDATE dinosaurs SET ${fields} WHERE id = ?`;
       values.push(dinosaurId);
       
       const [result] = await pool.query(query, values);
-      const res = result as any;
-      return res.affectedRows > 0;
+      const resAny = result as any;
+      return resAny.affectedRows > 0;
     } catch (err) {
       console.error('Erreur lors de la mise à jour du dinosaure:', err);
       throw err;
     }
-  }  
-    
+  }
+
   public async updateDinosaurName(userId: number, newName: string): Promise<boolean> {
     try {
       const query = `UPDATE dinosaurs SET name = ? WHERE user_id = ?`;
       const [result] = await pool.query(query, [newName, userId]);
-      const res = result as any;
-      return res.affectedRows > 0;
+      const resAny = result as any;
+      return resAny.affectedRows > 0;
     } catch (err) {
       console.error('Erreur lors de la mise à jour du nom du dinosaure:', err);
       throw err;
     }
   }
-  
+
   public async getAllDinosaurTypes(): Promise<DinosaurType[]> {
     const [rows] = await pool.query('SELECT * FROM dinosaur_types');
     return (rows as any[]).map(row => ({
@@ -223,7 +240,7 @@ export class DinosaurRepository {
       statModifiers: JSON.parse(row.stat_modifiers)
     }));
   }
-  
+
   public async getAllDinosaurDiets(): Promise<DinosaurDiet[]> {
     const [rows] = await pool.query('SELECT * FROM dinosaur_diets');
     return (rows as any[]).map(row => ({
@@ -232,7 +249,7 @@ export class DinosaurRepository {
       statModifiers: JSON.parse(row.stat_modifiers)
     }));
   }
-  
+
   public async createDinosaur(dinosaur: DatabaseDinosaur): Promise<DatabaseDinosaur | null> {
     const query = `INSERT INTO dinosaurs 
       (name, user_id, diet_id, type_id, energy, food, hunger, karma, experience, level, money, skill_points, epoch,

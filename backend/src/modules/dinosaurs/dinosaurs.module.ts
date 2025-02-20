@@ -13,6 +13,7 @@ import dinosaursRoutes from './routes/dinosaurs.routes';
 import { DinosaurRepository } from './repositories/dinosaur.repository';
 import { DinosaurMiddleware } from './middlewares/dinosaur.middleware';
 import { DynamicEventRepository } from './repositories/dynamic-event.repository';
+import { DinosaurGameAssetsRepository } from './repositories/dinosaur-game-assets.repository';
 
 /**
  * Module Dinosaurs.
@@ -38,12 +39,14 @@ export class DinosaursModule {
   private advancedActionsController: AdvancedActionsController;
   private dinosaurMiddleware: DinosaurMiddleware;
 
-  // Repository pour le seed des dynamic events
+  // Repository pour les dynamic events
   private dynamicEventRepository: DynamicEventRepository;
 
   constructor() {
-    // Initialisation du repository
-    const dinosaurRepository = new DinosaurRepository();
+    // Instanciation du repository d'assets
+    const gameAssetsRepo = new DinosaurGameAssetsRepository();
+    // Création du repository dinosaure avec injection du repo d'assets
+    const dinosaurRepository = new DinosaurRepository(gameAssetsRepo);
 
     // Initialisation des services spécifiques
     this.basicActionsService = new BasicActionsService(dinosaurRepository);
