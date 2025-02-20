@@ -183,6 +183,19 @@ CREATE TABLE dinosaur_skills (
     stat_modifiers JSON NOT NULL
 );
 
+DROP TABLE IF EXISTS dinosaur_skills_instance;
+CREATE TABLE dinosaur_skills_instance (
+  dinosaur_id INT NOT NULL,
+  skill_id INT NOT NULL,
+  is_purchased BOOLEAN NOT NULL DEFAULT FALSE,
+  is_active BOOLEAN,
+  last_activated_at DATETIME,
+  PRIMARY KEY (dinosaur_id, skill_id),
+  CONSTRAINT fk_dino_skill_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_dino_skill_instance_skill FOREIGN KEY (skill_id) REFERENCES dinosaur_skills(id) ON DELETE CASCADE
+);
+
+
 -- ---------------------------------------------------------
 -- Table des objets (items)
 -- Stocke la définition de chaque item.
@@ -207,6 +220,18 @@ CREATE TABLE dinosaur_items (
     category VARCHAR(50),
     levels JSON NOT NULL
 );
+
+DROP TABLE IF EXISTS dinosaur_items_instance;
+CREATE TABLE dinosaur_items_instance (
+  dinosaur_id INT NOT NULL,
+  item_id INT NOT NULL,
+  current_level_or_quantity INT NOT NULL,
+  is_equipped BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (dinosaur_id, item_id),
+  CONSTRAINT fk_dino_item_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_dino_item_instance_item FOREIGN KEY (item_id) REFERENCES dinosaur_items(id) ON DELETE CASCADE
+);
+
 
 -- ---------------------------------------------------------
 -- Table des bâtiments
@@ -233,3 +258,15 @@ CREATE TABLE dinosaur_buildings (
     improvement_tree JSON NOT NULL,
     stat_modifiers JSON NOT NULL
 );
+
+DROP TABLE IF EXISTS dinosaur_buildings_instance;
+CREATE TABLE dinosaur_buildings_instance (
+  dinosaur_id INT NOT NULL,
+  building_id INT NOT NULL,
+  current_level INT NOT NULL,
+  purchased_upgrades JSON NOT NULL,  -- Stocke le mapping des upgrades achetés
+  PRIMARY KEY (dinosaur_id, building_id),
+  CONSTRAINT fk_dino_building_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_dino_building_instance_building FOREIGN KEY (building_id) REFERENCES dinosaur_buildings(id) ON DELETE CASCADE
+);
+
