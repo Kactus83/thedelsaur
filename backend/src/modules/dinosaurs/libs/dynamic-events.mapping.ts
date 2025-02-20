@@ -12,6 +12,9 @@ import { prayEvents } from './events/pray.events';
 import { DynamicEventData } from '../models/dynamic-event-data.interface';
 import { bodyguardEvents } from './events/bodyguard.events';
 import { babysitterEvents } from './events/babysitter.events';
+import { diveEvents } from './events/dive.events';
+import { flyEvents } from './events/fly.events';
+import { digEvents } from './events/dig.events';
 
 // Agrégation des événements dans un seul Record
 export const DynamicEventsMap: Record<DinosaurAction, DynamicEventData[]> = {
@@ -26,4 +29,7 @@ export const DynamicEventsMap: Record<DinosaurAction, DynamicEventData[]> = {
   [DinosaurAction.Pray]: prayEvents,
   [DinosaurAction.Bodyguard]: bodyguardEvents,
   [DinosaurAction.Babysitter]: babysitterEvents,
+  [DinosaurAction.Dive]: diveEvents,
+  [DinosaurAction.Fly]: flyEvents,
+  [DinosaurAction.Dig]: digEvents,
 };
