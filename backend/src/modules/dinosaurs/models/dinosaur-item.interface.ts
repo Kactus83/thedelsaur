@@ -2,7 +2,7 @@ import { StatModifier } from './stats-modifiers.types';
 
 /**
  * Interface représentant le niveau d'un objet pour un dinosaure.
- * Chaque niveau définit des modificateurs spécifiques qui s'appliquent.
+ * Chaque niveau définit des modificateurs spécifiques appliqués lors de l'amélioration de l'objet.
  */
 export interface DinosaurItemLevel {
   /**
@@ -18,8 +18,8 @@ export interface DinosaurItemLevel {
 
 /**
  * Interface représentant un objet utilisable par un dinosaure.
- * Les objets sont achetés avec de l'argent et nécessitent un niveau minimum pour être acquis.
- * Ils peuvent être améliorés jusqu'à un niveau maximum, chaque niveau offrant des modificateurs différents.
+ * Les objets se paient en argent et nécessitent un niveau minimum pour être achetés.
+ * Chaque objet peut être amélioré jusqu'à un niveau maximum, chaque niveau apportant des modificateurs supplémentaires.
  */
 export interface DinosaurItem {
   /**
@@ -43,12 +43,12 @@ export interface DinosaurItem {
   price: number;
 
   /**
-   * Niveau minimum du dinosaure requis pour acheter cet objet.
+   * Niveau minimum du dinosaure requis pour pouvoir acheter cet objet.
    */
   minLevelToBuy: number;
 
   /**
-   * Niveau actuel de l'objet (correspondant à son amélioration).
+   * Niveau actuel de l'objet.
    */
   currentLevel: number;
 
@@ -60,6 +60,5 @@ export interface DinosaurItem {
   /**
    * Définition des modificateurs pour chaque niveau de l'objet.
    */
-  // utiliser un maping ici ne serai pas plus elegant ?
   levels: DinosaurItemLevel[];
 }

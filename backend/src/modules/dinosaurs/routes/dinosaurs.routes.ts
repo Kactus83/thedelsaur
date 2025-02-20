@@ -89,5 +89,17 @@ export default function (
     advancedActionsController.babysitterDinosaur(req, res)
   );
 
+  router.post('/actions/dive', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+    advancedActionsController.diveDinosaur(req, res)
+  );
+
+  router.post('/actions/fly', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+    advancedActionsController.flyDinosaur(req, res)
+  );
+
+  router.post('/actions/dig', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+    advancedActionsController.digDinosaur(req, res)
+  );
+
   return router;
 }

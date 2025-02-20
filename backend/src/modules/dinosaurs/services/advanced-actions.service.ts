@@ -114,4 +114,64 @@ export class AdvancedActionsService {
 
         return { dinosaur, event };
     }
+
+    /**
+     * Action pour que le dinosaure plonge pour récupérer des ressources.
+     * @param dinosaur Le dinosaure qui va plonger.
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public async diveDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Dive];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas plonger.');
+        }
+
+        const event = await getRandomEventForAction(DinosaurAction.Dive, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Dive, event);
+
+        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+
+        return { dinosaur, event };
+    }
+
+    /**
+     * Action pour que le dinosaure vole des ressources à un autre dinosaure.
+     * @param dinosaur Le dinosaure qui va voler.
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public async digDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Dig];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas creuser.');
+        }
+
+        const event = await getRandomEventForAction(DinosaurAction.Dig, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Dig, event);
+
+        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+
+        return { dinosaur, event };
+    }
+
+    /**
+     * Action pour que le dinosaure s'envolle
+     * @param dinosaur Le dinosaure qui va voler.
+     * @returns Le dinosaure mis à jour et l'événement généré.
+     */
+    public async flyDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+        const actionDetails = DinosaurActionsMap[DinosaurAction.Fly];
+
+        if (!actionDetails.canPerform(dinosaur)) {
+            throw new Error('Le dinosaure ne peut pas voler.');
+        }
+
+        const event = await getRandomEventForAction(DinosaurAction.Fly, dinosaur.level);
+        applyEventToDinosaur(dinosaur, DinosaurAction.Fly, event);
+
+        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+
+        return { dinosaur, event };
+    }
 }
