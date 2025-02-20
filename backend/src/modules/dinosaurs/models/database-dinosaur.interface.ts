@@ -38,16 +38,6 @@ export interface DatabaseDinosaur {
   money: number;
   skill_points: number;
   epoch: Epoch;
-
-  // Valeurs de référence pour les max
-  base_max_energy: number;
-  energy_decay_per_second: number;
-  energy_recovery_per_second: number;
-  base_max_food: number;
-  base_max_hunger: number;
-  hunger_increase_per_second: number;
-  hunger_increase_per_second_when_recovery: number;
-  karma_width: number;
   
   // Informations techniques
   created_at: Date;
