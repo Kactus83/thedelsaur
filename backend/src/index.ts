@@ -42,7 +42,7 @@ const usersModule = new UsersModule();
 const authModule = new AuthModule();
 const adminModule = new AdminModule();
 const dinosaursModule = new DinosaursModule();
-const gameAssetsModule = new GameAssetsModule();
+const gameAssetsModule = new GameAssetsModule(dinosaursModule.getDinosaurMiddleware());
 
 // Routes
 app.use('/auth', authModule.router);

@@ -90,4 +90,8 @@ export class DinosaursModule {
     await this.dynamicEventRepository.seedDynamicEventsIfEmpty();
     console.log('Dynamic events in Dinosaurs module have been seeded.');
   }
+
+  public getDinosaurMiddleware(): DinosaurMiddleware {
+    return this.dinosaurMiddleware;
+  }
 }
