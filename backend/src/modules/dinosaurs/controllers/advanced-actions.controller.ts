@@ -148,4 +148,86 @@ export class AdvancedActionsController {
             res.status(500).json({ message: 'Erreur interne du serveur' });
         }
     }
+
+    /**
+     * Action pour que le dinosaure plonge
+     */
+    public diveDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                res.status(400).json({ message: 'Utilisateur non authentifié' });
+                return;
+            }
+
+            const dinosaur = req.dinosaur;
+            if (!dinosaur) {
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+                return;
+            }
+
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.diveDinosaur(dinosaur);
+
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
+            res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+        } catch (error) {
+            console.error('Erreur lors de l\'action plonger du dinosaure:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    }
+
+    /**
+     * Action pour que le dinosaure creuse
+     */
+    public digDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                res.status(400).json({ message: 'Utilisateur non authentifié' });
+                return;
+            }
+
+            const dinosaur = req.dinosaur;
+            if (!dinosaur) {
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+                return;
+            }
+
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.digDinosaur(dinosaur);
+
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
+            res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+        } catch (error) {
+            console.error('Erreur lors de l\'action creuser du dinosaure:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    }
+
+    /**
+     * Action pour que le dinosaure vole
+     */
+    public flyDinosaur = async (req: AuthenticatedRequest, res: Response) => {
+        try {
+            const userId = req.user?.id;
+            if (!userId) {
+                res.status(400).json({ message: 'Utilisateur non authentifié' });
+                return;
+            }
+
+            const dinosaur = req.dinosaur;
+            if (!dinosaur) {
+                res.status(400).json({ message: 'Dinosaure non trouvé pour l utilisateur' });
+                return;
+            }
+
+            const { dinosaur: updatedDino, event } = await this.advancedActionsService.flyDinosaur(dinosaur);
+
+            const dinosaurDTO = plainToInstance(FrontendDinosaurDTO, updatedDino);
+            res.status(200).json({ message: 'Action réussie', dinosaur: dinosaurDTO, event });
+        } catch (error) {
+            console.error('Erreur lors de l\'action voler du dinosaure:', error);
+            res.status(500).json({ message: 'Erreur interne du serveur' });
+        }
+    }
+
 }

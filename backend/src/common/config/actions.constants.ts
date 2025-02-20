@@ -13,4 +13,5 @@ export const ENERGY_COST_TO_HUNT = 1500;                    // Coût énergétiq
 export const ENERGY_COST_TO_STEAL = 2500;                   // Coût énergétique pour l'action de "voler"
 export const ENERGY_COST_TO_PRAY = 2000;                          // Coût énergétique pour l'action de "prier"
 export const ENERGY_COST_TO_WORK = 5000;
+export const ENERGY_COST_SPECIAL_ACTION = 10000;
 
