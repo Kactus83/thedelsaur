@@ -13,6 +13,10 @@ import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import DinoDisplay from '../../components/Dashboard/DinoDisplay';
+// Nouveaux imports pour les overlays et le contexte
+import { useOverlay } from '../../contexts/OverlayContext';
+import InventoryOverlay from '../../components/Dashboard/overlays/InventoryOverlay';
+import BuildingsOverlay from '../../components/Dashboard/overlays/BuildingsOverlay';
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -25,10 +29,13 @@ const DashboardPage: React.FC = () => {
     const [dinosaur, setDinosaur] = useState<Dinosaur | null>(null);
     const [availableActions, setAvailableActions] = useState<ActionDetail[]>([]); // État pour les actions
     const [lastEvent, setLastEvent] = useState<DinosaurEvent | null>(null); // État pour l'événement affiché
-    const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Nouvel état pour l'overlay
+    const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Overlay pour les infos du dinosaure en mobile
     const [isActionInProgress, setIsActionInProgress] = useState<ActionDetail | null>(null); // État pour l'animation du dinosaure
     const [levelUp, setLevelUp] = useState<boolean>(false);
     
+    // Récupération du contexte d'overlays (pour Inventaire et Bâtiments)
+    const { currentOverlay, closeOverlay } = useOverlay();
+
     const initializePage = async () => {
         try {
             // Récupération des données utilisateur depuis le backend
@@ -40,7 +47,6 @@ const DashboardPage: React.FC = () => {
 
             // Récupération de l'expérience maximale du prochain niveau
             const maxExperienceResponse = await getNextLevelXp();
-
             // Supposons que l'API retourne un objet { nextLevelXp: 1000 }
             // Extraire directement la valeur numérique
             const maxExperience = maxExperienceResponse.nextLevelXp;
@@ -207,6 +213,14 @@ const DashboardPage: React.FC = () => {
                         {dinosaur && <DinosaurInfo dinosaur={dinosaur} />}
                     </div>
                 </div>
+            )}
+
+            {/* Nouveaux overlays déclenchés via le Header */}
+            {currentOverlay === 'inventory' && dinosaur && (
+                <InventoryOverlay items={dinosaur.items} onClose={closeOverlay} />
+            )}
+            {currentOverlay === 'buildings' && dinosaur && (
+                <BuildingsOverlay buildings={dinosaur.buildings} onClose={closeOverlay} />
             )}
         </>
     );

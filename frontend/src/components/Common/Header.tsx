@@ -1,41 +1,47 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useOverlay } from '../../contexts/OverlayContext';
 import './Header.css';
 
 const HandleLogout = () => {
-    localStorage.removeItem('token');
+  localStorage.removeItem('token');
 };
 
 const Header: React.FC = () => {
-    const [menuOpen, setMenuOpen] = useState(false); // State to toggle menu
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { openOverlay } = useOverlay();
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen); // Toggle menu open/close
-    };
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
-    return (
-        <header>
-            <div className="Title">
-                IdleSaur🦖
-            </div>
-            
-            {/* Hamburger icon with spans */}
-            <div className={`burger-icon ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+  return (
+    <header>
+      <div className="Title">IdleSaur🦖</div>
 
-            {/* Navigation menu */}
-            <nav className={menuOpen ? 'nav open' : 'nav'}>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/user-profile" onClick={toggleMenu}>Profil</Link>
-                <Link to="/" onClick={() => { HandleLogout(); toggleMenu(); }}>Disconnect</Link>
-            </nav>
-        </header>
-    );
+      {/* Hamburger icon */}
+      <div className={`burger-icon ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      {/* Navigation menu */}
+      <nav className={menuOpen ? 'nav open' : 'nav'}>
+        <Link to="/dashboard" onClick={toggleMenu}>Dashboard</Link>
+        <Link to="/user-profile" onClick={toggleMenu}>Profil</Link>
+        <button onClick={() => { HandleLogout(); toggleMenu(); }}>Disconnect</button>
+        
+        {/* Boutons pour déclencher les overlays */}
+        <button onClick={() => { openOverlay('inventory'); toggleMenu(); }}>
+          Inventaire
+        </button>
+        <button onClick={() => { openOverlay('buildings'); toggleMenu(); }}>
+          Bâtiments
+        </button>
+      </nav>
+    </header>
+  );
 };
 
 export default Header;
-
