@@ -153,3 +153,83 @@ CREATE TABLE dynamic_events (
     descriptions JSON NOT NULL,
     base_modifiers JSON NOT NULL
 );
+
+-- ---------------------------------------------------------
+-- Table des compétences (skills)
+-- Stocke la définition de chaque skill.
+-- Champs :
+--   - id : identifiant unique
+--   - name : nom de la compétence
+--   - description : description optionnelle
+--   - price : coût en points de compétence
+--   - min_level_to_buy : niveau minimum requis
+--   - category : catégorie (food, energy, money, karma, experience)
+--   - type : 'permanent' ou 'triggered'
+--   - tier : niveau hiérarchique
+--   - duration : durée en secondes (pour les skills déclenchables)
+--   - stat_modifiers : modificateurs stockés en JSON
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_skills;
+CREATE TABLE dinosaur_skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price INT NOT NULL,
+    min_level_to_buy INT NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    tier INT NOT NULL,
+    duration INT,  -- Nullable pour les skills permanents
+    stat_modifiers JSON NOT NULL
+);
+
+-- ---------------------------------------------------------
+-- Table des objets (items)
+-- Stocke la définition de chaque item.
+-- Champs :
+--   - id : identifiant unique
+--   - name : nom de l'objet
+--   - description : description optionnelle
+--   - price : prix en argent
+--   - min_level_to_buy : niveau minimum requis
+--   - item_type : 'consumable' ou 'persistent'
+--   - category : catégorie (ex. weapon, armor, accessory) – optionnel
+--   - levels : tableau JSON définissant la progression des niveaux
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_items;
+CREATE TABLE dinosaur_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price INT NOT NULL,
+    min_level_to_buy INT NOT NULL,
+    item_type VARCHAR(50) NOT NULL,
+    category VARCHAR(50),
+    levels JSON NOT NULL
+);
+
+-- ---------------------------------------------------------
+-- Table des bâtiments
+-- Stocke la définition de chaque bâtiment.
+-- Champs :
+--   - id : identifiant unique
+--   - name : nom du bâtiment
+--   - description : description optionnelle
+--   - price : prix d'achat
+--   - min_level_to_buy : niveau minimum requis
+--   - current_level : niveau par défaut (pour la définition)
+--   - max_level : niveau maximum (souvent dérivable de l'arbre)
+--   - improvement_tree : arbre d'améliorations en JSON
+--   - stat_modifiers : modificateurs de base en JSON
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_buildings;
+CREATE TABLE dinosaur_buildings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price INT NOT NULL,
+    min_level_to_buy INT NOT NULL,
+    max_level INT NOT NULL,
+    improvement_tree JSON NOT NULL,
+    stat_modifiers JSON NOT NULL
+);
