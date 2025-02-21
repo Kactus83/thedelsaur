@@ -6,6 +6,7 @@ import { StatModifier } from './stats-modifiers.types';
 import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
 import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
+import { DinosaurLifeDTO } from './dinosaur-life.dto';
 
 /**
  * DTO destiné au frontend.
@@ -21,6 +22,9 @@ export class FrontendDinosaurDTO {
   @Expose() id!: number;
   @Expose() userId!: number;
   @Expose() name!: string;
+
+  //Historique des vies (et scores)
+  @Expose() @Type(() => DinosaurLifeDTO) lives!: DinosaurLifeDTO[];
   
 
   // Assets détenus par le dinosaure ajouté recemments
@@ -70,6 +74,12 @@ export class FrontendDinosaurDTO {
   @Expose() energy!: number;
   @Expose() food!: number;
   @Expose() hunger!: number;
+
+  //- Advanced
+  @Expose() weapons!: number;
+  @Expose() armors!: number;
+  @Expose() friends!: number;
+  @Expose() employees!: number;
   
   
   /*
@@ -96,6 +106,12 @@ export class FrontendDinosaurDTO {
   @Expose() final_energy_decay!: number;
   @Expose() final_hunger_increase!: number;
   @Expose() final_hunger_increase_when_recovery!: number;
+
+  @Expose() final_food_production!: number;
+  @Expose() final_weapon_production!: number;
+  @Expose() final_armor_production!: number;
+  @Expose() final_friend_production!: number;
+  @Expose() final_employee_production!: number; 
 
   @Expose() final_earn_food_global_multiplier!: number;
   @Expose() final_earn_food_herbi_multiplier!: number;

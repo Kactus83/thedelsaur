@@ -132,5 +132,109 @@ export const babysitterEvents: DynamicEventData[] = [
         multiplicativeIncrement: 2
       }
     ]
+  },
+  {
+    id: 0,
+    name: "Garde improvisée",
+    actionType: DinosaurAction.Babysitter,
+    minLevel: 5,
+    positivityScore: 5,
+    weight: 1,
+    descriptions: [
+      "Lors d'une garde improvisée, le dinosaure décroche un petit contrat inattendu.",
+      "Un babysitting express qui, contre toute attente, lui offre un employé motivé.",
+      "Dans une situation rocambolesque, il se voit offrir l'assistance d'un nouveau collaborateur.",
+      "Une garde d'enfants décalée se transforme en opportunité pour recruter un employé fiable.",
+      "Un moment surprenant où le babysitting se conclut par l'arrivée d'un renfort professionnel."
+    ],
+    baseModifiers: [
+      {
+        source: "babysitter",
+        target: "employees",
+        base_value: 1,
+        additiveStep: 0,
+        additiveIncrement: 0,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Garderie conviviale",
+    actionType: DinosaurAction.Babysitter,
+    minLevel: 10,
+    positivityScore: 5,
+    weight: 1,
+    descriptions: [
+      "Une garderie où les rires des enfants se transforment en amitiés inattendues.",
+      "Le dinosaure, par un concours de circonstances, se retrouve entouré de cinq amis fidèles.",
+      "Une journée de babysitting se termine par une rencontre chaleureuse et amicale.",
+      "Un service de garde qui, contre toute attente, tisse des liens sincères et durables.",
+      "L'ambiance conviviale du babysitting lui permet de gagner une poignée d'amis précieux."
+    ],
+    baseModifiers: [
+      {
+        source: "babysitter",
+        target: "friends",
+        base_value: 5,
+        additiveStep: 0,
+        additiveIncrement: 0,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Super garde professionnelle",
+    actionType: DinosaurAction.Babysitter,
+    minLevel: 15,
+    positivityScore: 7,
+    weight: 1,
+    descriptions: [
+      "Dans un contexte professionnel hors norme, le dinosaure décroche un contrat de garde d'enfants qui paye gros.",
+      "Une intervention remarquable qui lui permet de recruter cinq employés compétents.",
+      "L'excellence de son babysitting se traduit par l'arrivée massive de collaborateurs talentueux.",
+      "Une prestation unique qui transforme la garde en une opportunité de recrutement en or.",
+      "Le dinosaure surprend tout le monde en se dotant d'une équipe professionnelle de cinq renforts."
+    ],
+    baseModifiers: [
+      {
+        source: "babysitter",
+        target: "employees",
+        base_value: 5,
+        additiveStep: 0,
+        additiveIncrement: 0,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
+  },
+  {
+    id: 0,
+    name: "Garderie spectaculaire",
+    actionType: DinosaurAction.Babysitter,
+    minLevel: 20,
+    positivityScore: 7,
+    weight: 1,
+    descriptions: [
+      "Une garde d'enfants hors du commun qui se solde par une avalanche d'amitiés.",
+      "Dans un moment de grâce, le dinosaure gagne dix amis qui lui apportent soutien et inspiration.",
+      "Un babysitting légendaire qui transforme les enfants en véritables alliés de son aventure.",
+      "Une prestation éblouissante où la convivialité se traduit par des liens d'amitié indéfectibles.",
+      "Le spectacle de sa garde exceptionnelle lui permet de se forger un cercle d'amis précieux et nombreux."
+    ],
+    baseModifiers: [
+      {
+        source: "babysitter",
+        target: "friends",
+        base_value: 10,
+        additiveStep: 0,
+        additiveIncrement: 0,
+        multiplicativeStep: 0,
+        multiplicativeIncrement: 0
+      }
+    ]
   }
 ];

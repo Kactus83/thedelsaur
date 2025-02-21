@@ -25,7 +25,9 @@ const App: React.FC = () => {
         path="/admin"
         element={
           <ProtectedRoute>
-            <AdminPage />
+            <OverlayProvider>
+              <AdminPage />
+            </OverlayProvider>
           </ProtectedRoute>
         }
       />
@@ -33,7 +35,9 @@ const App: React.FC = () => {
         path="/user-profile"
         element={
           <ProtectedRoute>
-            <UserProfilePage />
+            <OverlayProvider>
+              <UserProfilePage />
+            </OverlayProvider>
           </ProtectedRoute>
         }
       />

@@ -1,0 +1,78 @@
+.dino-stats-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 20px; /* Augmentation de la taille de police */
+  }
+  
+  .dino-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .stat-couple {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .stat-icon {
+    font-size: 24px;
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+  
+  .item-info {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0 4px;
+  }
+  
+  .item-info:hover {
+    color: #000;
+  }
+  
+  .stat-breakdown {
+    margin: 4px 0 8px 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: left;
+  }
+  

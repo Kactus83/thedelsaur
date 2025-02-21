@@ -87,6 +87,9 @@ async function waitForDatabaseReady(maxRetries = 10, delayMs = 1000, initialDela
 waitForDatabaseReady()
   .then(async () => {
     // Une fois la DB prête, on lance le seed pour les deux modules
+    await authModule.populateDefaultAdmins().catch(err => {
+      console.error("Erreur lors du seed des administrateurs par défaut:", err);
+    });
     await gameAssetsModule.seedGameAssets().catch(err => {
       console.error("Erreur lors du seed des Game Assets:", err);
     });

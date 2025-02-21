@@ -1,58 +1,67 @@
 .dino-action-wheel-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-  }
-  
-  .dino-action-wheel {
-    position: relative;
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #1a1a1a 30%, #333333 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .dino-action-button {
-    position: absolute;
-    border: none;
-    background: #ff9900;
-    border-radius: 50%;
-    padding: 10px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    color: #fff;
-    font-weight: bold;
-  }
-  
-  .dino-action-button:hover {
-    transform: scale(1.2);
-    background: #ffcc00;
-  }
-  
-  .dino-action-wheel-close {
-    position: absolute;
-    top: calc(50% - 20px);
-    left: calc(50% - 20px);
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: #cc0000;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 24px;
-    line-height: 40px;
-    text-align: center;
-    cursor: pointer;
-    z-index: 2;
-  }
-  
+  position: absolute; /* Relatif au conteneur parent (défini en position: relative) */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.dino-action-wheel {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  /* Effet donut : centre transparent, anneau visible */
+  background: radial-gradient(circle, transparent 40%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0.8) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dino-action-button {
+  position: absolute;
+  border: none;
+  background: #ff9900;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  color: #fff;
+  font-weight: bold;
+}
+
+.dino-action-button:hover {
+  transform: scale(1.2);
+  background: #ffcc00;
+}
+
+.dino-action-wheel-toggle {
+  position: absolute;
+  top: calc(50% - 25px);
+  left: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  border: none;
+  background: transparent;
+  color: #000;
+  border-radius: 50%;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s width 0.3s, height 0.3s font-size 0.3s;
+}
+
+.dino-action-wheel-toggle:hover {
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 50px;
+  top: calc(50% - 75px);
+  left: calc(50% - 75px);
+  width: 150px;
+  height: 150px;
+}

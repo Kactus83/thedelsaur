@@ -1,7 +1,7 @@
 
 // Constants for Dinosaur Leveling System
 export const BASE_EXP_REQUIRED = 1000;                       // Expérience requise pour passer du niveau 1 au niveau 2
-export const EXP_ADDITIONAL_PER_FIVE_LEVEL = 500;            // Nombre d'expérience supplémentaire nécessaire (multiplitée par le nombre de dizaine de  + 1) pour chaque niveau supplémentaire
+export const EXP_ADDITIONAL_PER_FIVE_LEVEL = 750;            // Nombre d'expérience supplémentaire nécessaire (multiplitée par le nombre de dizaine de  + 1) pour chaque niveau supplémentaire
 export const EXP_ADDITIONAL_STEP = 10;                       // Nombre de niveaux à parcourir pour augmenter l'expérience supplémentaire
 export const EXP_ADDITIONAL_FACTOR = 0.5;                   // Facteur de croissance de la progression d'expérience supplémentaire
 export const EXP_ADDITIONAL_FACTOR_STEP = 1;                // Nombre de niveaux à parcourir pour augmenter le facteur d'expérience supplémentaire

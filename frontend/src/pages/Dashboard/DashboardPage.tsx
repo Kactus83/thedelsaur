@@ -18,6 +18,8 @@ import { useOverlay } from '../../contexts/OverlayContext';
 import InventoryOverlay from '../../components/Dashboard/overlays/InventoryOverlay';
 import BuildingsOverlay from '../../components/Dashboard/overlays/BuildingsOverlay';
 import ShopOverlay from '../../components/Dashboard/overlays/ShopOverlay';
+// Ajout du composant DinoSoulInfo
+import DinoSoulInfo from '../../components/Dashboard/DinoSoulInfo';
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -99,7 +101,7 @@ const DashboardPage: React.FC = () => {
             setLastEvent(event);
             setIsActionInProgress(null); // Arrête l'animation du dinosaure
             // Cache l'overlay après 3 secondes
-            setTimeout(() => setLastEvent(null), 1750);
+            setTimeout(() => setLastEvent(null), 2500);
         }, 500);
     };
 
@@ -150,7 +152,6 @@ const DashboardPage: React.FC = () => {
                 </div>
                 {/* Section Middle contenant la barre XP et l'image du dinosaure */}
                 <div id="Middle">
-                    {/* Partie supérieure de la section Middle */}
                     <div className="topMiddle">
                         {/* Jauge XP avec infobulle pour le multiplicateur d'expérience */}
                         <Gauge_XP
@@ -158,7 +159,6 @@ const DashboardPage: React.FC = () => {
                             current={experience}
                             max={max_experience}
                             color="blue"
-                            tooltipText={`Multiplicateur d'expérience : ${dinosaur?.final_earn_experience_multiplier}x`}
                         />
                 
                         {/* Bouton pour afficher l'overlay en mode mobile */}
@@ -169,8 +169,10 @@ const DashboardPage: React.FC = () => {
                             Voir infos du dinosaure
                         </button>
                     </div>
-                    {/* Partie inférieure de la section Middle */}
-                    <div className="bottomMiddle">
+                    <div className="bottomMiddle" style={{ position: 'relative' }}>
+                            {/* Insertion du composant DinoSoulInfo en haut à droite */}
+                            {dinosaur && <DinoSoulInfo dinosaur={dinosaur} />}
+                        {/* La div "middleContent" reçoit un style inline pour position relative */}
                         <div className="middleContent">
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire et son type */}
                             {dinosaur && (
@@ -219,24 +221,24 @@ const DashboardPage: React.FC = () => {
             {/* Nouveaux overlays déclenchés via le Header */}
             {currentOverlay === 'inventory' && dinosaur && (
                 <InventoryOverlay 
-                items={dinosaur.items} 
-                onClose={closeOverlay} 
-                active={true} 
+                  items={dinosaur.items} 
+                  onClose={closeOverlay} 
+                  active={true} 
                 />
             )}
             {currentOverlay === 'buildings' && dinosaur && (
                 <BuildingsOverlay 
-                buildings={dinosaur.buildings} 
-                onClose={closeOverlay} 
-                active={true} 
+                  buildings={dinosaur.buildings} 
+                  onClose={closeOverlay} 
+                  active={true} 
                 />
             )}
             {currentOverlay === 'shop' && dinosaur && (
-            <ShopOverlay 
-                onDinosaurUpdate={setDinosaur} 
-                active={true}
-                dinosaur={dinosaur}
-            />
+                <ShopOverlay 
+                  onDinosaurUpdate={setDinosaur} 
+                  active={true}
+                  dinosaur={dinosaur}
+                />
             )}
 
         </>

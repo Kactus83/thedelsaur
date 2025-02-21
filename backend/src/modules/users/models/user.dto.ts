@@ -14,5 +14,14 @@ export class UserDTO {
   email!: string;
 
   @Expose()
+  neutral_soul_points!: number;
+
+  @Expose()
+  dark_soul_points!: number;
+
+  @Expose()
+  bright_soul_points!: number;
+
+  @Expose()
   created_at!: Date;
 }
