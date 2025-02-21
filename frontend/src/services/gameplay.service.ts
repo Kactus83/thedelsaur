@@ -11,7 +11,7 @@ export class GameplayService {
    * @returns La réponse de l'API avec le dinosaure mis à jour.
    */
   public async activateSkill(dinosaurId: number, skillId: number) {
-    const response = await api.post(`/dinosaurs/${dinosaurId}/activate-skill`, { skillId });
+    const response = await api.post(`/dinosaurs/activate-skill`, { skillId });
     return response.data;
   }
 
@@ -22,7 +22,7 @@ export class GameplayService {
    * @returns La réponse de l'API avec le dinosaure mis à jour.
    */
   public async consumeItem(dinosaurId: number, itemId: number) {
-    const response = await api.post(`/dinosaurs/${dinosaurId}/consume-item`, { itemId });
+    const response = await api.post(`/dinosaurs/consume-item`, { itemId });
     return response.data;
   }
 }

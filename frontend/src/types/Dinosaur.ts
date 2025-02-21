@@ -1,5 +1,6 @@
 import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
+import { DinosaurLifeDTO } from './dinosaur-life.dto';
 import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
 import { DinosaurDiet } from './DinosaurDiet';
 import { DinosaurType } from './DinosaurType';
@@ -13,6 +14,9 @@ export interface Dinosaur {
   id: number;
   userId: number;
   name: string;
+
+  //Historique des vies (et scores)
+  lives: DinosaurLifeDTO[];
   
   // Assets récents
   skills: DinosaurSkillInstanceDTO[];
@@ -49,6 +53,10 @@ export interface Dinosaur {
   energy: number;
   food: number;
   hunger: number;
+  weapons: number;
+  armors: number;
+  friends: number;
+  employees: number;
   
   // Génétique
   type: DinosaurType;
@@ -65,6 +73,11 @@ export interface Dinosaur {
   final_energy_decay: number;
   final_hunger_increase: number;
   final_hunger_increase_when_recovery: number;
+  food_production: number;
+  weapon_production: number;
+  armor_production: number;
+  friend_production: number;
+  employee_production: number;
   final_earn_food_global_multiplier: number;
   final_earn_food_herbi_multiplier: number;
   final_earn_food_carni_multiplier: number;

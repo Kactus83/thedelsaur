@@ -10,6 +10,10 @@ CREATE TABLE IF NOT EXISTS user (
   email VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   isAdmin BOOLEAN DEFAULT FALSE,
+  -- Nouveaux attributs pour la gestion des points persistants entre vies
+  neutral_soul_points INT NOT NULL DEFAULT 0,
+  dark_soul_points INT NOT NULL DEFAULT 0,
+  bright_soul_points INT NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -52,7 +56,6 @@ INSERT INTO dinosaur_types (name, stat_modifiers) VALUES
     {"target": "hunger_increase_multiplier", "type": "additive", "value": -0.50, "source": "type_bonus"}
 ]');
 
-
 -- ---------------------------------------------------------
 -- Table des diètes de dinosaures
 -- Chaque diète contient un ensemble de modificateurs génériques stockés en JSON,
@@ -87,7 +90,6 @@ INSERT INTO dinosaur_diets (name, stat_modifiers) VALUES
     {"target": "earn_food_global_multiplier", "type": "multiplicative", "value": 0.50, "source": "diet_bonus"}
 ]');
 
-
 -- ---------------------------------------------------------
 -- Table principale des dinosaures
 -- Stocke les caractéristiques de base, les earn multipliers, les nouveaux multipliers
@@ -96,7 +98,7 @@ INSERT INTO dinosaur_diets (name, stat_modifiers) VALUES
 -- Les champs "energy", "food" et "hunger" représentent les valeurs courantes.
 -- Les champs "base_max_energy", "base_max_food" et "base_max_hunger" représentent
 -- les valeurs de référence utilisées pour le calcul des valeurs finales.
--- proviennent de constantes stockées en DB et peuvent être ajustées en cas d'urgence.
+-- Proviennent de constantes stockées en DB et peuvent être ajustées en cas d'urgence.
 -- ---------------------------------------------------------
 DROP TABLE IF EXISTS dinosaurs;
 CREATE TABLE dinosaurs (
@@ -110,6 +112,10 @@ CREATE TABLE dinosaurs (
     energy INT NOT NULL,
     food INT NOT NULL,
     hunger INT NOT NULL,
+    weapons INT NOT NULL,
+    armors INT NOT NULL,
+    friends INT NOT NULL,
+    employees INT NOT NULL,
     karma INT NOT NULL,
     experience INT NOT NULL,
     level INT NOT NULL,
@@ -117,7 +123,7 @@ CREATE TABLE dinosaurs (
     skill_points INT NOT NULL,
     epoch VARCHAR(50) NOT NULL,
     
-    -- Details techniques
+    -- Détails techniques
     created_at DATETIME NOT NULL,
     last_reborn DATETIME NOT NULL,
     reborn_amount INT NOT NULL,
@@ -195,7 +201,6 @@ CREATE TABLE dinosaur_skills_instance (
   CONSTRAINT fk_dino_skill_instance_skill FOREIGN KEY (skill_id) REFERENCES dinosaur_skills(id) ON DELETE CASCADE
 );
 
-
 -- ---------------------------------------------------------
 -- Table des objets (items)
 -- Stocke la définition de chaque item.
@@ -231,7 +236,6 @@ CREATE TABLE dinosaur_items_instance (
   CONSTRAINT fk_dino_item_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
   CONSTRAINT fk_dino_item_instance_item FOREIGN KEY (item_id) REFERENCES dinosaur_items(id) ON DELETE CASCADE
 );
-
 
 -- ---------------------------------------------------------
 -- Table des bâtiments
@@ -270,3 +274,25 @@ CREATE TABLE dinosaur_buildings_instance (
   CONSTRAINT fk_dino_building_instance_building FOREIGN KEY (building_id) REFERENCES dinosaur_buildings(id) ON DELETE CASCADE
 );
 
+-- ---------------------------------------------------------
+-- Table de l'historique des vies du dino
+-- Stocke les informations de chaque vie (reset) du dino, 
+-- y compris le nom, l'expérience, le karma, le niveau, 
+-- la date de naissance, la date de mort, et les soul points calculés.
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_lives;
+CREATE TABLE dinosaur_lives (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  dinosaur_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  experience INT NOT NULL,
+  karma INT NOT NULL,
+  level INT NOT NULL,
+  birth_date DATETIME NOT NULL,
+  death_date DATETIME NOT NULL,
+  soul_points INT NOT NULL DEFAULT 0,
+  dark_soul_points INT NOT NULL DEFAULT 0,
+  bright_soul_points INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_dinosaur_lives FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE
+);

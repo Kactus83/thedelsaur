@@ -20,7 +20,7 @@ export class DinosaurFactory {
     this.dinosaurRepo = dinosaurRepo;
   }
 
-  public async createDinosaur(userId: number): Promise<DatabaseDinosaur> {
+  public async createDinosaur(userId: number, isAdmin: boolean = false): Promise<DatabaseDinosaur> {
     const allTypes: DinosaurType[] = await this.dinosaurRepo.getAllDinosaurTypes();
     const allDiets: DinosaurDiet[] = await this.dinosaurRepo.getAllDinosaurDiets();
 
@@ -32,16 +32,21 @@ export class DinosaurFactory {
       id: 0, // sera généré en base lors de l'insertion
       name,
       userId,
+      lives: [],
       type,
       diet,
       energy: DINOSAUR_CONSTANTS.INITIAL_ENERGY,
       food: DINOSAUR_CONSTANTS.INITIAL_FOOD,
       hunger: DINOSAUR_CONSTANTS.INITIAL_HUNGER,
+      weapons: 0,
+      armors: 0,
+      friends: 0,
+      employees: 0,
       karma: 0,
-      experience: 10000,    // ATTENTION TEMMPORAIRE POUR DEBUGING
+      experience: isAdmin ? 100000 : 0,   
       level: 1,
-      money: 5000,          // ATTENTION TEMMPORAIRE POUR DEBUGING
-      skill_points: 5000,   // ATTENTION TEMMPORAIRE POUR DEBUGING
+      money: isAdmin ? 100000 : 0,          
+      skill_points: isAdmin ? 100000 : 0,   
       epoch: Epoch.Ancient_Epoch1,
       created_at: new Date(),
       last_reborn: new Date(),
@@ -57,7 +62,7 @@ export class DinosaurFactory {
     return dinosaur;
   }
 
-  public async resurrectDinosaur(dinoDto: FrontendDinosaurDTO): Promise<FrontendDinosaurDTO> {
+  public async resurrectDinosaur(dinoDto: FrontendDinosaurDTO, isAdmin: boolean = false): Promise<FrontendDinosaurDTO> {
     const allTypes = await this.dinosaurRepo.getAllDinosaurTypes();
     const newType = allTypes[Math.floor(Math.random() * allTypes.length)];
     const allDiets = await this.dinosaurRepo.getAllDinosaurDiets();
@@ -67,11 +72,16 @@ export class DinosaurFactory {
       id: dinoDto.id,
       name: generateRandomName(),
       userId: dinoDto.userId,
+      lives: dinoDto.lives,
       type: newType,
       diet: newDiet,
       energy: DINOSAUR_CONSTANTS.INITIAL_ENERGY,
       food: DINOSAUR_CONSTANTS.INITIAL_FOOD,
       hunger: DINOSAUR_CONSTANTS.INITIAL_HUNGER,
+      weapons: 0,
+      armors: 0,
+      friends: 0,
+      employees: 0,
       karma: dinoDto.karma + DINOSAUR_CONSTANTS.KARMA_GAIN_AFTER_DEATH,
       experience: 0,
       level: 1,
@@ -146,10 +156,18 @@ export class DinosaurFactory {
     const final_earn_money_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_money_multiplier"));
     const final_earn_karma_multiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "earn_karma_multiplier"));
 
+    // Calcul des productions finales pour les nouveaux attributs (valeur de base = 0)
+    const final_food_production = calculateFinalStat(0, allModifiers.filter(mod => mod.target === "food_production"));
+    const final_weapon_production = calculateFinalStat(0, allModifiers.filter(mod => mod.target === "weapon_production"));
+    const final_armor_production = calculateFinalStat(0, allModifiers.filter(mod => mod.target === "armor_production"));
+    const final_friend_production = calculateFinalStat(0, allModifiers.filter(mod => mod.target === "friend_production"));
+    const final_employee_production = calculateFinalStat(0, allModifiers.filter(mod => mod.target === "employee_production"));
+
     const frontendDino: FrontendDinosaurDTO = {
       id: dbDino.id,
       userId: dbDino.userId,
       name: dbDino.name,
+      lives: dbDino.lives,
       base_max_energy,
       energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
       energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
@@ -173,6 +191,10 @@ export class DinosaurFactory {
       energy: dbDino.energy,
       food: dbDino.food,
       hunger: dbDino.hunger,
+      weapons: dbDino.weapons,
+      armors: dbDino.armors,
+      friends: dbDino.friends,
+      employees: dbDino.employees,
       type: dbDino.type,
       diet: dbDino.diet,
       stats_modifiers: [
@@ -193,6 +215,11 @@ export class DinosaurFactory {
       final_earn_skill_point_multiplier,
       final_earn_money_multiplier,
       final_earn_karma_multiplier,
+      final_food_production,
+      final_weapon_production,
+      final_armor_production,
+      final_friend_production,
+      final_employee_production,
       skills: dbDino.skills,
       items: dbDino.items,
       buildings: dbDino.buildings

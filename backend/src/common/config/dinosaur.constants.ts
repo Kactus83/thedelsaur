@@ -18,8 +18,10 @@ export const DINOSAUR_CONSTANTS = {
     HUNGER_INCREASE_PER_SECOND: 80,
     HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY: 300,
     // Karma system constants
-    KARMA_GAIN_AFTER_DEATH: 100,
-    KARMA_WIDTH: 10000,
+    KARMA_GAIN_AFTER_DEATH: 500,
+    KARMA_WIDTH: 100000,
+    // AfterLife system constants
+    EXP_TO_SOUL_POINTS_CONVERSION_RATIO: 0.1,
   // Limits for Sleeping and Waking Conditions
     MIN_ENERGY_TO_WAKE_UP: 1000,
   };

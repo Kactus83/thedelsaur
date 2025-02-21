@@ -105,12 +105,6 @@ body, html {
     align-items: center;
 }
 
-.middleContent img.dino-svg {
-    min-width: 60%;
-    max-width: 200px;
-    margin: 10px auto;
-    display: block;
-}
 
 .InRight {
     margin: 2px;

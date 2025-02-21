@@ -39,7 +39,8 @@ export class DinosaurMiddleware {
       let databaseDinosaur: DatabaseDinosaur | null = await this.dinosaurRepository.getDinosaurByUserId(userId);
 
       if (!databaseDinosaur) {
-        const newDino = await this.dinosaurFactory.createDinosaur(userId);
+        const isUserAdmin = req.user?.isAdmin;
+        const newDino = await this.dinosaurFactory.createDinosaur(userId, isUserAdmin);
         databaseDinosaur = await this.dinosaurRepository.createDinosaur(newDino);
         if (!databaseDinosaur) {
           res.status(500).json({ message: 'Échec de la création du dinosaure' });

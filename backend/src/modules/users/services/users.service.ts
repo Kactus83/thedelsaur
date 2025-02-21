@@ -1,7 +1,14 @@
 import pool from '../../../common/database/db';
 import { User } from '../models/user.interface';
 
+/**
+ * Service de gestion des utilisateurs.
+ */
 export class UsersService {
+  /**
+   * Récupère tous les utilisateurs.
+   * @returns {Promise<User[]>} Liste de tous les utilisateurs.
+   */
   public async getAllUsers(): Promise<User[]> {
     try {
       const [results] = await pool.query('SELECT * FROM user');
@@ -12,6 +19,11 @@ export class UsersService {
     }
   }
 
+  /**
+   * Récupère un utilisateur par son identifiant.
+   * @param userId L'identifiant de l'utilisateur.
+   * @returns {Promise<User | null>} L'utilisateur trouvé ou null si non existant.
+   */
   public async getUserById(userId: number): Promise<User | null> {
     try {
       const [results] = await pool.query('SELECT * FROM user WHERE id = ?', [userId]);
@@ -23,6 +35,11 @@ export class UsersService {
     }
   }
 
+  /**
+   * Récupère un utilisateur par son email.
+   * @param email L'email de l'utilisateur.
+   * @returns {Promise<User | null>} L'utilisateur trouvé ou null si non existant.
+   */
   public async getUserByEmail(email: string): Promise<User | null> {
     try {
       const [results] = await pool.query('SELECT * FROM user WHERE email = ?', [email]);
@@ -34,6 +51,17 @@ export class UsersService {
     }
   }
 
+  /**
+   * Crée un nouvel utilisateur en base et retourne son identifiant.
+   * Si l'utilisateur est administrateur, il reçoit 10000 points pour chaque type
+   * (neutral, dark et bright), sinon les points sont initialisés à 0.
+   *
+   * @param username Le pseudo de l'utilisateur.
+   * @param email L'email de l'utilisateur.
+   * @param passwordHash Le mot de passe hashé.
+   * @param isAdmin Indique si l'utilisateur est administrateur.
+   * @returns {Promise<number>} L'identifiant de l'utilisateur créé.
+   */
   public async createUser(
     username: string,
     email: string,
@@ -41,11 +69,31 @@ export class UsersService {
     isAdmin: boolean = false
   ): Promise<number> {
     try {
+      // Si le pseudo est "admin", on force le flag admin
       if (username === 'admin') {
         isAdmin = true;
       }
-      const query = 'INSERT INTO user (username, email, password_hash, isAdmin) VALUES (?, ?, ?, ?)';
-      const [result] = await pool.query(query, [username, email, passwordHash, isAdmin]);
+
+      // Définition des points en fonction du rôle admin
+      const neutralSoulPoints = isAdmin ? 10000 : 0;
+      const darkSoulPoints = isAdmin ? 10000 : 0;
+      const brightSoulPoints = isAdmin ? 10000 : 0;
+
+      const query = `
+        INSERT INTO user (
+          username, email, password_hash, isAdmin,
+          neutral_soul_points, dark_soul_points, bright_soul_points
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+      const [result] = await pool.query(query, [
+        username,
+        email,
+        passwordHash,
+        isAdmin,
+        neutralSoulPoints,
+        darkSoulPoints,
+        brightSoulPoints
+      ]);
       const res = result as any;
       return res.insertId;
     } catch (err) {
@@ -54,7 +102,11 @@ export class UsersService {
     }
   }
 
-  // Vérifie si un nom d'utilisateur est déjà utilisé
+  /**
+   * Vérifie si un pseudo est déjà utilisé.
+   * @param username Le pseudo à vérifier.
+   * @returns {Promise<boolean>} True si le pseudo est déjà pris, sinon false.
+   */
   public async isUsernameTaken(username: string): Promise<boolean> {
     try {
       const [results] = await pool.query('SELECT id FROM user WHERE username = ?', [username]);
@@ -66,10 +118,15 @@ export class UsersService {
     }
   }
 
-  // Met à jour le nom d'utilisateur d'un utilisateur spécifique
+  /**
+   * Met à jour le pseudo d'un utilisateur.
+   * @param userId L'identifiant de l'utilisateur.
+   * @param newUsername Le nouveau pseudo.
+   * @returns {Promise<boolean>} True si la mise à jour a réussi, sinon false.
+   */
   public async updateUsername(userId: number, newUsername: string): Promise<boolean> {
     try {
-      const query = `UPDATE user SET username = ? WHERE id = ?`;
+      const query = 'UPDATE user SET username = ? WHERE id = ?';
       const [result] = await pool.query(query, [newUsername, userId]);
       const res = result as any;
       return res.affectedRows > 0;

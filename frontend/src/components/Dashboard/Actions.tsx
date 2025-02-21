@@ -54,7 +54,7 @@ const Actions: React.FC<ActionsProps> = ({ refreshDinosaur, availableActions, on
         modifiers: []
       });
     } finally {
-      setTimeout(() => setIsActionDisabled(false), 1000); // Réactive les boutons après 1 sec
+      setTimeout(() => setIsActionDisabled(false), 3000); // Réactive les boutons après 1 sec
     }
   };
 

@@ -1,4 +1,3 @@
-// src/modules/dinosaurs/models/dynamic-event.ts
 
 import { DynamicEventData } from "./dynamic-event-data.interface";
 import { DinosaurEvent } from "./dinosaur-event.interface";
@@ -65,12 +64,10 @@ export class DynamicEvent {
           });
         }
       }
-      console.log("Pour le modificateur", mod.source, "-> additif:", additiveEffect, ", multiplicatif:",
-                  mod.multiplicativeStep > 0 ? (1 + Math.floor(dinosaurLevel / mod.multiplicativeStep) * mod.multiplicativeIncrement) : "non appliqué");
+      
       return acc;
     }, []);
 
-    console.log("Event généré :", finalModifiers);
 
     return {
       id: this.data.id,

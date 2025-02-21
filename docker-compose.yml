@@ -27,6 +27,8 @@ services:
       DB_PASSWORD: mypassword
       DB_NAME: mydatabase
       JWT_SECRET: mySuperSecretKey
+      DEFAULT_ADMIN_NAME: admin
+      DEFAULT_ADMIN_PASSWORD: password
     networks:
       - backend-network
 

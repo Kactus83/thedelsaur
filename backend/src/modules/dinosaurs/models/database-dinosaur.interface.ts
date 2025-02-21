@@ -4,6 +4,7 @@ import { Epoch } from './epoch.enum';
 import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
 import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
+import { DinosaurLifeDTO } from './dinosaur-life.dto';
 
 /**
  * Interface représentant le dinosaure stocké en base de données.
@@ -23,6 +24,9 @@ export interface DatabaseDinosaur {
   id: number;
   name: string;
   userId: number;
+
+  //Historique des vies (et scores)
+  lives: DinosaurLifeDTO[];
   
   // Génétique du dinosaure
   type: DinosaurType;
@@ -32,6 +36,10 @@ export interface DatabaseDinosaur {
   energy: number;
   food: number;
   hunger: number;
+  weapons: number;
+  armors: number;
+  friends: number;
+  employees: number;
   karma: number;
   experience: number;
   level: number;
