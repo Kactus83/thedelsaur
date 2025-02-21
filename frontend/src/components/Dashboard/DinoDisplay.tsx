@@ -3,6 +3,7 @@ import { Dinosaur } from '../../types/Dinosaur';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import { ActionDetail } from './Actions';
 import './DinoDisplay.css';
+import DinoActionWheel from './DinoActionWheel';
 
 interface DinoDisplayProps {
     dinosaur: Dinosaur;
@@ -56,23 +57,36 @@ const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
         if (props.levelUp) {
             const uniqueClass = `level-up-${Date.now()}`;
             setLevelUpClass(uniqueClass);
-
             const timer = setTimeout(() => {
                 setLevelUpClass('');
             }, 1000);
-
             return () => clearTimeout(timer);
         }
     }, [props.levelUp]);
 
     const className = `dino-svg ${dinosaur.is_dead ? 'dino-dead' : 'dino-alive'} ${animation} ${levelUpClass}`;
 
+    // Ajout d'un état pour afficher la roue d'actions lors d'un clic
+    const [showActionWheel, setShowActionWheel] = useState<boolean>(false);
+    const handleClick = () => {
+        setShowActionWheel(true);
+    };
+
     return (
-        <img
-            src={dinosaurImagePath}
-            alt={`Dinosaure ${dinosaur.name}`}
-            className={className}
-        />
+        <>
+            <img
+                src={dinosaurImagePath}
+                alt={`Dinosaure ${dinosaur.name}`}
+                className={className}
+                onClick={handleClick}
+            />
+            {showActionWheel && (
+                <DinoActionWheel
+                    actions={[]} // À remplir avec la liste des actions disponibles
+                    onClose={() => setShowActionWheel(false)}
+                />
+            )}
+        </>
     );
 };
 

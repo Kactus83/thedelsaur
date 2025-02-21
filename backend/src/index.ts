@@ -49,6 +49,7 @@ app.use('/auth', authModule.router);
 app.use('/users', usersModule.router);
 app.use('/admin', adminModule.router);
 app.use('/dinosaurs', dinosaursModule.router);
+app.use('/game-assets', gameAssetsModule.router);
 
 // Exemple de route pour tester Sentry
 app.get("/debug-sentry", function mainHandler(req, res) {
@@ -62,8 +63,12 @@ app.use(errorHandlerMiddleware);
 /**
  * Attendre que la base de données soit prête.
  */
-async function waitForDatabaseReady(maxRetries = 10, delayMs = 1000): Promise<void> {
+async function waitForDatabaseReady(maxRetries = 10, delayMs = 1000, initialDelay = 5000): Promise<void> {
   let retries = 0;
+
+  // On attend un peu avant de commencer les tentatives
+  await new Promise(res => setTimeout(res, initialDelay));
+  
   while (retries < maxRetries) {
     try {
       await pool.query('SELECT 1');

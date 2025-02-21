@@ -5,6 +5,7 @@ import DashboardPage from './pages/Dashboard/DashboardPage';
 import AdminPage from './pages/Admin/AdminPage';
 import UserProfilePage from './pages/UserProfile/UserProfilePage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import { OverlayProvider } from './contexts/OverlayContext';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +15,9 @@ const App: React.FC = () => {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <DashboardPage />
+            <OverlayProvider>
+              <DashboardPage />
+            </OverlayProvider>
           </ProtectedRoute>
         }
       />

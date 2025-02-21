@@ -39,6 +39,9 @@ const Header: React.FC = () => {
         <button onClick={() => { openOverlay('buildings'); toggleMenu(); }}>
           Bâtiments
         </button>
+        <button onClick={() => { openOverlay('shop'); toggleMenu(); }}>
+          Shop
+        </button>
       </nav>
     </header>
   );

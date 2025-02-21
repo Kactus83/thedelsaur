@@ -3,7 +3,7 @@ import { DinosaurEvent } from '../models/dinosaur-event.interface';
 import { DinosaurActionsMap } from '../libs/dinosaur-actions.mapping';
 import {
   BASE_EXP_REQUIRED,
-  EXP_ADDITIONAL_PER_TEN_LEVEL,
+  EXP_ADDITIONAL_PER_FIVE_LEVEL,
   EXP_ADDITIONAL_STEP,
   EXP_ADDITIONAL_FACTOR,
   EXP_ADDITIONAL_FACTOR_STEP,
@@ -107,7 +107,8 @@ export async function applyEventToDinosaur(
     // Pour l'action de résurrection, déléguer à la factory
     if (action === DinosaurAction.Resurrect) {
       // TODO: Remplacer ces instanciations locales par une injection de dépendances en production
-      const repo = new DinosaurRepository(new DinosaurGameAssetsRepository());
+      const gameAssetsRepo = new DinosaurGameAssetsRepository();
+      const repo = new DinosaurRepository(gameAssetsRepo);
       const factory = new DinosaurFactory(repo);
       return await factory.resurrectDinosaur(dinosaur);
     }
@@ -170,7 +171,7 @@ export function getExperienceThresholdForLevel(level: number): number {
 
   return Math.floor(
     BASE_EXP_REQUIRED +
-    Math.floor(level / EXP_ADDITIONAL_STEP) * EXP_ADDITIONAL_PER_TEN_LEVEL +
+    Math.floor(level / EXP_ADDITIONAL_STEP) * (Math.floor(level / 5) + 1) * EXP_ADDITIONAL_PER_FIVE_LEVEL +
     Math.floor(level / EXP_ADDITIONAL_FACTOR_STEP) * BASE_EXP_REQUIRED * EXP_ADDITIONAL_FACTOR
   );
 }

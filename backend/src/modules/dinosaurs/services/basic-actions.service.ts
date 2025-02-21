@@ -129,9 +129,11 @@ export class BasicActionsService {
 
         const event = await getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
 
-        applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event);
+        // Apply event lors d'une resurrection renvoie une nouvelle instance de dino
+        // Penser a bien utiliser newDino, et non pâs dinosaur comme partout ailleurs
+        const newDino: FrontendDinosaurDTO = await applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event);
 
-        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+        this.dinosaurRepository.updateDinosaur(newDino.id, newDino);
         return { dinosaur, event };
     }
 
@@ -148,9 +150,11 @@ export class BasicActionsService {
         }
 
         const event = await getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
-        applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
+        // Ici la fonction renvoie une nouvelle instance de dino
+        // Penser a bien utiliser newDino, et non pâs dinosaur comme partout ailleurs.
+        const newDino: FrontendDinosaurDTO = await applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
 
-        this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
+        this.dinosaurRepository.updateDinosaur(newDino.id, newDino);
         return { dinosaur, event };
     }
 }

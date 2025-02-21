@@ -1,0 +1,57 @@
+.shop-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .shop-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .shop-card-image {
+    margin-bottom: 10px;
+  }
+  
+  .shop-card-content {
+    text-align: center;
+  }
+  
+  .shop-card-price,
+  .shop-card-minlevel {
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  
+  .shop-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .shop-card-btn {
+    padding: 8px 12px;
+    border: none;
+    background: #0095ff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .shop-card-btn:hover {
+    background: #007acc;
+  }
+  
+  .shop-card-btn.upgrade {
+    background: #28a745;
+  }
+  
+  .shop-card-btn.upgrade:hover {
+    background: #218838;
+  }
+  

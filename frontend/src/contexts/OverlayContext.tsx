@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type OverlayType = 'inventory' | 'buildings' | null;
+// Extension du type pour inclure le shop
+export type OverlayType = 'inventory' | 'buildings' | 'shop' | null;
 
 interface OverlayContextProps {
   currentOverlay: OverlayType;

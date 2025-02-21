@@ -1,3 +1,5 @@
+// src/repositories/dinosaur-game-assets.repository.ts
+
 import pool from '../../../common/database/db';
 import { RowDataPacket } from 'mysql2';
 import { DinosaurSkillInstanceDTO } from '../models/dinosaur-skill-instance.dto';
@@ -5,7 +7,7 @@ import { DinosaurItemInstanceDTO } from '../models/dinosaur-item-instance.dto';
 import { DinosaurBuildingInstanceDTO } from '../models/dinosaur-building-instance.dto';
 
 /**
- * Interface décrivant une ligne de la table dinosaur_skills_instance.
+ * Interface décrivant une ligne issue du join entre dinosaur_skills_instance et dinosaur_skills.
  */
 interface DatabaseDinosaurSkillInstanceRow extends RowDataPacket {
   dinosaur_id: number;
@@ -13,26 +15,36 @@ interface DatabaseDinosaurSkillInstanceRow extends RowDataPacket {
   is_purchased: number; // stocké en TINYINT(1)
   is_active: number | null; // stocké en TINYINT(1) ou NULL
   last_activated_at: Date | null;
+  skill_statModifiers: string; // JSON provenant de dinosaur_skills.stat_modifiers
 }
 
 /**
- * Interface décrivant une ligne de la table dinosaur_items_instance.
+ * Interface décrivant une ligne issue du join entre dinosaur_items_instance et dinosaur_items.
  */
 interface DatabaseDinosaurItemInstanceRow extends RowDataPacket {
   dinosaur_id: number;
   item_id: number;
   current_level_or_quantity: number;
   is_equipped: number; // TINYINT(1)
+  // Champs provenant de dinosaur_items
+  item_name: string;
+  item_description: string;
+  item_price: number;
+  item_min_level_to_buy: number;
+  item_type: string;
+  item_category: string | null;
+  item_levels: string; // JSON
 }
 
 /**
- * Interface décrivant une ligne de la table dinosaur_buildings_instance.
+ * Interface décrivant une ligne issue du join entre dinosaur_buildings_instance et dinosaur_buildings.
  */
 interface DatabaseDinosaurBuildingInstanceRow extends RowDataPacket {
   dinosaur_id: number;
   building_id: number;
   current_level: number;
   purchased_upgrades: string; // JSON
+  building_statModifiers: string; // JSON provenant de dinosaur_buildings.stat_modifiers
 }
 
 /**
@@ -43,20 +55,25 @@ export class DinosaurGameAssetsRepository {
 
   /**
    * Récupère toutes les instances de skills associées à un dinosaure.
+   * Joint la table dinosaur_skills pour récupérer les statModifiers.
    * @param dinosaurId Identifiant du dinosaure.
    * @returns Une liste d'instances de skills.
    */
   public async getSkillInstancesByDinosaurId(dinosaurId: number): Promise<DinosaurSkillInstanceDTO[]> {
     try {
       const [rows] = await pool.query<DatabaseDinosaurSkillInstanceRow[]>(
-        `SELECT * FROM dinosaur_skills_instance WHERE dinosaur_id = ?`,
+        `SELECT dsi.*, ds.stat_modifiers AS skill_statModifiers 
+         FROM dinosaur_skills_instance dsi
+         JOIN dinosaur_skills ds ON dsi.skill_id = ds.id
+         WHERE dsi.dinosaur_id = ?`,
         [dinosaurId]
       );
       return rows.map(row => ({
         id: row.skill_id,
         isPurchased: !!row.is_purchased,
         isActive: row.is_active !== null ? !!row.is_active : undefined,
-        lastActivatedAt: row.last_activated_at ? new Date(row.last_activated_at) : undefined
+        lastActivatedAt: row.last_activated_at ? new Date(row.last_activated_at) : undefined,
+        statModifiers: JSON.parse(row.skill_statModifiers)
       })) as DinosaurSkillInstanceDTO[];
     } catch (error) {
       console.error("Error fetching dinosaur skill instances:", error);
@@ -95,19 +112,32 @@ export class DinosaurGameAssetsRepository {
 
   /**
    * Récupère toutes les instances d'items associées à un dinosaure.
+   * Joint la table dinosaur_items pour récupérer les niveaux (levels) et autres informations.
    * @param dinosaurId Identifiant du dinosaure.
    * @returns Une liste d'instances d'items.
    */
   public async getItemInstancesByDinosaurId(dinosaurId: number): Promise<DinosaurItemInstanceDTO[]> {
     try {
       const [rows] = await pool.query<DatabaseDinosaurItemInstanceRow[]>(
-        `SELECT * FROM dinosaur_items_instance WHERE dinosaur_id = ?`,
+        `SELECT dii.*, ditems.name AS item_name, ditems.description AS item_description, 
+                ditems.price AS item_price, ditems.min_level_to_buy AS item_min_level_to_buy, 
+                ditems.item_type AS item_type, ditems.category AS item_category, ditems.levels AS item_levels
+         FROM dinosaur_items_instance dii
+         JOIN dinosaur_items ditems ON dii.item_id = ditems.id
+         WHERE dii.dinosaur_id = ?`,
         [dinosaurId]
       );
       return rows.map(row => ({
         id: row.item_id,
         currentLevelOrQuantity: row.current_level_or_quantity,
-        isEquipped: !!row.is_equipped
+        isEquipped: !!row.is_equipped,
+        name: row.item_name,
+        description: row.item_description,
+        price: row.item_price,
+        minLevelToBuy: row.item_min_level_to_buy,
+        itemType: row.item_type,
+        category: row.item_category || undefined,
+        levels: JSON.parse(row.item_levels)
       })) as DinosaurItemInstanceDTO[];
     } catch (error) {
       console.error("Error fetching dinosaur item instances:", error);
@@ -145,19 +175,24 @@ export class DinosaurGameAssetsRepository {
 
   /**
    * Récupère toutes les instances de bâtiments associées à un dinosaure.
+   * Joint la table dinosaur_buildings pour récupérer les statModifiers.
    * @param dinosaurId Identifiant du dinosaure.
    * @returns Une liste d'instances de bâtiments.
    */
   public async getBuildingInstancesByDinosaurId(dinosaurId: number): Promise<DinosaurBuildingInstanceDTO[]> {
     try {
       const [rows] = await pool.query<DatabaseDinosaurBuildingInstanceRow[]>(
-        `SELECT * FROM dinosaur_buildings_instance WHERE dinosaur_id = ?`,
+        `SELECT dbi.*, dbuild.stat_modifiers AS building_statModifiers
+         FROM dinosaur_buildings_instance dbi
+         JOIN dinosaur_buildings dbuild ON dbi.building_id = dbuild.id
+         WHERE dbi.dinosaur_id = ?`,
         [dinosaurId]
       );
       return rows.map(row => ({
         id: row.building_id,
         currentLevel: row.current_level,
-        purchasedUpgrades: JSON.parse(row.purchased_upgrades)
+        purchasedUpgrades: JSON.parse(row.purchased_upgrades),
+        statModifiers: JSON.parse(row.building_statModifiers)
       })) as DinosaurBuildingInstanceDTO[];
     } catch (error) {
       console.error("Error fetching dinosaur building instances:", error);
@@ -222,6 +257,49 @@ export class DinosaurGameAssetsRepository {
       throw error;
     }
   }
+  
+  /**
+   * Supprime toutes les instances de skills associées à un dinosaure.
+   */
+  public async deleteSkillInstancesByDinosaurId(dinosaurId: number): Promise<boolean> {
+    try {
+      const query = `DELETE FROM dinosaur_skills_instance WHERE dinosaur_id = ?`;
+      const [result] = await pool.query(query, [dinosaurId]);
+      const resAny = result as any;
+      return resAny.affectedRows >= 0;
+    } catch (error) {
+      console.error("Error deleting dinosaur skill instances:", error);
+      throw error;
+    }
+  }
 
-  // D'autres méthodes spécifiques (ex. activation, upgrade via le shop) pourront être ajoutées ici.
+  /**
+   * Supprime toutes les instances d'items associées à un dinosaure.
+   */
+  public async deleteItemInstancesByDinosaurId(dinosaurId: number): Promise<boolean> {
+    try {
+      const query = `DELETE FROM dinosaur_items_instance WHERE dinosaur_id = ?`;
+      const [result] = await pool.query(query, [dinosaurId]);
+      const resAny = result as any;
+      return resAny.affectedRows >= 0;
+    } catch (error) {
+      console.error("Error deleting dinosaur item instances:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Supprime toutes les instances de bâtiments associées à un dinosaure.
+   */
+  public async deleteBuildingInstancesByDinosaurId(dinosaurId: number): Promise<boolean> {
+    try {
+      const query = `DELETE FROM dinosaur_buildings_instance WHERE dinosaur_id = ?`;
+      const [result] = await pool.query(query, [dinosaurId]);
+      const resAny = result as any;
+      return resAny.affectedRows >= 0;
+    } catch (error) {
+      console.error("Error deleting dinosaur building instances:", error);
+      throw error;
+    }
+  }
 }

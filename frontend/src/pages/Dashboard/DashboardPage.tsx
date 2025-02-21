@@ -17,6 +17,7 @@ import DinoDisplay from '../../components/Dashboard/DinoDisplay';
 import { useOverlay } from '../../contexts/OverlayContext';
 import InventoryOverlay from '../../components/Dashboard/overlays/InventoryOverlay';
 import BuildingsOverlay from '../../components/Dashboard/overlays/BuildingsOverlay';
+import ShopOverlay from '../../components/Dashboard/overlays/ShopOverlay';
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -217,11 +218,27 @@ const DashboardPage: React.FC = () => {
 
             {/* Nouveaux overlays déclenchés via le Header */}
             {currentOverlay === 'inventory' && dinosaur && (
-                <InventoryOverlay items={dinosaur.items} onClose={closeOverlay} />
+                <InventoryOverlay 
+                items={dinosaur.items} 
+                onClose={closeOverlay} 
+                active={true} 
+                />
             )}
             {currentOverlay === 'buildings' && dinosaur && (
-                <BuildingsOverlay buildings={dinosaur.buildings} onClose={closeOverlay} />
+                <BuildingsOverlay 
+                buildings={dinosaur.buildings} 
+                onClose={closeOverlay} 
+                active={true} 
+                />
             )}
+            {currentOverlay === 'shop' && dinosaur && (
+            <ShopOverlay 
+                onDinosaurUpdate={setDinosaur} 
+                active={true}
+                dinosaur={dinosaur}
+            />
+            )}
+
         </>
     );
 };
