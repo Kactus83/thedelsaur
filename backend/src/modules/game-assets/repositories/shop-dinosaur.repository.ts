@@ -16,6 +16,16 @@ export class ShopDinosaurRepository {
   }
 
   /**
+   * Met à jour les points de compétence (skill_points) du dinosaure dans la table `dinosaurs`.
+   * @param dinosaurId Identifiant du dinosaure.
+   * @param skillPoints Nouveau solde de points de compétence.
+   */
+  public async updateSkillPoints(dinosaurId: number, skillPoints: number): Promise<void> {
+    const query = 'UPDATE dinosaurs SET skill_points = ? WHERE id = ?';
+    await pool.query(query, [skillPoints, dinosaurId]);
+  }
+
+  /**
    * Ajoute une instance de compétence (skill) pour le dinosaure dans la table `dinosaur_skills_instance`.
    * @param dinosaurId Identifiant du dinosaure.
    * @param skillId Identifiant de la compétence.

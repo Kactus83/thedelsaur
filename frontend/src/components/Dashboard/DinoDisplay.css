@@ -1,116 +1,111 @@
-/* Animation du dinosaure lors d'une action */
 .dino-svg.action-in-progress {
-    animation: dinoActionAnimation 0.45s forwards;
+  animation: dinoActionAnimation 0.45s forwards;
 }
 
 .dino-dead {
-    filter: grayscale(100%);
-    transition: filter 2s, transform 2s ;
-    transform: rotate(180deg) translateY(-35%);
+  filter: grayscale(100%);
+  transition: filter 2s, transform 2s;
+  transform: rotate(180deg) translateY(-35%);
 }
 
 .dino-alive {
-    filter: grayscale(0%);
-    transition: filter 2s, transform 2s ;
-    transform: rotate(0deg) translateY(0) ;
-}
-.wonder{
-    animation: dinoActionWonder 0.45 forwards ;
-}
-.baisser{
-    animation: dinoActionBaisser 0.5s forwards ;
+  filter: grayscale(0%);
+  transition: filter 2s, transform 2s;
+  transform: rotate(0deg) translateY(0);
 }
 
-.sleep{
-    opacity: 0%;
+.wonder {
+  animation: dinoActionWonder 0.45 forwards;
 }
 
+.baisser {
+  animation: dinoActionBaisser 0.5s forwards;
+}
+
+.sleep {
+  opacity: 0%;
+}
 
 @keyframes dinoActionBaisser {
-    0% {
-        transform: rotate(0deg) ;
-    }
-    50% {
-        transform: rotate(-45deg) ;
-    }
-
-    100% {
-        transform: rotate(0deg) ;
-    }
-    
+  0% {
+      transform: rotate(0deg);
+  }
+  50% {
+      transform: rotate(-45deg);
+  }
+  100% {
+      transform: rotate(0deg);
+  }
 }
 
 @keyframes dinoActionWonder {
-    0% {
-        transform: scaleX(1) ;
-    }
-
-    50% {
-        transform: scaleX(-1);
-    }
-    100% {
-        transform: scaleX(1);
-    }
+  0% {
+      transform: scaleX(1);
+  }
+  50% {
+      transform: scaleX(-1);
+  }
+  100% {
+      transform: scaleX(1);
+  }
 }
-
-
 
 /* Animation de montée de niveau */
 .dino-svg[class*="level-up"] {
-    animation: dinoLevelUp 1s ease-in-out;
-  }
-  
-  @keyframes dinoLevelUp {
-    0% {
+  animation: dinoLevelUp 1s ease-in-out;
+}
+
+@keyframes dinoLevelUp {
+  0% {
       transform: scale(1) rotate(0deg);
       filter: drop-shadow(0 0 0px gold);
-    }
-    12.5% {
+  }
+  12.5% {
       transform: scale(1.1) rotate(45deg);
       filter: drop-shadow(0 0 5px gold);
-    }
-    25% {
+  }
+  25% {
       transform: scale(1.2) rotate(90deg);
       filter: drop-shadow(0 0 10px gold);
-    }
-    37.5% {
+  }
+  37.5% {
       transform: scale(1.35) rotate(135deg);
       filter: drop-shadow(0 0 15px gold);
-    }
-    50% {
+  }
+  50% {
       transform: scale(1.5) rotate(180deg);
       filter: drop-shadow(0 0 20px gold);
-    }
-    62.5% {
+  }
+  62.5% {
       transform: scale(1.35) rotate(225deg);
       filter: drop-shadow(0 0 15px gold);
-    }
-    75% {
+  }
+  75% {
       transform: scale(1.2) rotate(270deg);
       filter: drop-shadow(0 0 10px gold);
-    }
-    87.5% {
+  }
+  87.5% {
       transform: scale(1.1) rotate(315deg);
       filter: drop-shadow(0 0 5px gold);
-    }
-    100% {
+  }
+  100% {
       transform: scale(1) rotate(360deg);
       filter: drop-shadow(0 0 0px gold);
-    }
   }
-  
+}
+
 /* 
 @keyframes dinoActionAnimation {
-    0% {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
-    60% {
-        transform: scale(0.5) translateY(-50px);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-    }
+  0% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+  }
+  60% {
+      transform: scale(0.5) translateY(-50px);
+      opacity: 0;
+  }
+  100% {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+  }
 } */

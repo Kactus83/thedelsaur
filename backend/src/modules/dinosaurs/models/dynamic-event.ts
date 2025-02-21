@@ -32,8 +32,6 @@ export class DynamicEvent {
       throw new Error("Niveau insuffisant pour générer cet event dynamique.");
     }
 
-    console.log("Génération de l'événement", this.data.name, "pour le niveau", dinosaurLevel);
-    console.log("Modifiers de base :");
     this.data.baseModifiers.forEach(mod => console.log(mod));
 
     // Choix aléatoire d'une description parmi celles disponibles

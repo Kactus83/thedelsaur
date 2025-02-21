@@ -36,12 +36,12 @@ export class ShopService {
     if (dinosaur.level < skill.minLevelToBuy) {
       throw new Error('Niveau insuffisant pour acheter cette compétence');
     }
-    if (dinosaur.money < skill.price) {
+    if (dinosaur.skill_points < skill.price) {
       throw new Error('Fonds insuffisants pour acheter cette compétence');
     }
 
     dinosaur.money -= skill.price;
-    await this.shopDinoRepo.updateMoney(dinosaur.id, dinosaur.money);
+    await this.shopDinoRepo.updateSkillPoints(dinosaur.id, dinosaur.skill_points);
     await this.shopDinoRepo.addSkillInstance(
       dinosaur.id,
       skill.id,

@@ -7,6 +7,7 @@ import { DinosaurRepository } from '../repositories/dinosaur.repository';
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { StatModifier } from '../models/stats-modifiers.types';
 import { getLevelModifiers } from '../utils/levelModifiers';
+import { DinosaurGameAssetsRepository } from '../repositories/dinosaur-game-assets.repository';
 
 /**
  * Factory pour créer ou ressusciter un dinosaure.
@@ -37,10 +38,10 @@ export class DinosaurFactory {
       food: DINOSAUR_CONSTANTS.INITIAL_FOOD,
       hunger: DINOSAUR_CONSTANTS.INITIAL_HUNGER,
       karma: 0,
-      experience: 0,
+      experience: 10000,    // ATTENTION TEMMPORAIRE POUR DEBUGING
       level: 1,
-      money: 0,
-      skill_points: 0,
+      money: 5000,          // ATTENTION TEMMPORAIRE POUR DEBUGING
+      skill_points: 5000,   // ATTENTION TEMMPORAIRE POUR DEBUGING
       epoch: Epoch.Ancient_Epoch1,
       created_at: new Date(),
       last_reborn: new Date(),
