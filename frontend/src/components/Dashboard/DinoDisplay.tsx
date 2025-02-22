@@ -7,34 +7,19 @@ import DinoActionWheel from './DinoActionWheel';
 import { GameplayService } from '../../services/gameplay.service';
 
 /**
- * Mapping des cibles de modificateur vers leur emoji associé.
+ * Composant DinoDisplay
+ * 
+ * Affiche le dinosaure avec ses animations et la roue d'actions.
+ * 
+ * Modifications apportées :
+ * - Suppression de la génération et de l'affichage des notifications emoji.
+ * - Mise à jour du switch de gestion des animations pour intégrer les nouveaux cas :
+ *    • Prier         => animation 'pray'
+ *    • Garde du corps et Garde d'enfants => animation 'wonder'
+ *    • Plonger       => animation 'dive'
+ *    • Voler         => pour les dinos de type "Air", animation 'fly', sinon 'wonder'
+ *    • Creuser       => animation 'dig'
  */
-const modifierEmojiMapping: Record<string, string> = {
-  energy: '⚡',
-  food: '🍎',
-  hunger: '😰',
-  experience: '📚',
-  karma: '☯️',
-  money: '💰',
-  skillPoints: '⭐',
-  weapons: '⚔️',
-  armors: '🛡️',
-  friends: '🤝',
-  employees: '👥',
-};
-
-/**
- * Liste des cibles pour lesquelles on souhaite afficher une notification emoji
- * (le karma étant géré séparément via une animation sur l'image).
- */
-const emojiTargets = ['experience', 'money', 'skillPoints', 'weapons', 'armors', 'friends', 'employees'];
-
-interface EmojiNotification {
-  id: number;
-  emoji: string;
-  left: number; // Position horizontale en pourcentage dans le container
-}
-
 interface DinoDisplayProps {
   dinosaur: Dinosaur;
   lastEvent: DinosaurEvent | null;
@@ -42,15 +27,13 @@ interface DinoDisplayProps {
   levelUp: boolean;
 }
 
-const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
-  const { dinosaur, lastEvent, action, levelUp } = props;
-
-  // Construit le chemin de l'image en fonction du régime et du type
+const DinoDisplay: React.FC<DinoDisplayProps> = ({ dinosaur, lastEvent, action, levelUp }) => {
+  // Construit le chemin de l'image en fonction du régime et du type du dinosaure
   const dietName = dinosaur?.diet?.name.toLowerCase();
   const typeName = dinosaur?.type?.name.toLowerCase();
   const dinosaurImagePath = dinosaur ? `/assets/dino/dino_${dietName}_${typeName}.svg` : '';
 
-  // Détermine l'animation d'action en fonction du nom de l'action
+  // Détermine l'animation d'action en fonction du nom de l'action reçue
   let animation = '';
   switch (action?.name) {
     case 'Se Réveiller':
@@ -67,8 +50,26 @@ const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
       break;
     case 'Chasser':
     case 'Découvrir':
-    case 'Voler':
+    case 'Garde du corps': // Nouvelle action : Bodyguard
+    case "Garde d'enfants":  // Nouvelle action : Babysitter
       animation = 'wonder';
+      break;
+    case 'Voler':
+      // Pour les dinos de type Air, on utilise l'animation 'fly'
+      if (dinosaur.type.name.toLowerCase() === 'air') {
+        animation = 'fly';
+      } else {
+        animation = 'wonder';
+      }
+      break;
+    case 'Prier': // Nouvelle action : Pray
+      animation = 'pray';
+      break;
+    case 'Plonger': // Nouvelle action : Dive
+      animation = 'dive';
+      break;
+    case 'Creuser': // Nouvelle action : Dig
+      animation = 'dig';
       break;
     default:
       break;
@@ -91,7 +92,7 @@ const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
   }, [levelUp]);
 
   // Gestion de l'animation de Karma : si l'event contient un modificateur de karma,
-  // on applique une animation de pulsation sur l'image du dino.
+  // on applique une animation de pulsation sur l'image du dinosaure.
   const [karmaAnimationClass, setKarmaAnimationClass] = useState<string>('');
   useEffect(() => {
     if (lastEvent) {
@@ -106,33 +107,11 @@ const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
     }
   }, [lastEvent]);
 
-  // Gestion des notifications emoji pour les gains (xp, argent, etc.)
-  const [emojiNotifications, setEmojiNotifications] = useState<EmojiNotification[]>([]);
-  useEffect(() => {
-    if (lastEvent) {
-      lastEvent.modifiers.forEach(mod => {
-        if (emojiTargets.includes(mod.target)) {
-          const emoji = modifierEmojiMapping[mod.target] || '';
-          const id = Date.now() + Math.floor(Math.random() * 1000);
-          // Position horizontale aléatoire entre 20% et 80%
-          const left = Math.floor(Math.random() * 60) + 20;
-          const newNotification: EmojiNotification = { id, emoji, left };
-          setEmojiNotifications(prev => [...prev, newNotification]);
-          // Suppression de la notification après la durée de l'animation (1.5s)
-          setTimeout(() => {
-            setEmojiNotifications(prev => prev.filter(notif => notif.id !== id));
-          }, 1500);
-        }
-      });
-    }
-  }, [lastEvent]);
-
-  // Combine les classes CSS pour l'image du dino
+  // Combine les classes CSS pour l'image du dinosaure
   const className = `dino-svg ${dinosaur.is_dead ? 'dino-dead' : 'dino-alive'} ${animation} ${levelUpClass} ${karmaAnimationClass}`;
 
   // Affichage de la roue d'actions au survol (logique existante)
   const [showActionWheel, setShowActionWheel] = useState<boolean>(false);
-  // Simulation d'une injection future de GameplayService
   const gameplayService = new GameplayService();
 
   return (
@@ -146,16 +125,6 @@ const DinoDisplay: React.FC<DinoDisplayProps> = (props: DinoDisplayProps) => {
         alt={`Dinosaure ${dinosaur.name}`}
         className={className}
       />
-      {/* Notifications emoji animées pour les gains (xp, etc.) */}
-      {emojiNotifications.map(notif => (
-        <span 
-          key={notif.id} 
-          className="emoji-notification" 
-          style={{ left: `${notif.left}%` }}
-        >
-          {notif.emoji}
-        </span>
-      ))}
       {showActionWheel && (
         <DinoActionWheel
           dinosaur={dinosaur}

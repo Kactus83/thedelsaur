@@ -6,7 +6,8 @@ export enum DinosaurSkillCategory {
     Energy = 'energy',
     Money = 'money',
     Karma = 'karma',
-    Experience = 'experience'
+    Experience = 'experience',
+    Advanced = 'advanced'
   }
   
   /**

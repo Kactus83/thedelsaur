@@ -145,12 +145,12 @@ export class DinosaurEventService {
     for (const modifier of event.modifiers) {
       const targetProperty = targetMapping[modifier.target];
       if (!targetProperty) {
-        console.warn(`Modifier target "${modifier.target}" non reconnu`);
         continue;
       }
       // Accéder à la propriété du dinosaure
       const dinosaurRecord = dinosaur as Record<string, any>;
       const currentValue = dinosaurRecord[targetProperty] as number;
+      console.log(`Valeur actuelle de ${targetProperty} : ${currentValue}`);
       let newValue = currentValue;
       if (modifier.type === 'additive') {
         newValue = currentValue + modifier.value;

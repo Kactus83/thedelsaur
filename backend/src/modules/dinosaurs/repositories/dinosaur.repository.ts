@@ -188,6 +188,10 @@ export class DinosaurRepository {
         "level",
         "money",
         "skill_points",
+        "weapons",
+        "armors",
+        "friends",
+        "employees",
         "epoch",
         "created_at",
         "last_reborn",
@@ -197,8 +201,9 @@ export class DinosaurRepository {
         "is_dead"
       ]);
       
-      const updatesFiltered = { ...updates };
       // On ne met pas à jour les champs complexes (type, diet, lives)
+      // On devrait peut etre utiliser clas validator et lcass transformer pour faire ca
+      const updatesFiltered = { ...updates };
       delete updatesFiltered.type;
       delete updatesFiltered.diet;
       delete updatesFiltered.lives;

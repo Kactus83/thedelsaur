@@ -59,7 +59,7 @@ const HungerGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
 
   return (
     <div className="hunger-gauge">
-      <div className="hunger-label">Faim</div>
+      <div className="hunger-label">FAIM</div>
       <div className={`hunger-bar ${blinkClass}`} style={haloStyle}>
         <div
           className="hunger-fill"

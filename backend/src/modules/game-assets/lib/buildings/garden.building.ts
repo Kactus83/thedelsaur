@@ -49,7 +49,8 @@ export const gardenBuilding: DinosaurBuildingDTO[] = [
         cost: 750,
         prerequisites: [1],
         statModifiers: [
-          { source: "building", target: "earn_food_herbi_multiplier", type: "multiplicative", value: 1 }
+          { source: "building", target: "earn_food_herbi_multiplier", type: "multiplicative", value: 1 },
+          { source: "building", target: "food_production", type: "additive", value: 1 }
         ]
       },
       {
@@ -69,13 +70,15 @@ export const gardenBuilding: DinosaurBuildingDTO[] = [
         cost: 2500,
         prerequisites: [5, 2, 3],
         statModifiers: [
-          { source: "building", target: "earn_food_herbi_multiplier", type: "multiplicative", value: 2 }
+          { source: "building", target: "earn_food_herbi_multiplier", type: "multiplicative", value: 2 },
+          { source: "building", target: "food_production", type: "additive", value: 3 }
         ]
       }
     ],
     statModifiers: [
       { source: "building", target: "base_max_food", type: "additive", value: 10000 },
-      { source: "building", target: "earn_food_herbi_multiplier", type: "additive", value: 0.5 }
+      { source: "building", target: "earn_food_herbi_multiplier", type: "additive", value: 0.5 },
+      { source: "building", target: "food_production", type: "additive", value: 1 }
     ]
   }
 ];
