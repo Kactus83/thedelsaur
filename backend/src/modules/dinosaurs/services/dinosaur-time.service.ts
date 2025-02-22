@@ -85,19 +85,6 @@ export class DinosaurTimeService {
         const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second_when_recovery;
         dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
 
-        // Production de weapons, armors, friends et employees pendant le sommeil
-        const weaponProduction = elapsedSeconds * dino.final_weapon_production;
-        dino.weapons = Math.min(dino.final_weapon_production, dino.weapons + weaponProduction);
-
-        const armorProduction = elapsedSeconds * dino.final_armor_production;
-        dino.armors = Math.min(dino.final_armor_production, dino.armors + armorProduction);
-
-        const friendProduction = elapsedSeconds * dino.final_friend_production;
-        dino.friends = Math.min(dino.final_friend_production, dino.friends + friendProduction);
-
-        const employeesProduction = elapsedSeconds * dino.final_employee_production;
-        dino.employees = Math.min(dino.final_employee_production, dino.employees + employeesProduction);
-
         // Si l'énergie atteint son maximum, réveiller le dinosaure via le BasicActionsService
         if (dino.energy >= dino.final_max_energy) {
           await this.basicActionsService.wakeDinosaur(dino);
@@ -110,6 +97,23 @@ export class DinosaurTimeService {
         // Augmentation de la faim en état éveillé
         const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second;
         dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
+
+        // Production de food, weapons, armors, friends et employees pendant le sommeil
+
+        const foodProduction = elapsedSeconds * dino.final_food_production;
+        dino.food = dino.food + Math.min(dino.final_food_production, dino.food + foodProduction);
+
+        const weaponProduction = elapsedSeconds * dino.final_weapon_production;
+        dino.weapons = dino.weapons + Math.min(dino.final_weapon_production, dino.weapons + weaponProduction);
+
+        const armorProduction = elapsedSeconds * dino.final_armor_production;
+        dino.armors = dino.armors + Math.min(dino.final_armor_production, dino.armors + armorProduction);
+
+        const friendProduction = elapsedSeconds * dino.final_friend_production;
+        dino.friends = dino.friends + Math.min(dino.final_friend_production, dino.friends + friendProduction);
+
+        const employeesProduction = elapsedSeconds * dino.final_employee_production;
+        dino.employees = dino.employees + Math.min(dino.final_employee_production, dino.employees + employeesProduction);
 
         // Si l'énergie tombe à zéro, passage en sommeil
         if (dino.energy === 0) {

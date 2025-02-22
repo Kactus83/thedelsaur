@@ -25,7 +25,7 @@ const EnergyGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
 
   return (
     <div className="energy-gauge">
-      <div className="energy-label">Énergie</div>
+      <div className="energy-label">ÉNERGIE</div>
       <div className={`energy-bar ${isFull ? 'sparkle' : ''}`}>
         <div
           className="energy-fill"

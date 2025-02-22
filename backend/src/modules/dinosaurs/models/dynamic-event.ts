@@ -31,8 +31,6 @@ export class DynamicEvent {
       throw new Error("Niveau insuffisant pour générer cet event dynamique.");
     }
 
-    this.data.baseModifiers.forEach(mod => console.log(mod));
-
     // Choix aléatoire d'une description parmi celles disponibles
     const randomIndex = Math.floor(Math.random() * this.data.descriptions.length);
     const description = this.data.descriptions[randomIndex];
@@ -64,7 +62,6 @@ export class DynamicEvent {
           });
         }
       }
-      
       return acc;
     }, []);
 

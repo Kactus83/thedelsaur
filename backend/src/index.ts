@@ -63,7 +63,7 @@ app.use(errorHandlerMiddleware);
 /**
  * Attendre que la base de données soit prête.
  */
-async function waitForDatabaseReady(maxRetries = 10, delayMs = 1000, initialDelay = 5000): Promise<void> {
+async function waitForDatabaseReady(maxRetries = 10, delayMs = 2000, initialDelay = 5000): Promise<void> {
   let retries = 0;
 
   // On attend un peu avant de commencer les tentatives
