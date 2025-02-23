@@ -39,6 +39,11 @@ export class FrontendDinosaurDTO {
   * Identiques pour tous les dinosaures.
   */
  
+  // Calculéessur la base des stats / de l'historique des vie du dino
+  @Expose() past_lives_average_karma!: number;
+  @Expose() initial_luck_factor!: number;
+
+  // issues des constantes du jeu
   @Expose() initial_base_max_energy!: number;
   @Expose() initial_energy_decay_per_second!: number;
   @Expose() initial_energy_recovery_per_second!: number;
@@ -63,6 +68,13 @@ export class FrontendDinosaurDTO {
   @Expose() hunger_increase_per_second!: number;
   @Expose() hunger_increase_per_second_when_recovery!: number;
   @Expose() karma_width!: number;
+
+ 
+
+  /*
+  * Valeurs calculées du systeme karmique
+  * 
+  */ 
   
   /*
   * Details techniques
@@ -81,12 +93,14 @@ export class FrontendDinosaurDTO {
   */
 
   //- Leveling
-  @Expose() karma!: number;
   @Expose() experience!: number;
   @Expose() level!: number;
   @Expose() money!: number;
   @Expose() skill_points!: number;
   @Expose() epoch!: Epoch;
+
+  // Karma
+  @Expose() karma!: number;
 
   //- Vitals
   @Expose() energy!: number;
@@ -117,6 +131,7 @@ export class FrontendDinosaurDTO {
   /*
   * Multiplicateurs finaux apres application des modificateurs
   */
+  @Expose() final_luck_factor!: number;
   @Expose() final_max_energy!: number;
   @Expose() final_max_food!: number;
   @Expose() final_max_hunger!: number;
@@ -131,6 +146,7 @@ export class FrontendDinosaurDTO {
   @Expose() final_friend_production!: number;
   @Expose() final_employee_production!: number; 
 
+  @Expose() final_luck_factor_multiplier!: number;
   @Expose() final_earn_food_global_multiplier!: number;
   @Expose() final_earn_food_herbi_multiplier!: number;
   @Expose() final_earn_food_carni_multiplier!: number;

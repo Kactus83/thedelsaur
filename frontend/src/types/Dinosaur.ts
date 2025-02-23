@@ -16,9 +16,9 @@ export interface Dinosaur {
   userId: number;
   name: string;
 
-  //Historique des vies (et scores)
+  // Historique des vies (et scores)
   lives: DinosaurLifeDTO[];
-  
+
   // Assets récents
   skills: DinosaurSkillInstanceDTO[];
   items: DinosaurItemInstanceDTO[];
@@ -35,8 +35,11 @@ export interface Dinosaur {
   initial_hunger_increase_per_second: number;
   initial_hunger_increase_per_second_when_recovery: number;
   initial_karma_width: number;
+  // Nouveaux champs pour le luck factor
+  initial_luck_factor: number;
+  past_lives_average_karma: number;
   
-  // Valeurs de bases après application des modificateurs
+  // Valeurs de bases après application des modificateurs de valeur initiales
   base_max_energy: number;
   energy_decay_per_second: number;
   energy_recovery_per_second: number;
@@ -100,4 +103,8 @@ export interface Dinosaur {
   final_earn_skill_point_multiplier: number;
   final_earn_money_multiplier: number;
   final_earn_karma_multiplier: number;
+
+  // Champs pour le calcul du luck factor
+  final_luck_factor: number;
+  final_luck_factor_multiplier: number;
 }

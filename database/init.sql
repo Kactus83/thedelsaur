@@ -127,7 +127,7 @@ DROP TABLE IF EXISTS dinosaurs;
 CREATE TABLE dinosaurs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL UNIQUE,
     diet_id INT NOT NULL,
     type_id INT NOT NULL,
     

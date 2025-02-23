@@ -6,6 +6,7 @@ import KarmaGauge from './utils/KarmaGauge';
 import EnergyGauge from './utils/EnergyGauge';
 import FoodGauge from './utils/FoodGauge';
 import HungerGauge from './utils/HungerGauge';
+import AgeEpochDisplay from './utils/AgeEpochDisplay';
 
 /**
  * Calcule l'âge du dinosaure en fonction de sa dernière renaissance.
@@ -31,9 +32,9 @@ const DinosaurInfo: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
     <div className="dinosaur-info">
       <h2>{dinosaur.name}</h2>
       <div className="dino-basic-info">
-        <p><strong>Âge :</strong> {calculateDinosaurAge(dinosaur.last_reborn)}</p>
-        <p><strong>Époque :</strong> {dinosaur.epoch}</p>
+        <AgeEpochDisplay dinosaur={dinosaur} />
       </div>
+      <DinoStats dinosaur={dinosaur} />
       <div className="dino-gauges">
         <EnergyGauge dinosaur={dinosaur} />
         <FoodGauge dinosaur={dinosaur} />
@@ -41,7 +42,6 @@ const DinosaurInfo: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
         <KarmaGauge dinosaur={dinosaur} />
 
       </div>
-      <DinoStats dinosaur={dinosaur} />
     </div>
   );
 };

@@ -37,7 +37,6 @@ export const authenticateJWT = async (
 
       next();
     } catch (err) {
-      console.error('Erreur lors de la vérification du token ou de la récupération de l\'utilisateur:', err);
       res.status(401).json({ message: 'Token invalide ou utilisateur non trouvé' });
       return;
     }

@@ -9,6 +9,7 @@ interface StatCalculationBreakdownProps {
 }
 
 const StatCalculationBreakdown: React.FC<StatCalculationBreakdownProps> = ({ label, base, modifiers }) => {
+  console.log('StatCalculationBreakdown', label, base, modifiers);
   // Calcul des modificateurs additifs
   const additiveModifiers = modifiers.filter(mod => mod.type === 'additive');
   const additiveTotal = additiveModifiers.reduce((sum, mod) => sum + mod.value, 0);

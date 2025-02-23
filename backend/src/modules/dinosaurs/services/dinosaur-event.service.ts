@@ -8,6 +8,7 @@ import { DynamicEvent } from '../models/dynamic-event';
 import { AfterlifeService } from './afterlife.service';
 import { DinosaurFactory } from '../factories/dinosaur.factory';
 import { getExperienceThresholdForLevel, getSkillPointsForLevel } from '../utils/levelThresholds';
+import { DynamicEventData } from '../models/dynamic-event-data.interface';
 
 /**
  * Service pour gérer les événements liés aux actions du dinosaure.
@@ -59,41 +60,103 @@ export class DinosaurEventService {
   }
 
   /**
-   * Sélectionne aléatoirement un événement pour une action donnée en utilisant le système dynamique.
-   * Le repository dynamique est utilisé pour récupérer les templates,
-   * filtrer ceux éligibles selon le niveau du dinosaure, et effectuer une sélection pondérée.
-   * L'événement final est généré via la classe DynamicEvent.
+   * Sélectionne aléatoirement un événement pour une action donnée en utilisant le système "loi de l'attraction".
+   * La fonction normalise les scores de positivité de l'ensemble des événements éligibles (échelle 0–100),
+   * convertit le luck factor du dinosaure en échelle 0–100, puis module le poids initial de chaque événement
+   * en fonction de la proximité entre son score relatif et la chance du joueur.
    * 
+   * Ainsi, le dinosaure "attire" les événements dont le score est le plus proche de sa chance.
+   *
    * @param action L'action effectuée.
-   * @param dinosaurLevel Le niveau du dinosaure.
+   * @param dinosaur Le dinosaure courant (DTO), qui doit inclure la propriété luck_factor.
    * @returns Une promesse résolvant l'événement dynamique généré.
    */
   public async getRandomEventForAction(
     action: DinosaurAction,
-    dinosaurLevel: number
+    dinosaur: FrontendDinosaurDTO
   ): Promise<DinosaurEvent> {
     // Récupérer tous les templates dynamiques pour l'action donnée
     const dynamicEventsData = await this.dynamicEventRepo.getDynamicEventsByAction(action);
+
     // Filtrer ceux dont le niveau minimum est inférieur ou égal au niveau du dinosaure
-    const eligibleTemplates = dynamicEventsData.filter(eventData => eventData.minLevel <= dinosaurLevel);
+    const eligibleTemplates = dynamicEventsData.filter(eventData => eventData.minLevel <= dinosaur.level);
     if (eligibleTemplates.length === 0) {
-      throw new Error(`Aucun event dynamique disponible pour l'action ${action} et le niveau ${dinosaurLevel}`);
+      throw new Error(`Aucun event dynamique disponible pour l'action ${action} et le niveau ${dinosaur.level}`);
     }
-    // Sélection pondérée selon le champ weight
-    const totalWeight = eligibleTemplates.reduce((sum, eventData) => sum + eventData.weight, 0);
-    let randomWeight = Math.random() * totalWeight;
-    let chosenTemplate = eligibleTemplates[eligibleTemplates.length - 1];
-    for (const eventData of eligibleTemplates) {
-      if (randomWeight < eventData.weight) {
+
+    // Pour ajouter temporairement des propriétés de calcul, on étend l'interface DynamicEventData
+    interface EnhancedDynamicEventData extends DynamicEventData {
+      relativePositivity: number; // Score de positivité normalisé entre 0 et 100
+      adjustedWeight: number;     // Poids modulé par la proximité avec la chance du joueur
+    }
+
+    // Création d'un tableau d'objets étendus
+    const enhancedTemplates: EnhancedDynamicEventData[] = eligibleTemplates.map(eventData => ({
+      ...eventData,
+      relativePositivity: 0,
+      adjustedWeight: 0,
+    }));
+
+    // 1. Normalisation des scores de positivité
+    // On extrait les positivityScore et on calcule le min et le max
+    const positivityScores = enhancedTemplates.map(e => e.positivityScore);
+    const minPositivity = Math.min(...positivityScores);
+    const maxPositivity = Math.max(...positivityScores);
+    const rangePositivity = maxPositivity - minPositivity;
+
+    enhancedTemplates.forEach(eventData => {
+      // Si tous les events ont le même score, on leur attribue une valeur neutre (50)
+      eventData.relativePositivity = rangePositivity === 0 
+        ? 50 
+        : ((eventData.positivityScore - minPositivity) / rangePositivity) * 100;
+    });
+
+    // 2. Conversion du luck factor du dinosaure en échelle 0–100.
+    // On suppose ici que dinosaur.luck_factor est initialement entre 0 et 1.
+    const playerLuck = dinosaur.final_luck_factor * 100;
+
+    // 3. Calcul de la distance maximale parmi les scores relatifs (pour normaliser la différence)
+    const relativeScores = enhancedTemplates.map(e => e.relativePositivity);
+    const minRelative = Math.min(...relativeScores);
+    const maxRelative = Math.max(...relativeScores);
+    const maxDistance = maxRelative - minRelative || 1; // pour éviter une division par zéro
+
+    // 4. Calcul du poids ajusté pour chaque événement
+    // Plus la distance entre le score relatif de l'événement et playerLuck est faible, plus le facteur de modulation est proche de 1.
+    enhancedTemplates.forEach(eventData => {
+      let modulationFactor: number;
+      if (rangePositivity === 0) {
+        // Tous les événements ont le même score, on ne module pas le poids
+        modulationFactor = 1;
+      } else {
+        const distance = Math.abs(eventData.relativePositivity - playerLuck);
+        modulationFactor = 1 - (distance / maxDistance);
+      }
+      eventData.adjustedWeight = eventData.weight * modulationFactor;
+    });    
+
+    // Vérifier que la somme des poids ajustés est supérieure à 0
+    const totalAdjustedWeight = enhancedTemplates.reduce((sum, eventData) => sum + eventData.adjustedWeight, 0);
+    if (totalAdjustedWeight <= 0) {
+      throw new Error('Aucun event dynamique n\'a un poids ajusté supérieur à 0.');
+    }
+
+    // 5. Sélection pondérée avec les poids ajustés
+    let randomWeight = Math.random() * totalAdjustedWeight;
+    let chosenTemplate: EnhancedDynamicEventData = enhancedTemplates[enhancedTemplates.length - 1];
+    for (const eventData of enhancedTemplates) {
+      if (randomWeight < eventData.adjustedWeight) {
         chosenTemplate = eventData;
         break;
       }
-      randomWeight -= eventData.weight;
+      randomWeight -= eventData.adjustedWeight;
     }
-    // Générer l'événement final à partir du template choisi
+
+    // Générer l'événement final à partir du template choisi.
     const dynamicEvent = new DynamicEvent(chosenTemplate);
-    return dynamicEvent.generateEvent(dinosaurLevel);
+    return dynamicEvent.generateEvent(dinosaur.level);
   }
+
 
   /**
    * Applique les effets d'un événement au dinosaure en utilisant les modifiers définis dans l'événement.
@@ -151,7 +214,6 @@ export class DinosaurEventService {
       // Accéder à la propriété du dinosaure
       const dinosaurRecord = dinosaur as Record<string, any>;
       const currentValue = dinosaurRecord[targetProperty] as number;
-      console.log(`Valeur actuelle de ${targetProperty} : ${currentValue}`);
       let newValue = currentValue;
       if (modifier.type === 'additive') {
         newValue = currentValue + modifier.value;

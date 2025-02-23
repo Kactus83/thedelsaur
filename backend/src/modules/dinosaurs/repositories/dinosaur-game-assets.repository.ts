@@ -39,13 +39,21 @@ interface DatabaseDinosaurItemInstanceRow extends RowDataPacket {
 /**
  * Interface décrivant une ligne issue du join entre dinosaur_buildings_instance et dinosaur_buildings.
  */
-interface DatabaseDinosaurBuildingInstanceRow extends RowDataPacket {
+export interface DatabaseDinosaurBuildingInstanceRow extends RowDataPacket {
   dinosaur_id: number;
   building_id: number;
   current_level: number;
-  purchased_upgrades: string; // JSON
-  building_statModifiers: string; // JSON provenant de dinosaur_buildings.stat_modifiers
+  purchased_upgrades: string; // JSON (ex: '{"1":true,"2":false}')
+  // Champs provenant de la table des bâtiments
+  name: string;
+  description: string | null;
+  price: number;
+  min_level_to_buy: number;
+  max_level: number;
+  improvement_tree: string; // JSON (tableau d'amélioration)
+  building_statModifiers: string; // JSON
 }
+
 
 /**
  * Interface décrivant une ligne issue du join entre dinosaur_soul_skills_instance et dinosaur_soul_skills.
@@ -190,26 +198,44 @@ export class DinosaurGameAssetsRepository {
     }
   }
 
+
   /**
    * Récupère toutes les instances de bâtiments associées à un dinosaure.
-   * Joint la table dinosaur_buildings pour récupérer les statModifiers.
+   * La requête joint la table dinosaur_buildings pour récupérer les informations de base (nom, description, etc.).
    * @param dinosaurId Identifiant du dinosaure.
    * @returns Une liste d'instances de bâtiments.
    */
   public async getBuildingInstancesByDinosaurId(dinosaurId: number): Promise<DinosaurBuildingInstanceDTO[]> {
     try {
       const [rows] = await pool.query<DatabaseDinosaurBuildingInstanceRow[]>(
-        `SELECT dbi.*, dbuild.stat_modifiers AS building_statModifiers
+        `SELECT 
+           dbi.building_id, 
+           dbi.current_level, 
+           dbi.purchased_upgrades, 
+           dbuild.name, 
+           dbuild.description, 
+           dbuild.price, 
+           dbuild.min_level_to_buy, 
+           dbuild.max_level, 
+           dbuild.improvement_tree, 
+           dbuild.stat_modifiers AS building_statModifiers
          FROM dinosaur_buildings_instance dbi
          JOIN dinosaur_buildings dbuild ON dbi.building_id = dbuild.id
          WHERE dbi.dinosaur_id = ?`,
         [dinosaurId]
       );
+      
       return rows.map(row => ({
         id: row.building_id,
+        name: row.name,
+        description: row.description || undefined,
+        price: row.price,
+        minLevelToBuy: row.min_level_to_buy,
+        maxLevel: row.max_level,
+        improvementTree: JSON.parse(row.improvement_tree),
+        statModifiers: JSON.parse(row.building_statModifiers),
         currentLevel: row.current_level,
-        purchasedUpgrades: JSON.parse(row.purchased_upgrades),
-        statModifiers: JSON.parse(row.building_statModifiers)
+        purchasedUpgrades: JSON.parse(row.purchased_upgrades)
       })) as DinosaurBuildingInstanceDTO[];
     } catch (error) {
       console.error("Error fetching dinosaur building instances:", error);

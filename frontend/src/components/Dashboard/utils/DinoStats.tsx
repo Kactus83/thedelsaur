@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './DinoStats.css';
 import { Dinosaur } from '../../../types/Dinosaur';
 import { useOverlay } from '../../../contexts/OverlayContext';
@@ -12,11 +12,45 @@ interface StatMapping {
   modifiers: any[];
 }
 
+const formatNumber = (num: number): string => {
+  if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+  if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+  if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+  return num.toString();
+};
+
+interface AnimatedNumberProps {
+  value: number;
+}
+
+const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ value }) => {
+  const [displayValue, setDisplayValue] = useState(value);
+
+  useEffect(() => {
+    const start = displayValue;
+    const end = value;
+    const duration = 800; // durée de l'animation en ms
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const current = start + (end - start) * progress;
+      setDisplayValue(current);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+
+    requestAnimationFrame(animate);
+  }, [value]);
+
+  return <span className="stat-value">{formatNumber(displayValue)}</span>;
+};
+
 const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   const { openStatDetail } = useOverlay();
 
   const statMoney: StatMapping = {
-    label: 'Argent',
+    label: 'ARGENT',
     icon: '💰',
     base: 1,
     value: dinosaur.money,
@@ -24,7 +58,7 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   };
 
   const statSkill: StatMapping = {
-    label: 'Compétence',
+    label: 'SKILL',
     icon: '⭐',
     base: 1,
     value: dinosaur.skill_points,
@@ -32,7 +66,7 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   };
 
   const statWeapon: StatMapping = {
-    label: 'Armes',
+    label: 'ARMES',
     icon: '⚔️',
     base: 0,
     value: dinosaur.weapons,
@@ -40,7 +74,7 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   };
 
   const statArmor: StatMapping = {
-    label: 'Armures',
+    label: 'ARMURES',
     icon: '🛡️',
     base: 0,
     value: dinosaur.armors,
@@ -48,7 +82,7 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   };
 
   const statFriends: StatMapping = {
-    label: 'Amis',
+    label: 'AMIS',
     icon: '🤝',
     base: 0,
     value: dinosaur.friends,
@@ -56,7 +90,7 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   };
 
   const statEmployees: StatMapping = {
-    label: 'Employés',
+    label: 'EMPLOYÉS',
     icon: '👥',
     base: 0,
     value: dinosaur.employees,
@@ -66,59 +100,62 @@ const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   return (
     <div className="dino-stats-container">
       <div className="dino-stats-grid">
-        {/* Argent */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.MONEY)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statMoney.icon}</span>
-            <span className="stat-label">{statMoney.label}</span>
-            <span className="stat-value">{statMoney.value}</span>
+        {/* Groupe 1 : Argent et Compétence */}
+        <div className="stat-group" onClick={() => openStatDetail(ClickableStatTarget.MONEY)}>
+          <div className="stat-item">
+            <div className="stat-icon">{statMoney.icon}</div>
+            <div className="stat-label">{statMoney.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statMoney.value} />
+              <span className="item-info">❓</span>
+            </div>
           </div>
-          <div className="item-info">❓</div>
+          <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.COMPETENCE)}>
+            <div className="stat-icon">{statSkill.icon}</div>
+            <div className="stat-label">{statSkill.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statSkill.value} />
+              <span className="item-info">❓</span>
+            </div>
+          </div>
         </div>
-        {/* Compétence */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.COMPETENCE)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statSkill.icon}</span>
-            <span className="stat-label">{statSkill.label}</span>
-            <span className="stat-value">{statSkill.value}</span>
+        {/* Groupe 2 : Armes et Armures */}
+        <div className="stat-group" onClick={() => openStatDetail(ClickableStatTarget.WEAPONS)}>
+          <div className="stat-item">
+            <div className="stat-icon">{statWeapon.icon}</div>
+            <div className="stat-label">{statWeapon.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statWeapon.value} />
+              <span className="item-info">❓</span>
+            </div>
           </div>
-          <div className="item-info">❓</div>
+          <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.ARMORS)}>
+            <div className="stat-icon">{statArmor.icon}</div>
+            <div className="stat-label">{statArmor.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statArmor.value} />
+              <span className="item-info">❓</span>
+            </div>
+          </div>
         </div>
-        {/* Armes */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.WEAPONS)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statWeapon.icon}</span>
-            <span className="stat-label">{statWeapon.label}</span>
-            <span className="stat-value">{statWeapon.value}</span>
+        {/* Groupe 3 : Amis */}
+        <div className="stat-group" onClick={() => openStatDetail(ClickableStatTarget.FRIENDS)}>
+          <div className="stat-item">
+            <div className="stat-icon">{statFriends.icon}</div>
+            <div className="stat-label">{statFriends.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statFriends.value} />
+              <span className="item-info">❓</span>
+            </div>
           </div>
-          <div className="item-info">❓</div>
-        </div>
-        {/* Armures */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.ARMORS)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statArmor.icon}</span>
-            <span className="stat-label">{statArmor.label}</span>
-            <span className="stat-value">{statArmor.value}</span>
+          <div className="stat-item">
+            <div className="stat-icon">{statEmployees.icon}</div>
+            <div className="stat-label">{statEmployees.label}</div>
+            <div className="stat-value-wrapper">
+              <AnimatedNumber value={statEmployees.value} />
+              <span className="item-info">❓</span>
+            </div>
           </div>
-          <div className="item-info">❓</div>
-        </div>
-        {/* Amis */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.FRIENDS)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statFriends.icon}</span>
-            <span className="stat-label">{statFriends.label}</span>
-            <span className="stat-value">{statFriends.value}</span>
-          </div>
-          <div className="item-info">❓</div>
-        </div>
-        {/* Employés */}
-        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.EMPLOYEES)}>
-          <div className="stat-content">
-            <span className="stat-icon">{statEmployees.icon}</span>
-            <span className="stat-label">{statEmployees.label}</span>
-            <span className="stat-value">{statEmployees.value}</span>
-          </div>
-          <div className="item-info">❓</div>
         </div>
       </div>
     </div>

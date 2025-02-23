@@ -87,7 +87,7 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas dormir.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Sleep, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Sleep, dinosaur);
 
         dinosaur.is_sleeping = true;
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Sleep, event);
@@ -108,7 +108,7 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas se réveiller.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.WakeUp, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.WakeUp, dinosaur);
 
         dinosaur.is_sleeping = false;
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.WakeUp, event);
@@ -129,7 +129,7 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas ressusciter.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Resurrect, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Resurrect, dinosaur);
 
         // Apply event lors d'une resurrection renvoie une nouvelle instance de dino
         // Penser a bien utiliser newDino, et non pâs dinosaur comme partout ailleurs
@@ -151,7 +151,7 @@ export class BasicActionsService {
             throw new Error('Le dinosaure ne peut pas brouter.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Graze, dinosaur);
         // Ici la fonction renvoie une nouvelle instance de dino
         // Penser a bien utiliser newDino, et non pâs dinosaur comme partout ailleurs.
         const newDino: FrontendDinosaurDTO = await this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);

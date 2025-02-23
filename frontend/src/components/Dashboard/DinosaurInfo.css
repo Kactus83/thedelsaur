@@ -1,21 +1,26 @@
 .dinosaur-info {
+    height: 100%;
     margin: 2px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     padding: 10px;
-    width: 43vh;
+    width: 27vh;
   }
   
   .dino-basic-info {
     text-align: center;
-    margin-bottom: 10px;
+    width: 100%;
   }
   
   .dino-gauges {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0px 3px;
     display: flex;
     gap: 5px;
-    margin-bottom: 10px;
     flex-wrap: wrap;
     justify-content: center;
   }

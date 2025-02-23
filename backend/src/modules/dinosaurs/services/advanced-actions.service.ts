@@ -29,7 +29,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas voler.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Steal, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Steal, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Steal, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -49,7 +49,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas découvrir.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Discover, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Discover, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Discover, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -69,7 +69,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas prier.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Pray, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Pray, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Pray, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -89,7 +89,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas travailler comme garde du corps.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Bodyguard, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Bodyguard, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Bodyguard, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -109,7 +109,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas garder les enfants.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Babysitter, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Babysitter, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Babysitter, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -129,7 +129,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas plonger.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Dive, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Dive, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Dive, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -149,7 +149,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas creuser.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Dig, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Dig, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Dig, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);
@@ -169,7 +169,7 @@ export class AdvancedActionsService {
             throw new Error('Le dinosaure ne peut pas voler.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Fly, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Fly, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Fly, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

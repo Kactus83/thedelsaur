@@ -29,7 +29,7 @@ export class CarnivoreActionsService {
             throw new Error('Le dinosaure ne peut pas chasser.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Hunt, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Hunt, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Hunt, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

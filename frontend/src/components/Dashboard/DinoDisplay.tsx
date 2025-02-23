@@ -1,3 +1,4 @@
+// src/components/Dashboard/DinoDisplay.tsx
 import React, { useEffect, useState } from 'react';
 import { Dinosaur } from '../../types/Dinosaur';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
@@ -110,14 +111,20 @@ const DinoDisplay: React.FC<DinoDisplayProps> = ({ dinosaur, lastEvent, action, 
   // Combine les classes CSS pour l'image du dinosaure
   const className = `dino-svg ${dinosaur.is_dead ? 'dino-dead' : 'dino-alive'} ${animation} ${levelUpClass} ${karmaAnimationClass}`;
 
-  // Affichage de la roue d'actions au survol (logique existante)
+  // La roue d'action ne doit s'afficher que si le dinosaure n'est ni endormi ni mort
   const [showActionWheel, setShowActionWheel] = useState<boolean>(false);
   const gameplayService = new GameplayService();
+
+  const handleMouseEnter = () => {
+    if (!dinosaur.is_sleeping && !dinosaur.is_dead) {
+      setShowActionWheel(true);
+    }
+  };
 
   return (
     <div 
       className="dino-display-container"
-      onMouseEnter={() => setShowActionWheel(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={() => setShowActionWheel(false)}
     >
       <img
