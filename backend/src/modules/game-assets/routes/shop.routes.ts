@@ -24,13 +24,23 @@ export default function (
     }
   );
 
-  // Achat d'une compétence
+  // Achat d'une compétence classique
   router.post(
     '/shop/skills/:skillId',
     authenticateJWT,
     dinosaurMiddleware.fetchAndUpdateDinosaur,
     (req, res, next) => {
       shopController.purchaseSkill(req, res).catch(next);
+    }
+  );
+
+  // Achat d'une Soul Skill
+  router.post(
+    '/shop/soul-skills/:soulSkillId',
+    authenticateJWT,
+    dinosaurMiddleware.fetchAndUpdateDinosaur,
+    (req, res, next) => {
+      shopController.purchaseSoulSkill(req, res).catch(next);
     }
   );
 

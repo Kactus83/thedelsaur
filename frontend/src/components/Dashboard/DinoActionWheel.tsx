@@ -17,10 +17,12 @@ interface DinoActionWheelProps {
 }
 
 const DinoActionWheel: React.FC<DinoActionWheelProps> = ({ dinosaur, gameplayService, onClose }) => {
+
   // Filtrer les skills (uniquement ceux de type Triggered)
   const triggeredSkills = dinosaur.skills.filter(skill => skill.type === 'triggered');
   // Filtrer les items (uniquement consommables)
   const consumableItems = dinosaur.items.filter(item => item.itemType === 'consumable');
+
 
   // Toggle entre les deux vues : 'skills' ou 'items'
   const [viewMode, setViewMode] = useState<'skills' | 'items'>('skills');

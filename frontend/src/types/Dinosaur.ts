@@ -2,6 +2,7 @@ import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
 import { DinosaurLifeDTO } from './dinosaur-life.dto';
 import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
+import { DinosaurSoulSkillInstanceDTO } from './dinosaur-soul-skill-instance.dto';
 import { DinosaurDiet } from './DinosaurDiet';
 import { DinosaurType } from './DinosaurType';
 import { Epoch } from './Epoch';
@@ -22,11 +23,24 @@ export interface Dinosaur {
   skills: DinosaurSkillInstanceDTO[];
   items: DinosaurItemInstanceDTO[];
   buildings: DinosaurBuildingInstanceDTO[];
+  soulSkills: DinosaurSoulSkillInstanceDTO[];
 
-  // Valeurs de base (identiques pour tous les dinosaures)
+  // Valeurs initiales de base du dinosaure (identiques pour tous les dinosaures)
+  initial_base_max_energy: number;
+  initial_energy_decay_per_second: number;
+  initial_energy_recovery_per_second: number;
+  initial_energy_recovery_per_second_when_sleeping: number;
+  initial_base_max_food: number;
+  initial_base_max_hunger: number;
+  initial_hunger_increase_per_second: number;
+  initial_hunger_increase_per_second_when_recovery: number;
+  initial_karma_width: number;
+  
+  // Valeurs de bases après application des modificateurs
   base_max_energy: number;
   energy_decay_per_second: number;
   energy_recovery_per_second: number;
+  energy_recovery_per_second_when_sleeping: number;
   base_max_food: number;
   base_max_hunger: number;
   hunger_increase_per_second: number;
@@ -65,7 +79,7 @@ export interface Dinosaur {
   // Modificateurs (issus de level, karma, etc.)
   stats_modifiers: StatModifier[];
   
-  // Multiplicateurs finaux (après application des modificateurs)
+  // Multiplicateurs finaux après application des modificateurs
   final_max_energy: number;
   final_max_food: number;
   final_max_hunger: number;
@@ -73,11 +87,12 @@ export interface Dinosaur {
   final_energy_decay: number;
   final_hunger_increase: number;
   final_hunger_increase_when_recovery: number;
-  food_production: number;
-  weapon_production: number;
-  armor_production: number;
-  friend_production: number;
-  employee_production: number;
+  
+  final_food_production: number;
+  final_weapon_production: number;
+  final_armor_production: number;
+  final_friend_production: number;
+  final_employee_production: number;
   final_earn_food_global_multiplier: number;
   final_earn_food_herbi_multiplier: number;
   final_earn_food_carni_multiplier: number;

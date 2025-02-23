@@ -24,7 +24,7 @@ export class ShopController {
   };
 
   /**
-   * Achat d'une compétence.
+   * Achat d'une compétence classique.
    * Route : POST /shop/skills/:skillId
    */
   public purchaseSkill = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
@@ -43,6 +43,31 @@ export class ShopController {
       res.status(200).json({ message, dinosaur: updatedDino });
     } catch (error: any) {
       console.error('Erreur lors de l\'achat de la compétence :', error);
+      res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
+    }
+  };
+
+  /**
+   * Achat d'une Soul Skill.
+   * Route : POST /shop/soul-skills/:soulSkillId
+   */
+  public purchaseSoulSkill = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const dinosaur = req.dinosaur;
+      const user = req.user;
+      if (!dinosaur || !user) {
+        res.status(400).json({ message: 'Dinosaure ou User non trouvé' });
+        return;
+      }
+      const soulSkillId = Number(req.params.soulSkillId);
+      if (isNaN(soulSkillId)) {
+        res.status(400).json({ message: 'Identifiant de Soul Skill invalide' });
+        return;
+      }
+      const { dinosaur: updatedDino, message } = await this.shopService.purchaseSoulSkill(dinosaur, user, soulSkillId);
+      res.status(200).json({ message, dinosaur: updatedDino });
+    } catch (error: any) {
+      console.error('Erreur lors de l\'achat de la Soul Skill :', error);
       res.status(500).json({ message: error.message || 'Erreur interne du serveur' });
     }
   };

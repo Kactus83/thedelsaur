@@ -117,13 +117,14 @@ export class DinosaurEventService {
   public async applyEventToDinosaur(
     dinosaur: FrontendDinosaurDTO,
     action: DinosaurAction,
-    event: DinosaurEvent
+    event: DinosaurEvent,
+    isAdmin: boolean = false
   ): Promise<FrontendDinosaurDTO> {
     if (action === DinosaurAction.Resurrect) {
       // Enregistrer l'historique de vie avant résurrection
       await this.afterlifeService.processAfterlife(dinosaur);
       // Utiliser la factory injectée pour ressusciter le dinosaure
-      return await this.dinosaurFactory.resurrectDinosaur(dinosaur);
+      return await this.dinosaurFactory.resurrectDinosaur(dinosaur, isAdmin);
     }
 
     // Table de correspondance entre le target du modifier et la propriété du DTO

@@ -16,6 +16,11 @@ export const purchaseSkill = async (skillId: number): Promise<{ dinosaur: Dinosa
   return response.data;
 };
 
+export const purchaseSoulSkill = async (soulSkillId: number): Promise<{ dinosaur: Dinosaur; message: string }> => {
+  const response = await api.post(`/game-assets/shop/soul-skills/${soulSkillId}`);
+  return response.data;
+};
+
 export const purchaseItem = async (itemId: number): Promise<{ dinosaur: Dinosaur; message: string }> => {
   const response = await api.post(`/game-assets/shop/items/${itemId}`);
   return response.data;

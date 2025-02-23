@@ -1,42 +1,70 @@
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .overlay-content {
-    background-color: #fff;
-    padding: 20px;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 8px;
-    position: relative;
-  }
-  
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .buildings-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .building-item {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.overlay-content {
+  background-color: #fff;
+  padding: 20px;
+  width: 80%;
+  height: 90%;
+  overflow: auto;
+  max-width: 600px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.buildings-list {
+  list-style: none;
+  padding: 0;
+}
+
+.building-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.building-upgrades {
+  margin-top: 10px;
+}
+
+.building-upgrades ul {
+  list-style: none;
+  padding: 0;
+}
+
+.building-upgrades li {
+  margin-bottom: 5px;
+}
+
+.building-upgrades button {
+  margin-left: 10px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}

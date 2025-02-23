@@ -20,6 +20,7 @@ import { GameplayService } from './services/gameplay.service';
 import { DinosaurLivesRepository } from './repositories/dinosaur-lives.repository';
 import { AfterlifeService } from './services/afterlife.service';
 import { DinosaurEventService } from './services/dinosaur-event.service';
+import { PlayerScoreRepository } from './repositories/player-score.repository';
 
 /**
  * Module Dinosaurs.
@@ -61,10 +62,11 @@ export class DinosaursModule {
     const dinosaurRepository = new DinosaurRepository(gameAssetsRepo, dinosaurLivesRepository);
     const dinosaurFactory = new DinosaurFactory(dinosaurRepository);
     const dynamicEventRepository = new DynamicEventRepository();
+    const playerScoreRepository = new PlayerScoreRepository();
     this.dynamicEventRepository = dynamicEventRepository;
 
     // Initialisation des services spécifiques
-    this.afterlifeService = new AfterlifeService(dinosaurLivesRepository);
+    this.afterlifeService = new AfterlifeService(dinosaurLivesRepository, playerScoreRepository);
     this.dinosaurEventService = new DinosaurEventService(
       dynamicEventRepository,
       this.afterlifeService,

@@ -9,6 +9,7 @@ interface ShopItemCardProps {
   preview?: boolean;
   disabled?: boolean;
   insufficientResources?: boolean;
+  ownedQuantity?: number;
 }
 
 const ShopItemCard: React.FC<ShopItemCardProps> = ({
@@ -18,6 +19,7 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
   preview = false,
   disabled = false,
   insufficientResources = false,
+  ownedQuantity = 0,
 }) => {
   return (
     <div className="shop-card">
@@ -30,6 +32,9 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
         <p>{item.description}</p>
         <p className="shop-card-price">Prix : {item.price}</p>
         <p className="shop-card-minlevel">Niveau min : {item.minLevelToBuy}</p>
+        {ownedQuantity > 0 && (
+          <p className="shop-card-owned">Possédé : {ownedQuantity}</p>
+        )}
         <div className="shop-card-actions">
           {preview ? (
             <button className="shop-card-btn" disabled>

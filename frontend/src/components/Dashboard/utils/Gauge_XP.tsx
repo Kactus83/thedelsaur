@@ -1,6 +1,7 @@
-// src/components/Dashboard/utils/Gauge_XP.tsx
 import React, { useState } from 'react';
 import './Gauge_XP.css';
+import { useOverlay } from '../../../contexts/OverlayContext';
+import { ClickableStatTarget } from '../../../types/ClickableStatTarget';
 
 interface GaugeXPProps {
   label: string;
@@ -16,6 +17,7 @@ interface GaugeXPProps {
  */
 const Gauge_XP: React.FC<GaugeXPProps> = ({ label, current, max, color = '#4CAF50', calculationBreakdown }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { openStatDetail } = useOverlay();
   const percentage = Math.min((current / max) * 100, 100);
 
   const toggleTooltip = () => {
@@ -23,15 +25,17 @@ const Gauge_XP: React.FC<GaugeXPProps> = ({ label, current, max, color = '#4CAF5
   };
 
   return (
-    <div className="gaugexp" onClick={toggleTooltip}>
+    <div className="gaugexp">
       <span className="gauge-xplabel">{label}</span>
-      <div className="gauge-xpbar">
+      <div className="gauge-xpbar" onClick={() => openStatDetail(ClickableStatTarget.EXPERIENCE_GAUGE)}>
         <div
           className="gauge-xpfill"
           style={{ width: `${percentage}%`, backgroundColor: color }}
         ></div>
       </div>
-      <span className="gauge-xptext">{current} / {max}</span>
+      <span className="gauge-xptext" onClick={() => openStatDetail(ClickableStatTarget.EXPERIENCE_GAUGE_TEXT)}>
+        {current} / {max}
+      </span>
       {showTooltip && calculationBreakdown && (
         <div className="tooltip-xpdetail">
           {calculationBreakdown}

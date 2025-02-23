@@ -1,6 +1,8 @@
 import React from 'react';
 import './EnergyGauge.css';
 import { Dinosaur } from '../../../types/Dinosaur';
+import { useOverlay } from '../../../contexts/OverlayContext';
+import { ClickableStatTarget } from '../../../types/ClickableStatTarget';
 
 /**
  * Composant de jauge pour l'énergie.
@@ -9,6 +11,7 @@ import { Dinosaur } from '../../../types/Dinosaur';
  * Un effet d'éclat est déclenché lorsque l'énergie atteint son maximum.
  */
 const EnergyGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
+  const { openStatDetail } = useOverlay();
   const currentEnergy = dinosaur.energy;
   const maxEnergy = dinosaur.final_max_energy;
   const fraction = Math.min(currentEnergy / maxEnergy, 1);
@@ -26,7 +29,7 @@ const EnergyGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   return (
     <div className="energy-gauge">
       <div className="energy-label">ÉNERGIE</div>
-      <div className={`energy-bar ${isFull ? 'sparkle' : ''}`}>
+      <div className={`energy-bar ${isFull ? 'sparkle' : ''}`} onClick={() => openStatDetail(ClickableStatTarget.ENERGY_GAUGE)}>
         <div
           className="energy-fill"
           style={{
@@ -36,7 +39,7 @@ const EnergyGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
           }}
         />
       </div>
-      <div className="energy-text">
+      <div className="energy-text" onClick={() => openStatDetail(ClickableStatTarget.ENERGY_GAUGE_TEXT)}>
         {currentEnergy} / {maxEnergy}
       </div>
     </div>

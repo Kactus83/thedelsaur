@@ -5,6 +5,7 @@ import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
 import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
 import { DinosaurLifeDTO } from './dinosaur-life.dto';
+import { DinosaurSoulSkillInstanceDTO } from './dinosaur-soul-skill-instance.dto';
 
 /**
  * Interface représentant le dinosaure stocké en base de données.
@@ -59,4 +60,5 @@ export interface DatabaseDinosaur {
   skills: DinosaurSkillInstanceDTO[];
   items: DinosaurItemInstanceDTO[];
   buildings: DinosaurBuildingInstanceDTO[];
+  soul_skills: DinosaurSoulSkillInstanceDTO[];
 }

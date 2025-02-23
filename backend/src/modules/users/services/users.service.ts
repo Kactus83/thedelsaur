@@ -79,11 +79,33 @@ export class UsersService {
       const darkSoulPoints = isAdmin ? 10000 : 0;
       const brightSoulPoints = isAdmin ? 10000 : 0;
 
+      // On peut construire un player_score initial (si on veut écraser le DEFAULT)
+      const initialPlayerScore = {
+        totalSoulPoints: 0,
+        totalDarkSoulPoints: 0,
+        totalBrightSoulPoints: 0,
+        totalLives: 0,
+        totalKarma: 0,
+        latestKarma: 0,
+        maxKarma: 0,
+        minKarma: 0,
+        averageKarma: 0,
+        negativeLivesCount: 0,
+        positiveLivesCount: 0,
+        totalLifetime: 0,
+        maxLifetime: 0,
+        totalLevels: 0,
+        maxLevel: 0,
+        totalExperience: 0,
+        maxExperience: 0
+      };
+
       const query = `
         INSERT INTO user (
           username, email, password_hash, isAdmin,
-          neutral_soul_points, dark_soul_points, bright_soul_points
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+          neutral_soul_points, dark_soul_points, bright_soul_points,
+          player_score
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `;
       const [result] = await pool.query(query, [
         username,
@@ -92,7 +114,8 @@ export class UsersService {
         isAdmin,
         neutralSoulPoints,
         darkSoulPoints,
-        brightSoulPoints
+        brightSoulPoints,
+        JSON.stringify(initialPlayerScore)
       ]);
       const res = result as any;
       return res.insertId;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useOverlay } from '../../contexts/OverlayContext';
 import './Header.css';
+import { useOverlay } from '../../contexts/OverlayContext';
 
-const HandleLogout = () => {
+const handleLogout = () => {
   localStorage.removeItem('token');
 };
 
@@ -16,32 +16,88 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header>
+    <header className="header-container">
+      {/* -- Zone gauche (desktop) : Profil / Disconnect -- */}
+      <div className="desktop-left">
+        <Link to="/user-profile" className="header-btn-left">
+          Profil&nbsp;👤
+        </Link>
+        <button
+          className="header-btn-left"
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          Disconnect&nbsp;🚪
+        </button>
+      </div>
+
+      {/* -- Titre au centre (desktop) -- */}
       <div className="Title">IdleSaur🦖</div>
 
-      {/* Hamburger icon */}
-      <div className={`burger-icon ${menuOpen ? 'open' : ''}`} onClick={toggleMenu}>
+      {/* -- Zone droite (desktop) : PvP / Classements -- */}
+      <div className="desktop-right">
+        <button
+          className="header-btn-right"
+          onClick={() => openOverlay('pvp')}
+        >
+          PvP&nbsp;⚔
+        </button>
+        <button
+          className="header-btn-right"
+          onClick={() => openOverlay('ranking')}
+        >
+          Classements&nbsp;🏆
+        </button>
+      </div>
+
+      {/* -- Icône burger (mobile) -- */}
+      <div
+        className={`burger-icon ${menuOpen ? 'open' : ''}`}
+        onClick={toggleMenu}
+      >
         <span></span>
         <span></span>
         <span></span>
       </div>
 
-      {/* Navigation menu */}
+      {/* 
+        -- Nav (mobile) : 
+        overlay plein écran + grille 2×2 dans la partie haute.
+      */}
       <nav className={menuOpen ? 'nav open' : 'nav'}>
-        <Link to="/dashboard" onClick={toggleMenu}>Dashboard</Link>
-        <Link to="/user-profile" onClick={toggleMenu}>Profil</Link>
-        <button onClick={() => { HandleLogout(); toggleMenu(); }}>Disconnect</button>
-        
-        {/* Boutons pour déclencher les overlays */}
-        <button onClick={() => { openOverlay('inventory'); toggleMenu(); }}>
-          Inventaire
-        </button>
-        <button onClick={() => { openOverlay('buildings'); toggleMenu(); }}>
-          Bâtiments
-        </button>
-        <button onClick={() => { openOverlay('shop'); toggleMenu(); }}>
-          Shop
-        </button>
+        <div className="nav-grid">
+          <Link
+            to="/user-profile"
+            onClick={toggleMenu}
+          >
+            Profil&nbsp;👤
+          </Link>
+          <button
+            onClick={() => {
+              handleLogout();
+              toggleMenu();
+            }}
+          >
+            Disconnect&nbsp;🚪
+          </button>
+          <button
+            onClick={() => {
+              openOverlay('pvp');
+              toggleMenu();
+            }}
+          >
+            PvP&nbsp;⚔
+          </button>
+          <button
+            onClick={() => {
+              openOverlay('ranking');
+              toggleMenu();
+            }}
+          >
+            Classements&nbsp;🏆
+          </button>
+        </div>
       </nav>
     </header>
   );

@@ -20,6 +20,7 @@ import { persistentExperienceItems } from './items/persistent.items.experience';
 import { persistentAdvancedItems } from './items/persistent.items.advanced';
 
 import { allBuildingsMapping } from './buildings/game-assets.buildings.mapping';
+import { soulSkills } from './soul-skills/dinosaur-soul-skill.mapping';
 
 /**
  * Agrégation complète des définitions de Game Assets.
@@ -32,6 +33,9 @@ export const GameAssetsMapping = {
     ...karmaSkills,
     ...experienceSkills,
     ...advancedSkills
+  ],
+  soulSkills: [
+    ...soulSkills
   ],
   items: {
     consumable: [

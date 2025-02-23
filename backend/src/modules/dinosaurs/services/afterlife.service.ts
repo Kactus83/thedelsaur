@@ -2,6 +2,7 @@ import { DinosaurLivesRepository } from '../repositories/dinosaur-lives.reposito
 import { FrontendDinosaurDTO } from '../models/frontend-dinosaur.dto';
 import { DINOSAUR_CONSTANTS } from '../../../common/config/dinosaur.constants';
 import { DinosaurLifeDTO } from '../models/dinosaur-life.dto';
+import { PlayerScoreRepository } from '../repositories/player-score.repository';
 
 /**
  * Service dédié à la gestion de l'afterlife du dinosaure.
@@ -9,9 +10,11 @@ import { DinosaurLifeDTO } from '../models/dinosaur-life.dto';
  */
 export class AfterlifeService {
   private dinosaurLivesRepository: DinosaurLivesRepository;
+  private playerScoreRepository: PlayerScoreRepository;
 
-  constructor(dinosaurLivesRepository: DinosaurLivesRepository) {
+  constructor(dinosaurLivesRepository: DinosaurLivesRepository, playerScoreRepository: PlayerScoreRepository) {
     this.dinosaurLivesRepository = dinosaurLivesRepository;
+    this.playerScoreRepository = playerScoreRepository;
   }
 
   /**
@@ -65,6 +68,9 @@ export class AfterlifeService {
 
     // Enregistrement en base de la vie passée via le repository
     const insertedId = await this.dinosaurLivesRepository.createDinosaurLife(lifeRecord);
+
+    // On met à jour le score du joueur (via le PlayerScoreRepository)
+    await this.playerScoreRepository.recalculateAndSaveUserScore(dinosaur.userId);
     return insertedId;
   }
 }

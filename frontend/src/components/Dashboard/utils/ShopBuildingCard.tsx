@@ -5,7 +5,7 @@ import './ShopCard.css';
 interface ShopBuildingCardProps {
   building: DinosaurBuildingDTO;
   onPurchase: (buildingId: number) => void;
-  onUpgrade: (buildingId: number, upgradeId: number) => void;
+  onUpgrade?: (buildingId: number, upgradeId: number) => void;
   preview?: boolean;
   disabled?: boolean;
   insufficientResources?: boolean;
@@ -42,15 +42,6 @@ const ShopBuildingCard: React.FC<ShopBuildingCardProps> = ({
               onClick={() => onPurchase(building.id)}
             >
               {insufficientResources ? "Pas assez d'argent" : "Acheter"}
-            </button>
-          )}
-          {!preview && (
-            <button
-              className="shop-card-btn upgrade"
-              disabled={disabled || insufficientResources}
-              onClick={() => onUpgrade(building.id, 1)}
-            >
-              {insufficientResources ? "Pas assez d'argent" : "Upgrade"}
             </button>
           )}
         </div>

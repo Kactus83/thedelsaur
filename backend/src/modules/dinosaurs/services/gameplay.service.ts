@@ -65,16 +65,19 @@ export class GameplayService {
       throw new Error("Item non possédé par le dinosaure");
     }
     // Pour un item consommable, on décrémente la quantité.
-    // Vous pouvez adapter cette logique selon votre modèle (ex: si la quantité atteint 0, supprimer l'item).
     if (itemInstance.itemType === 'consumable') {
       itemInstance.currentLevelOrQuantity = Math.max(itemInstance.currentLevelOrQuantity - 1, 0);
+      // Si la quantité atteint 0, retirer l'item de la liste
+      if (itemInstance.currentLevelOrQuantity === 0) {
+        dinosaur.items = dinosaur.items.filter(item => item.id !== itemId);
+      }
     }
-    // Appliquer l'effet de l'item sur le dinosaure ici (la logique métier est à définir)
-    // Par exemple, si l'item restaure de la nourriture :
+    // Appliquer l'effet de l'item sur le dinosaure ici (par exemple, restaurer de la nourriture)
     // dinosaur.food = Math.min(dinosaur.food + 500, dinosaur.base_max_food);
 
     // Mettre à jour en base
     await this.dinosaurRepo.updateDinosaur(dinosaurId, dinosaur);
     return this.dinosaurFactory.convertToFrontendDinosaur(dinosaur);
   }
+
 }
