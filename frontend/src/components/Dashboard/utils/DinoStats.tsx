@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './DinoStats.css';
 import { Dinosaur } from '../../../types/Dinosaur';
+import { useOverlay } from '../../../contexts/OverlayContext';
+import { ClickableStatTarget } from '../../../types/ClickableStatTarget';
 
 interface StatMapping {
   label: string;
@@ -10,39 +12,9 @@ interface StatMapping {
   modifiers: any[];
 }
 
-interface StatCouple {
-  stat1: StatMapping;
-  stat2: StatMapping;
-}
+const DinoStats: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
+  const { openStatDetail } = useOverlay();
 
-interface DinoStatsProps {
-  dinosaur: Dinosaur;
-}
-
-/**
- * Calcule le breakdown d'une stat.
- * Formule : (base + somme des additifs) × (produit de (1 + chaque multiplicatif))
- * Retourne les valeurs additive, multiplicative et le résultat final.
- */
-const computeBreakdown = (
-  base: number,
-  modifiers: any[]
-): { additive: number; multiplicative: number; final: number } => {
-  let additive = 0;
-  let multiplicative = 1;
-  modifiers.forEach(mod => {
-    if (mod.type === 'additive') {
-      additive += mod.value;
-    } else if (mod.type === 'multiplicative') {
-      multiplicative *= (1 + mod.value);
-    }
-  });
-  const final = (base + additive) * multiplicative;
-  return { additive, multiplicative, final };
-};
-
-const DinoStats: React.FC<DinoStatsProps> = ({ dinosaur }) => {
-  // Définition des indicateurs à afficher (hors Karma)
   const statMoney: StatMapping = {
     label: 'Argent',
     icon: '💰',
@@ -91,72 +63,63 @@ const DinoStats: React.FC<DinoStatsProps> = ({ dinosaur }) => {
     modifiers: dinosaur.stats_modifiers.filter(mod => mod.target === 'employee_production')
   };
 
-  // Regroupement en trois couples
-  const couples: StatCouple[] = [
-    { stat1: statMoney, stat2: statSkill },
-    { stat1: statWeapon, stat2: statArmor },
-    { stat1: statFriends, stat2: statEmployees }
-  ];
-
-  // State pour gérer l'affichage du détail pour chaque stat (6 items au total)
-  const [visibleDetails, setVisibleDetails] = useState<boolean[]>(Array(6).fill(false));
-
-  const toggleDetail = (index: number) => {
-    const newVisible = [...visibleDetails];
-    newVisible[index] = !newVisible[index];
-    setVisibleDetails(newVisible);
-  };
-
   return (
     <div className="dino-stats-container">
       <div className="dino-stats-grid">
-        {couples.map((couple, coupleIndex) => (
-          <div key={coupleIndex} className="stat-couple">
-            {/* Stat item 1 */}
-            <div className="stat-item">
-              <div className="stat-content">
-                <span className="stat-icon">{couple.stat1.icon}</span>
-                <span className="stat-label">{couple.stat1.label}</span>
-                <span className="stat-value">{couple.stat1.value}</span>
-              </div>
-              <div className="item-info" onClick={() => toggleDetail(coupleIndex * 2)}>
-                ❓
-              </div>
-            </div>
-            {visibleDetails[coupleIndex * 2] && (
-              <div className="stat-breakdown">
-                <strong>{couple.stat1.label}:</strong>{' '}
-                {couple.stat1.base} +{' '}
-                {computeBreakdown(couple.stat1.base, couple.stat1.modifiers).additive} ={' '}
-                {couple.stat1.base + computeBreakdown(couple.stat1.base, couple.stat1.modifiers).additive}; ×{' '}
-                {computeBreakdown(couple.stat1.base, couple.stat1.modifiers).multiplicative.toFixed(2)} ={' '}
-                {computeBreakdown(couple.stat1.base, couple.stat1.modifiers).final.toFixed(2)}
-              </div>
-            )}
-
-            {/* Stat item 2 */}
-            <div className="stat-item">
-              <div className="stat-content">
-                <span className="stat-icon">{couple.stat2.icon}</span>
-                <span className="stat-label">{couple.stat2.label}</span>
-                <span className="stat-value">{couple.stat2.value}</span>
-              </div>
-              <div className="item-info" onClick={() => toggleDetail(coupleIndex * 2 + 1)}>
-                ❓
-              </div>
-            </div>
-            {visibleDetails[coupleIndex * 2 + 1] && (
-              <div className="stat-breakdown">
-                <strong>{couple.stat2.label}:</strong>{' '}
-                {couple.stat2.base} +{' '}
-                {computeBreakdown(couple.stat2.base, couple.stat2.modifiers).additive} ={' '}
-                {couple.stat2.base + computeBreakdown(couple.stat2.base, couple.stat2.modifiers).additive}; ×{' '}
-                {computeBreakdown(couple.stat2.base, couple.stat2.modifiers).multiplicative.toFixed(2)} ={' '}
-                {computeBreakdown(couple.stat2.base, couple.stat2.modifiers).final.toFixed(2)}
-              </div>
-            )}
+        {/* Argent */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.MONEY)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statMoney.icon}</span>
+            <span className="stat-label">{statMoney.label}</span>
+            <span className="stat-value">{statMoney.value}</span>
           </div>
-        ))}
+          <div className="item-info">❓</div>
+        </div>
+        {/* Compétence */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.COMPETENCE)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statSkill.icon}</span>
+            <span className="stat-label">{statSkill.label}</span>
+            <span className="stat-value">{statSkill.value}</span>
+          </div>
+          <div className="item-info">❓</div>
+        </div>
+        {/* Armes */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.WEAPONS)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statWeapon.icon}</span>
+            <span className="stat-label">{statWeapon.label}</span>
+            <span className="stat-value">{statWeapon.value}</span>
+          </div>
+          <div className="item-info">❓</div>
+        </div>
+        {/* Armures */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.ARMORS)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statArmor.icon}</span>
+            <span className="stat-label">{statArmor.label}</span>
+            <span className="stat-value">{statArmor.value}</span>
+          </div>
+          <div className="item-info">❓</div>
+        </div>
+        {/* Amis */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.FRIENDS)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statFriends.icon}</span>
+            <span className="stat-label">{statFriends.label}</span>
+            <span className="stat-value">{statFriends.value}</span>
+          </div>
+          <div className="item-info">❓</div>
+        </div>
+        {/* Employés */}
+        <div className="stat-item" onClick={() => openStatDetail(ClickableStatTarget.EMPLOYEES)}>
+          <div className="stat-content">
+            <span className="stat-icon">{statEmployees.icon}</span>
+            <span className="stat-label">{statEmployees.label}</span>
+            <span className="stat-value">{statEmployees.value}</span>
+          </div>
+          <div className="item-info">❓</div>
+        </div>
       </div>
     </div>
   );

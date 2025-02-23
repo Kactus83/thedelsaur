@@ -1,6 +1,8 @@
 import React from 'react';
 import './HungerGauge.css';
 import { Dinosaur } from '../../../types/Dinosaur';
+import { useOverlay } from '../../../contexts/OverlayContext';
+import { ClickableStatTarget } from '../../../types/ClickableStatTarget';
 
 /**
  * Composant de jauge pour la faim.
@@ -10,6 +12,7 @@ import { Dinosaur } from '../../../types/Dinosaur';
  * la bordure clignote (lentement entre 80% et 90%, puis rapidement au-delà).
  */
 const HungerGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
+  const { openStatDetail } = useOverlay();
   const currentHunger = dinosaur.hunger;
   const maxHunger = dinosaur.final_max_hunger;
   const fraction = Math.min(currentHunger / maxHunger, 1);
@@ -60,7 +63,7 @@ const HungerGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
   return (
     <div className="hunger-gauge">
       <div className="hunger-label">FAIM</div>
-      <div className={`hunger-bar ${blinkClass}`} style={haloStyle}>
+      <div className={`hunger-bar ${blinkClass}`} style={haloStyle} onClick={() => openStatDetail(ClickableStatTarget.HUNGER_GAUGE)}>
         <div
           className="hunger-fill"
           style={{
@@ -70,7 +73,7 @@ const HungerGauge: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
           }}
         />
       </div>
-      <div className="hunger-text">
+      <div className="hunger-text" onClick={() => openStatDetail(ClickableStatTarget.HUNGER_GAUGE_TEXT)}>
         {currentHunger} / {maxHunger}
       </div>
     </div>

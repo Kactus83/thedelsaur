@@ -13,13 +13,14 @@ import BackgroundOverlay from '../../components/Dashboard/BackgroundOverlay';
 import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import DinoDisplay from '../../components/Dashboard/DinoDisplay';
-// Nouveaux imports pour les overlays et le contexte
 import { useOverlay } from '../../contexts/OverlayContext';
 import InventoryOverlay from '../../components/Dashboard/overlays/InventoryOverlay';
 import BuildingsOverlay from '../../components/Dashboard/overlays/BuildingsOverlay';
 import ShopOverlay from '../../components/Dashboard/overlays/ShopOverlay';
-// Ajout du composant DinoSoulInfo
-import DinoSoulInfo from '../../components/Dashboard/DinoSoulInfo';
+import RankingOverlay from '../../components/Dashboard/overlays/RankingOverlay';
+import PvpOverlay from '../../components/Dashboard/overlays/PvpOverlay';
+import ClickableStatDetailOverlay from '../../components/Dashboard/overlays/ClickableStatDetailOverlay';
+import DinoSoulOverlay from '../../components/Dashboard/overlays/DinoSoulOverlay';
 
 /**
  * Composant fonctionnel représentant la page Dashboard.
@@ -35,9 +36,9 @@ const DashboardPage: React.FC = () => {
     const [isOverlayVisible, setIsOverlayVisible] = useState<boolean>(false); // Overlay pour les infos du dinosaure en mobile
     const [isActionInProgress, setIsActionInProgress] = useState<ActionDetail | null>(null); // État pour l'animation du dinosaure
     const [levelUp, setLevelUp] = useState<boolean>(false);
-    
-    // Récupération du contexte d'overlays (pour Inventaire et Bâtiments)
-    const { currentOverlay, closeOverlay } = useOverlay();
+  
+    // Récupération du contexte d'overlays (pour Inventaire, Bâtiments, Shop, etc.)
+    const { currentOverlay, closeOverlay, openOverlay, statDetailTarget } = useOverlay();
 
     const initializePage = async () => {
         try {
@@ -74,6 +75,8 @@ const DashboardPage: React.FC = () => {
             const updatedActions = await fetchDinosaurActions();
             const maxExperienceResponse = await getNextLevelXp();
             const maxExperience = maxExperienceResponse.nextLevelXp;
+
+            console.log('Dino:', updatedDinosaur);
 
             if (dinosaur && updatedDinosaur.level > dinosaur.level) {           
                 setDinosaur(updatedDinosaur);
@@ -170,8 +173,47 @@ const DashboardPage: React.FC = () => {
                         </button>
                     </div>
                     <div className="bottomMiddle" style={{ position: 'relative' }}>
-                            {/* Insertion du composant DinoSoulInfo en haut à droite */}
-                            {dinosaur && <DinoSoulInfo dinosaur={dinosaur} />}
+                        {/* Insertion des icones de toogle d'overlays */}
+                        {dinosaur && (
+                            <div className="overlay-icons-bar">
+
+                            {/* 1) Dino Soul Overlay */}
+                            <span
+                                className="overlay-icon"
+                                onClick={() => openOverlay('dino-soul')}
+                                title="Dino Soul"
+                            >
+                                💀
+                            </span>
+
+                            {/* 2) Inventaire */}
+                            <span
+                                className="overlay-icon"
+                                onClick={() => openOverlay('inventory')}
+                                title="Inventaire"
+                            >
+                                👜
+                            </span>
+
+                            {/* 3) Bâtiments */}
+                            <span
+                                className="overlay-icon"
+                                onClick={() => openOverlay('buildings')}
+                                title="Bâtiments"
+                            >
+                                🏠
+                            </span>
+
+                            {/* 4) Shop */}
+                            <span
+                                className="overlay-icon"
+                                onClick={() => openOverlay('shop')}
+                                title="Boutique"
+                            >
+                                🛒
+                            </span>
+                            </div>
+                        )}
                         {/* La div "middleContent" reçoit un style inline pour position relative */}
                         <div className="middleContent">
                             {/* Affichage conditionnel de l'image du dinosaure selon son régime alimentaire et son type */}
@@ -218,29 +260,56 @@ const DashboardPage: React.FC = () => {
                 </div>
             )}
 
+            {/* Overlay pour afficher les informations des viues passées du dino (DinoSoulOverlay) */}
+            {currentOverlay === 'dino-soul' && dinosaur && (
+                <DinoSoulOverlay 
+                  dinosaur={dinosaur} 
+                  onClose={closeOverlay} 
+                  active={true}
+                />
+            )}
+            
             {/* Nouveaux overlays déclenchés via le Header */}
             {currentOverlay === 'inventory' && dinosaur && (
                 <InventoryOverlay 
-                  items={dinosaur.items} 
-                  onClose={closeOverlay} 
-                  active={true} 
+                  dinosaur={dinosaur}
+                  onDinosaurUpdate={setDinosaur}
+                  onClose={closeOverlay}
+                  active={true}
                 />
             )}
             {currentOverlay === 'buildings' && dinosaur && (
                 <BuildingsOverlay 
-                  buildings={dinosaur.buildings} 
-                  onClose={closeOverlay} 
-                  active={true} 
+                  dinosaur={dinosaur}
+                  onDinosaurUpdate={setDinosaur}
+                  onClose={closeOverlay}
+                  active={true}
                 />
             )}
-            {currentOverlay === 'shop' && dinosaur && (
+            {currentOverlay === 'shop' && dinosaur && user && (
                 <ShopOverlay 
                   onDinosaurUpdate={setDinosaur} 
                   active={true}
                   dinosaur={dinosaur}
+                  user={user}
                 />
             )}
+            
+            {currentOverlay === 'ranking' && dinosaur && (
+                <RankingOverlay onClose={closeOverlay} active />
+            )}
 
+            {currentOverlay === 'pvp' && dinosaur && (
+                <PvpOverlay onClose={closeOverlay} active />
+            )}
+
+            {currentOverlay === 'stat-detail' && dinosaur && statDetailTarget && (
+                <ClickableStatDetailOverlay 
+                  dinosaur={dinosaur} 
+                  target={statDetailTarget} 
+                  onClose={closeOverlay}
+                />
+            )}
         </>
     );
 };

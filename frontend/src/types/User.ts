@@ -1,3 +1,5 @@
+import { PlayerScoreDTO } from "./player-score.dto";
+
 export interface User {
     id: number;
     username: string;
@@ -6,4 +8,5 @@ export interface User {
     dark_soul_points: number;
     bright_soul_points: number;
     created_at: string;
+    player_score: PlayerScoreDTO;
 }

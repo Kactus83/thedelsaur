@@ -4,6 +4,7 @@
 -- =============================================================================
 
 -- Création de la table `user`
+DROP TABLE IF EXISTS user;
 CREATE TABLE IF NOT EXISTS user (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL UNIQUE,
@@ -14,7 +15,29 @@ CREATE TABLE IF NOT EXISTS user (
   neutral_soul_points INT NOT NULL DEFAULT 0,
   dark_soul_points INT NOT NULL DEFAULT 0,
   bright_soul_points INT NOT NULL DEFAULT 0,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  -- Nouvelle colonne pour stocker le score global du joueur
+  player_score JSON NOT NULL DEFAULT (
+    JSON_OBJECT(
+      'totalSoulPoints', 0,
+      'totalDarkSoulPoints', 0,
+      'totalBrightSoulPoints', 0,
+      'totalLives', 0,
+      'totalKarma', 0,
+      'latestKarma', 0,
+      'maxKarma', 0,
+      'minKarma', 0,
+      'averageKarma', 0,
+      'negativeLivesCount', 0,
+      'positiveLivesCount', 0,
+      'totalLifetime', 0,
+      'maxLifetime', 0,
+      'totalLevels', 0,
+      'maxLevel', 0,
+      'totalExperience', 0,
+      'maxExperience', 0
+    )
+  )
 );
 
 -- ---------------------------------------------------------
@@ -272,6 +295,34 @@ CREATE TABLE dinosaur_buildings_instance (
   PRIMARY KEY (dinosaur_id, building_id),
   CONSTRAINT fk_dino_building_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
   CONSTRAINT fk_dino_building_instance_building FOREIGN KEY (building_id) REFERENCES dinosaur_buildings(id) ON DELETE CASCADE
+);
+
+-- ---------------------------------------------------------
+-- Table de définition des soul skills (nouveaux assets)
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_soul_skills;
+CREATE TABLE dinosaur_soul_skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price INT NOT NULL,
+    soul_type ENUM('neutral','bright','dark') NOT NULL,
+    tier INT NOT NULL,
+    stat_modifiers JSON NOT NULL
+);
+
+-- ---------------------------------------------------------
+-- Table des instances de soul skills (achats par les dinosaures)
+-- ---------------------------------------------------------
+DROP TABLE IF EXISTS dinosaur_soul_skills_instance;
+CREATE TABLE dinosaur_soul_skills_instance (
+  dinosaur_id INT NOT NULL,
+  soul_skill_id INT NOT NULL,
+  is_unlocked BOOLEAN NOT NULL DEFAULT FALSE,
+  purchased_at DATETIME,
+  PRIMARY KEY (dinosaur_id, soul_skill_id),
+  CONSTRAINT fk_dino_soul_skill_instance_dino FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_dino_soul_skill_instance_soul_skill FOREIGN KEY (soul_skill_id) REFERENCES dinosaur_soul_skills(id) ON DELETE CASCADE
 );
 
 -- ---------------------------------------------------------

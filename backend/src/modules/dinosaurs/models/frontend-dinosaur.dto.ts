@@ -7,6 +7,7 @@ import { DinosaurSkillInstanceDTO } from './dinosaur-skill-instance.dto';
 import { DinosaurItemInstanceDTO } from './dinosaur-item-instance.dto';
 import { DinosaurBuildingInstanceDTO } from './dinosaur-building-instance.dto';
 import { DinosaurLifeDTO } from './dinosaur-life.dto';
+import { DinosaurSoulSkillInstanceDTO } from './dinosaur-soul-skill-instance.dto';
 
 /**
  * DTO destiné au frontend.
@@ -31,15 +32,32 @@ export class FrontendDinosaurDTO {
   @Expose() @Type(() => DinosaurSkillInstanceDTO) skills!: DinosaurSkillInstanceDTO[];
   @Expose() @Type(() => DinosaurItemInstanceDTO) items!: DinosaurItemInstanceDTO[];
   @Expose() @Type(() => DinosaurBuildingInstanceDTO) buildings!: DinosaurBuildingInstanceDTO[];
+  @Expose() @Type(() => DinosaurSoulSkillInstanceDTO) soulSkills!: DinosaurSoulSkillInstanceDTO[];
 
   /*
   * Valeurs de bases du dinosaure
   * Identiques pour tous les dinosaures.
   */
  
+  @Expose() initial_base_max_energy!: number;
+  @Expose() initial_energy_decay_per_second!: number;
+  @Expose() initial_energy_recovery_per_second!: number;
+  @Expose() initial_energy_recovery_per_second_when_sleeping!: number;
+  @Expose() initial_base_max_food!: number;
+  @Expose() initial_base_max_hunger!: number;
+  @Expose() initial_hunger_increase_per_second!: number;
+  @Expose() initial_hunger_increase_per_second_when_recovery!: number;
+  @Expose() initial_karma_width!: number;
+
+  /*
+  * Valeurs de bases apres application des modificateurs
+  * 
+  */
+ 
   @Expose() base_max_energy!: number;
   @Expose() energy_decay_per_second!: number;
   @Expose() energy_recovery_per_second!: number;
+  @Expose() energy_recovery_per_second_when_sleeping!: number;
   @Expose() base_max_food!: number;
   @Expose() base_max_hunger!: number;
   @Expose() hunger_increase_per_second!: number;

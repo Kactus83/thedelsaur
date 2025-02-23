@@ -105,11 +105,11 @@ export default function (
 
   // Routes de gameplay 
 
-  router.post('/actions/activate-skill', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+  router.post('/activate-skill', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     gameplayController.activateSkill(req, res)
   );
 
-  router.post('/actions/consume-item', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
+  router.post('/consume-item', authenticateJWT, dinosaurMiddleware.fetchAndUpdateDinosaur, (req, res) =>
     gameplayController.consumeItem(req, res)
   );
 

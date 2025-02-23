@@ -1,5 +1,3 @@
-// src/repositories/dinosaur.repository.ts
-
 import { DatabaseDinosaur } from '../models/database-dinosaur.interface';
 import pool from '../../../common/database/db';
 import { RowDataPacket } from 'mysql2';
@@ -13,7 +11,7 @@ import { DinosaurLivesRepository } from './dinosaur-lives.repository';
  * Repository pour gérer les opérations sur la table des dinosaures.
  * Les requêtes effectuent une jointure avec les tables dinosaur_types et dinosaur_diets
  * afin d'obtenir les objets complets (incluant leurs modificateurs en JSON).
- * Ce repository intègre également les assets (skills, items, buildings)
+ * Ce repository intègre également les assets (skills, items, buildings, soul skills)
  * ainsi que l'historique des vies du dinosaure.
  */
 export class DinosaurRepository {
@@ -83,7 +81,8 @@ export class DinosaurRepository {
         skills: [],
         items: [],
         buildings: [],
-        lives: [] // Historique des vies du dinosaure
+        lives: [], // Historique des vies du dinosaure
+        soul_skills: [] // Ajout des Soul Skills
       };
 
       // Récupérer en parallèle les assets et l'historique des vies du dinosaure
@@ -93,10 +92,12 @@ export class DinosaurRepository {
         this.gameAssetsRepo.getBuildingInstancesByDinosaurId(dinosaurId),
         this.livesRepo.getDinosaurLivesByDinosaurId(dinosaurId)
       ]);
+      const soulSkillInstances = await this.gameAssetsRepo.getSoulSkillInstancesByDinosaurId(dinosaurId);
       dinosaur.skills = skillInstances;
       dinosaur.items = itemInstances;
       dinosaur.buildings = buildingInstances;
       dinosaur.lives = lives;
+      dinosaur.soul_skills = soulSkillInstances;
       return dinosaur;
     } catch (err) {
       console.error('Erreur lors de la récupération du dinosaure par ID:', err);
@@ -156,7 +157,8 @@ export class DinosaurRepository {
         skills: [],
         items: [],
         buildings: [],
-        lives: [] // Historique des vies
+        lives: [], // Historique des vies
+        soul_skills: [] // Ajout des Soul Skills
       };
       const [skillInstances, itemInstances, buildingInstances, lives] = await Promise.all([
         this.gameAssetsRepo.getSkillInstancesByDinosaurId(row.id),
@@ -164,10 +166,12 @@ export class DinosaurRepository {
         this.gameAssetsRepo.getBuildingInstancesByDinosaurId(row.id),
         this.livesRepo.getDinosaurLivesByDinosaurId(row.id)
       ]);
+      const soulSkillInstances = await this.gameAssetsRepo.getSoulSkillInstancesByDinosaurId(row.id);
       dinosaur.skills = skillInstances;
       dinosaur.items = itemInstances;
       dinosaur.buildings = buildingInstances;
       dinosaur.lives = lives;
+      dinosaur.soul_skills = soulSkillInstances;
       return dinosaur;
     } catch (err) {
       console.error('Erreur lors de la récupération du dinosaure par userId:', err);

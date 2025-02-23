@@ -2,11 +2,15 @@ import { ShopDinosaurRepository } from '../repositories/shop-dinosaur.repository
 import { DinosaurSkillRepository } from '../repositories/dinosaur-skill.repository';
 import { DinosaurItemRepository } from '../repositories/dinosaur-item.repository';
 import { DinosaurBuildingRepository } from '../repositories/dinosaur-building.repository';
+import { DinosaurSoulSkillRepository } from '../repositories/dinosaur-soul-skill.repository';
 import { DinosaurSkillDTO } from '../models/dinosaur-skill.dto';
 import { DinosaurItemDTO } from '../models/dinosaur-item.dto';
 import { DinosaurBuildingDTO } from '../models/dinosaur-building.dto';
+import { DinosaurSoulSkillDTO } from '../models/dinosaur-soul-skill.dto';
 import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
 import { ShopAssetsDTO } from '../models/shop-assets.dto';
+import { User } from '../../users/models/user.interface';
+import { DinosaurSoulSkillInstanceDTO } from '../../dinosaurs/models/dinosaur-soul-skill-instance.dto';
 
 /**
  * Service gérant les transactions de la boutique pour l'achat et l'upgrade des game assets.
@@ -17,10 +21,11 @@ export class ShopService {
     private dinosaurSkillRepository: DinosaurSkillRepository,
     private dinosaurItemRepository: DinosaurItemRepository,
     private dinosaurBuildingRepository: DinosaurBuildingRepository,
+    private dinosaurSoulSkillRepository: DinosaurSoulSkillRepository
   ) {}
 
   /**
-   * Achat d'une compétence.
+   * Achat d'une compétence classique.
    */
   public async purchaseSkill(
     dinosaur: FrontendDinosaurDTO,
@@ -59,6 +64,77 @@ export class ShopService {
     dinosaur.skills.push(skillInstance);
 
     return { dinosaur, message: 'Compétence achetée avec succès' };
+  }
+
+  /**
+   * Achat d'une Soul Skill.
+   * Le paiement s'effectue en fonction du type de soul points requis :
+   * - Dark pour les skills Dark.
+   * - Bright pour les skills Bright.
+   * - Neutral pour les skills Neutral.
+   */
+  public async purchaseSoulSkill(
+    dinosaur: FrontendDinosaurDTO,
+    user: User,
+    soulSkillId: number
+  ): Promise<{ dinosaur: FrontendDinosaurDTO; message: string }> {
+    const soulSkill: DinosaurSoulSkillInstanceDTO | null = await this.dinosaurSoulSkillRepository.getDinosaurSoulSkillById(soulSkillId);
+    if (!soulSkill) {
+      throw new Error('Soul Skill non trouvée');
+    }
+    // Vérifier si le dinosaure a déjà acheté cette soul skill
+    if (dinosaur.soulSkills && dinosaur.soulSkills.find(s => s.id === soulSkill.id && s.isUnlocked)) {
+      throw new Error('Soul Skill déjà achetée');
+    }
+    // Vérification du paiement en fonction du type de soul points
+    // On suppose que le FrontendDinosaurDTO contient les propriétés : neutralSoulPoints, brightSoulPoints, darkSoulPoints
+    let currentPoints: number = 0;
+    let updatedPoints: number = 0;
+    switch (soulSkill.soulType) {
+      case 'neutral':
+        currentPoints = user.neutral_soul_points || 0;
+        if (currentPoints < soulSkill.price) {
+          throw new Error('Points neutres insuffisants pour acheter cette Soul Skill');
+        }
+        updatedPoints = currentPoints - soulSkill.price;
+        await this.shopDinoRepo.updateSoulPoints(user.id, 'neutral', updatedPoints);
+        user.neutral_soul_points = updatedPoints;
+        break;
+      case 'bright':
+        currentPoints = user.neutral_soul_points || 0;
+        if (currentPoints < soulSkill.price) {
+          throw new Error('Points bright insuffisants pour acheter cette Soul Skill');
+        }
+        updatedPoints = currentPoints - soulSkill.price;
+        await this.shopDinoRepo.updateSoulPoints(user.id, 'bright', updatedPoints);
+        user.neutral_soul_points = updatedPoints;
+        break;
+      case 'dark':
+        currentPoints = user.neutral_soul_points || 0;
+        if (currentPoints < soulSkill.price) {
+          throw new Error('Points dark insuffisants pour acheter cette Soul Skill');
+        }
+        updatedPoints = currentPoints - soulSkill.price;
+        await this.shopDinoRepo.updateSoulPoints(user.id, 'dark', updatedPoints);
+        user.neutral_soul_points = updatedPoints;
+        break;
+      default:
+        throw new Error('Type de soul inconnu');
+    }
+    // Ajout de l'instance de Soul Skill pour le dinosaure
+    await this.shopDinoRepo.addSoulSkillInstance(dinosaur.id, soulSkill.id);
+    // Mise à jour en mémoire pour la réponse
+    if (!dinosaur.soulSkills) {
+      dinosaur.soulSkills = [];
+    }
+    const soulSkillInstance = {
+      ...soulSkill,
+      isUnlocked: true,
+      purchasedAt: new Date()
+    };
+    dinosaur.soulSkills.push(soulSkillInstance);
+
+    return { dinosaur, message: 'Soul Skill achetée avec succès' };
   }
 
   /**
@@ -218,6 +294,7 @@ export class ShopService {
     const skills = await this.dinosaurSkillRepository.getAllDinosaurSkills();
     const items = await this.dinosaurItemRepository.getAllDinosaurItems();
     const buildings = await this.dinosaurBuildingRepository.getAllDinosaurBuildings();
-    return { skills, items, buildings };
+    const soulSkills = await this.dinosaurSoulSkillRepository.getAllDinosaurSoulSkills();
+    return { skills, items, buildings, soulSkills };
   }
 }

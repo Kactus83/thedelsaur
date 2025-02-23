@@ -1,33 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { 
   fetchShopAssets, 
   purchaseSkill, 
+  purchaseSoulSkill, 
   purchaseItem, 
-  upgradeItem, 
-  purchaseBuilding, 
-  upgradeBuilding 
+  purchaseBuilding 
 } from '../../../services/shopService';
 import { ShopAssetsDTO } from '../../../types/shop-assets.dto';
 import { Dinosaur } from '../../../types/Dinosaur';
+import { User } from '../../../types/User';
 import { useOverlay } from '../../../contexts/OverlayContext';
 import ShopSkillCard from '../../Dashboard/utils/ShopSkillCard';
 import ShopItemCard from '../../Dashboard/utils/ShopItemCard';
 import ShopBuildingCard from '../../Dashboard/utils/ShopBuildingCard';
 import './ShopOverlay.css';
+import ShopSoulSkillCard from '../utils/ShopSoulSkillCard';
 
 interface ShopOverlayProps {
   onDinosaurUpdate?: (dino: Dinosaur) => void;
   active?: boolean;
   dinosaur: Dinosaur;
+  user: User;
 }
 
-const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = false, dinosaur }) => {
+const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = false, dinosaur, user }) => {
   const [assets, setAssets] = useState<ShopAssetsDTO | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [actionMessage, setActionMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const { closeOverlay } = useOverlay();
-  const [selectedTab, setSelectedTab] = useState<'skills' | 'items' | 'buildings'>('skills');
+  // Onglets: skills, soulSkills, items, buildings
+  const [selectedTab, setSelectedTab] = useState<'skills' | 'items' | 'soulSkills' | 'buildings'>('skills');
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -44,20 +47,31 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
     loadAssets();
   }, []);
 
-  // Filtrage : on n'affiche que les assets dont le niveau minimum est <= (dino.level + 1).
-  // Pour les skills, on exclut celles déjà achetées.
+  // Filtrage générique pour assets possédant la propriété minLevelToBuy
   const filterAssets = <T extends { minLevelToBuy: number }>(list: T[], alreadyOwned: (id: number) => boolean) => {
     const available = list.filter(asset => asset.minLevelToBuy <= dinosaur.level && !alreadyOwned((asset as any).id));
     const preview = list.filter(asset => asset.minLevelToBuy === dinosaur.level + 1);
     return { available, preview };
   };
 
-  // Pour les skills, détermine si déjà achetée
+  // Filtrage spécifique pour soul skills en utilisant 'tier' comme niveau minimal
+  const filterSoulSkills = <T extends { tier: number }>(list: T[], alreadyOwned: (id: number) => boolean) => {
+    const available = list.filter(asset => asset.tier <= dinosaur.level && !alreadyOwned((asset as any).id));
+    const preview = list.filter(asset => asset.tier === dinosaur.level + 1);
+    return { available, preview };
+  };
+
+  // Pour skills
   const isSkillOwned = (skillId: number): boolean => {
     return dinosaur.skills.some(s => s.id === skillId && s.isPurchased);
   };
 
-  // Pour les items et bâtiments, on laisse éventuellement afficher même si déjà acquis (pour upgrade)
+  // Pour soul skills
+  const isSoulSkillOwned = (soulSkillId: number): boolean => {
+    return dinosaur.soulSkills.some(s => s.id === soulSkillId && s.isUnlocked);
+  };
+
+  // Pour items et buildings, on laisse afficher même si déjà possédé pour upgrade (mais pour buildings, on veut les masquer une fois achetés)
   const filterGeneric = <T extends { minLevelToBuy: number }>(list: T[]) => {
     const available = list.filter(asset => asset.minLevelToBuy <= dinosaur.level);
     const preview = list.filter(asset => asset.minLevelToBuy === dinosaur.level + 1);
@@ -66,27 +80,37 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
 
   const skillsData = assets ? filterAssets(assets.skills, isSkillOwned) : { available: [], preview: [] };
   const itemsData = assets ? filterGeneric(assets.items) : { available: [], preview: [] };
+  const soulSkillsData = assets ? filterSoulSkills(assets.soulSkills, isSoulSkillOwned) : { available: [], preview: [] };
   const buildingsData = assets ? filterGeneric(assets.buildings) : { available: [], preview: [] };
 
   const skillsToDisplay = [...skillsData.available, ...skillsData.preview];
   const itemsToDisplay = [...itemsData.available, ...itemsData.preview];
+  const soulSkillsToDisplay = [...soulSkillsData.available, ...soulSkillsData.preview];
   const buildingsToDisplay = [...buildingsData.available, ...buildingsData.preview];
 
   // Vérification des ressources
   const skillInsufficient = (price: number): boolean => dinosaur.skill_points < price;
   const moneyInsufficient = (price: number): boolean => dinosaur.money < price;
+  // Pour les soul skills, le paiement se fait via l'objet User
+  const soulInsufficient = (price: number, type: string): boolean => {
+    if (type === 'neutral') return user.neutral_soul_points < price;
+    if (type === 'bright') return user.bright_soul_points < price;
+    if (type === 'dark') return user.dark_soul_points < price;
+    return true;
+  };
 
   // Détermine quelles catégories afficher dans le menu
-  const availableTabs = {
+  const availableTabs = useMemo(() => ({
     skills: skillsToDisplay.length > 0,
+    soulSkills: assets ? assets.soulSkills.length > 0 : false,
     items: itemsToDisplay.length > 0,
-    buildings: buildingsToDisplay.length > 0,
-  };
+    buildings: buildingsToDisplay.filter(b => !dinosaur.buildings.some(bb => bb.id === b.id)).length > 0,
+  }), [assets, skillsToDisplay.length, itemsToDisplay.length, buildingsToDisplay, dinosaur.buildings]);
 
   useEffect(() => {
     if (!availableTabs[selectedTab]) {
       const newTab = Object.keys(availableTabs).find(tab => availableTabs[tab as keyof typeof availableTabs]);
-      if (newTab) setSelectedTab(newTab as 'skills' | 'items' | 'buildings');
+      if (newTab) setSelectedTab(newTab as 'skills' | 'items' | 'soulSkills' | 'buildings');
     }
   }, [availableTabs, selectedTab]);
 
@@ -101,6 +125,17 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
     }
   };
 
+  const handlePurchaseSoulSkill = async (soulSkillId: number) => {
+    try {
+      const result = await purchaseSoulSkill(soulSkillId);
+      setActionMessage(result.message);
+      if (onDinosaurUpdate) onDinosaurUpdate(result.dinosaur);
+    } catch (error: any) {
+      console.error('Erreur achat soul skill:', error);
+      setErrorMessage(error.message || 'Erreur lors de l’achat de la soul skill.');
+    }
+  };
+
   const handlePurchaseItem = async (itemId: number) => {
     try {
       const result = await purchaseItem(itemId);
@@ -112,17 +147,6 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
     }
   };
 
-  const handleUpgradeItem = async (itemId: number) => {
-    try {
-      const result = await upgradeItem(itemId);
-      setActionMessage(result.message);
-      if (onDinosaurUpdate) onDinosaurUpdate(result.dinosaur);
-    } catch (error: any) {
-      console.error('Erreur upgrade item:', error);
-      setErrorMessage(error.message || "Erreur lors de l’upgrade de l’item.");
-    }
-  };
-
   const handlePurchaseBuilding = async (buildingId: number) => {
     try {
       const result = await purchaseBuilding(buildingId);
@@ -131,17 +155,6 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
     } catch (error: any) {
       console.error('Erreur achat bâtiment:', error);
       setErrorMessage(error.message || "Erreur lors de l’achat du bâtiment.");
-    }
-  };
-
-  const handleUpgradeBuilding = async (buildingId: number, upgradeId: number) => {
-    try {
-      const result = await upgradeBuilding(buildingId, upgradeId);
-      setActionMessage(result.message);
-      if (onDinosaurUpdate) onDinosaurUpdate(result.dinosaur);
-    } catch (error: any) {
-      console.error('Erreur upgrade bâtiment:', error);
-      setErrorMessage(error.message || "Erreur lors de l’upgrade du bâtiment.");
     }
   };
 
@@ -177,6 +190,14 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
               Compétences
             </button>
           )}
+          {availableTabs.soulSkills && (
+            <button 
+              className={selectedTab === 'soulSkills' ? 'active' : ''} 
+              onClick={() => setSelectedTab('soulSkills')}
+            >
+              Soul Skills
+            </button>
+          )}
           {availableTabs.items && (
             <button 
               className={selectedTab === 'items' ? 'active' : ''} 
@@ -199,7 +220,6 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
           {selectedTab === 'skills' &&
             skillsToDisplay.map((skill) => {
               const preview = skill.minLevelToBuy === dinosaur.level + 1;
-              // Affiche en mode actif si dino.level >= skill.minLevelToBuy et non preview
               const insufficient = !preview && skillInsufficient(skill.price);
               return (
                 <ShopSkillCard 
@@ -212,18 +232,36 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
               );
             })
           }
+          {selectedTab === 'soulSkills' &&
+            soulSkillsToDisplay.map((soulSkill) => {
+              const preview = soulSkill.tier === dinosaur.level + 1;
+              const insufficient = !preview && soulInsufficient(soulSkill.price, soulSkill.soulType);
+              return (
+                <ShopSoulSkillCard 
+                  key={soulSkill.id} 
+                  soulSkill={soulSkill} 
+                  onPurchase={handlePurchaseSoulSkill} 
+                  preview={preview}
+                  insufficientResources={insufficient}
+                />
+              );
+            })
+          }
           {selectedTab === 'items' &&
             itemsToDisplay.map((item) => {
               const preview = item.minLevelToBuy === dinosaur.level + 1;
               const insufficient = !preview && moneyInsufficient(item.price);
+              // Calcul de la quantité possédée pour cet item
+              const ownedQuantity = dinosaur.items.filter(i => i.id === item.id).length;
               return (
                 <ShopItemCard 
                   key={item.id} 
                   item={item} 
                   onPurchase={handlePurchaseItem} 
-                  onUpgrade={handleUpgradeItem}
+                  onUpgrade={item.itemType === 'persistent' ? undefined : undefined} 
                   preview={preview}
                   insufficientResources={insufficient}
+                  ownedQuantity={ownedQuantity}
                 />
               );
             })
@@ -232,12 +270,13 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
             buildingsToDisplay.map((building) => {
               const preview = building.minLevelToBuy === dinosaur.level + 1;
               const insufficient = !preview && moneyInsufficient(building.price);
+              // Masquer le bâtiment s'il est déjà possédé
+              if (dinosaur.buildings.some(b => b.id === building.id)) return null;
               return (
                 <ShopBuildingCard 
                   key={building.id} 
                   building={building} 
                   onPurchase={handlePurchaseBuilding} 
-                  onUpgrade={handleUpgradeBuilding}
                   preview={preview}
                   insufficientResources={insufficient}
                 />

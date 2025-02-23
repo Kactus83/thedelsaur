@@ -122,7 +122,7 @@ export class BasicActionsService {
      * @param dinosaur Le dinosaure à ressusciter.
      * @returns Le dinosaure mis à jour et l'événement généré.
      */
-    public async resurrectDinosaur(dinosaur: FrontendDinosaurDTO): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
+    public async resurrectDinosaur(dinosaur: FrontendDinosaurDTO, isAdmin: boolean = false): Promise<{ dinosaur: FrontendDinosaurDTO, event: DinosaurEvent }> {
         const actionDetails = DinosaurActionsMap[DinosaurAction.Resurrect];
 
         if (!actionDetails.canPerform(dinosaur)) {
@@ -133,7 +133,7 @@ export class BasicActionsService {
 
         // Apply event lors d'une resurrection renvoie une nouvelle instance de dino
         // Penser a bien utiliser newDino, et non pâs dinosaur comme partout ailleurs
-        const newDino: FrontendDinosaurDTO = await this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event);
+        const newDino: FrontendDinosaurDTO = await this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Resurrect, event, isAdmin);
 
         this.dinosaurRepository.updateDinosaur(newDino.id, newDino);
         return { dinosaur, event };

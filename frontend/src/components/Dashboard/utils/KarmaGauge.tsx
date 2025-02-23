@@ -1,6 +1,8 @@
 import React from 'react';
 import './KarmaGauge.css';
 import { Dinosaur } from '../../../types/Dinosaur';
+import { useOverlay } from '../../../contexts/OverlayContext';
+import { ClickableStatTarget } from '../../../types/ClickableStatTarget';
 
 interface KarmaGaugeProps {
   dinosaur: Dinosaur;
@@ -16,6 +18,7 @@ interface KarmaGaugeProps {
  * Le libellé ("Karma") est affiché au-dessus et les valeurs numériques en dessous.
  */
 const KarmaGauge: React.FC<KarmaGaugeProps> = ({ dinosaur }) => {
+  const { openStatDetail } = useOverlay();
   const maxKarma = dinosaur.karma_width;
   const currentKarma = dinosaur.karma;
 
@@ -41,7 +44,7 @@ const KarmaGauge: React.FC<KarmaGaugeProps> = ({ dinosaur }) => {
   return (
     <div className="karma-gauge">
       <div className="karma-label">KARMA</div>
-      <div className="karma-bar" style={haloStyle}>
+      <div className="karma-bar" style={haloStyle} onClick={() => openStatDetail(ClickableStatTarget.KARMA_GAUGE)}>
         <div
           className="karma-fill negative"
           style={{
@@ -58,7 +61,7 @@ const KarmaGauge: React.FC<KarmaGaugeProps> = ({ dinosaur }) => {
           }}
         />
       </div>
-      <div className="karma-text">
+      <div className="karma-text" onClick={() => openStatDetail(ClickableStatTarget.KARMA_GAUGE_TEXT)}>
         {currentKarma < 0 ? '-' : ''}
         {Math.abs(currentKarma)} / {currentKarma < 0 ? '-' : ''}
         {maxKarma}
