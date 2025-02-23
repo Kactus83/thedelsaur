@@ -61,22 +61,22 @@ INSERT INTO dinosaur_types (name, stat_modifiers) VALUES
 ('Land', '[
     {"target": "base_max_hunger", "type": "additive", "value": 2500, "source": "type_bonus"},
     {"target": "base_max_energy", "type": "additive", "value": 2500, "source": "type_bonus"},
-    {"target": "hunger_increase_multiplier", "type": "additive", "value": -0.25, "source": "type_bonus"},
-    {"target": "energy_recovery_multiplier", "type": "additive", "value": 0.25, "source": "type_bonus"}
+    {"target": "hunger_increase_multiplier", "type": "multiplicative", "value": -0.25, "source": "type_bonus"},
+    {"target": "energy_recovery_multiplier", "type": "multiplicative", "value": 0.25, "source": "type_bonus"}
 ]');
 
 -- Insertion pour "Air"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Air', '[
     {"target": "base_max_energy", "type": "additive", "value": 5000, "source": "type_bonus"},
-    {"target": "energy_recovery_multiplier", "type": "additive", "value": 0.50, "source": "type_bonus"}
+    {"target": "energy_recovery_multiplier", "type": "multiplicative", "value": 0.50, "source": "type_bonus"}
 ]');
 
 -- Insertion pour "Sea"
 INSERT INTO dinosaur_types (name, stat_modifiers) VALUES 
 ('Sea', '[
     {"target": "base_max_food", "type": "additive", "value": 5000, "source": "type_bonus"},
-    {"target": "hunger_increase_multiplier", "type": "additive", "value": -0.50, "source": "type_bonus"}
+    {"target": "hunger_increase_multiplier", "type": "multiplicative", "value": -0.50, "source": "type_bonus"}
 ]');
 
 -- ---------------------------------------------------------
