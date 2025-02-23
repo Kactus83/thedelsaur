@@ -29,7 +29,8 @@ export type StatTarget =
   | "energy_recovery_per_second_when_sleeping"
   | "hunger_increase_per_second"
   | "hunger_increase_per_second_when_recovery"
-  | "karma_width";
+  | "karma_width"
+  | "luck_factor_multiplier";
 
 
 /**

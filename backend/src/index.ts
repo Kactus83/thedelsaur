@@ -18,6 +18,7 @@ import { DinosaursModule } from './modules/dinosaurs/dinosaurs.module';
 import { GameAssetsModule } from './modules/game-assets/game-assets.module';
 import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
 import pool from './common/database/db';
+import { FakesModule } from './modules/fakes/fakes.module';
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ const authModule = new AuthModule();
 const adminModule = new AdminModule();
 const dinosaursModule = new DinosaursModule();
 const gameAssetsModule = new GameAssetsModule(dinosaursModule.getDinosaurMiddleware());
+const fakesModule = new FakesModule();
 
 // Routes
 app.use('/auth', authModule.router);
@@ -95,6 +97,9 @@ waitForDatabaseReady()
     });
     await dinosaursModule.seedDinosaurs().catch(err => {
       console.error("Erreur lors du seed des Dynamic Events (Dinosaurs):", err);
+    });
+    await fakesModule.seedFakes().catch(err => {
+      console.error("Erreur lors du seed des données factices:", err);
     });
     app.listen(PORT, () => {
       console.log(`Backend server is running on http://localhost:${PORT}`);

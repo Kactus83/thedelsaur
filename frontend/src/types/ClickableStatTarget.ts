@@ -14,6 +14,10 @@ export enum ClickableStatTarget {
     WEAPONS = 'WEAPONS',
     ARMORS = 'ARMORS',
     FRIENDS = 'FRIENDS',
-    EMPLOYEES = 'EMPLOYEES'
+    EMPLOYEES = 'EMPLOYEES',
+    LUCK_GAUGE = 'LUCK_GAUGE',
+    EPOCH_BAR = 'EPOCH_BAR',
+    EPOCH_LABEL = 'EPOCH_LABEL',
+    AGE = 'AGE',
   }
   

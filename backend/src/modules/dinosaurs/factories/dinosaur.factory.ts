@@ -137,9 +137,22 @@ export class DinosaurFactory {
 
     if (dbDino.buildings && dbDino.buildings.length > 0) {
       dbDino.buildings.forEach(building => {
+        // Ajouter les modificateurs de base du bâtiment
         allModifiers = allModifiers.concat(building.statModifiers);
+    
+        // Ajouter les modificateurs de tous les niveaux d'amélioration achetés
+        if (building.purchasedUpgrades) {
+          Object.entries(building.purchasedUpgrades).forEach(([upgradeId, isPurchased]) => {
+            if (isPurchased) {
+              const upgradeNode = building.improvementTree.find(node => node.id === Number(upgradeId));
+              if (upgradeNode) {
+                allModifiers = allModifiers.concat(upgradeNode.statModifiers);
+              }
+            }
+          });
+        }
       });
-    }
+    }    
 
     // NEW: Ajout des modificateurs des Soul Skills
     if (dbDino.soul_skills && dbDino.soul_skills.length > 0) {
@@ -202,6 +215,25 @@ export class DinosaurFactory {
       allModifiers.filter(mod => mod.target === "karma_width")
     );
     
+    // --- Nouveaux calculs pour le luck factor ---
+    // 1. Calcul de la moyenne du karma des vies passées
+    const pastLivesAverageKarma = dbDino.lives.length > 0 
+      ? dbDino.lives.reduce((sum, life) => sum + life.karma, 0) / dbDino.lives.length 
+      : 0;
+
+    // 2. Calcul de l'initial_luck_factor sous forme de ratio normalisé de 0 à 1
+    // La moyenne entre le karma actuel et la moyenne des vies passées
+    const avgKarma = (dbDino.karma + pastLivesAverageKarma) / 2;
+    let initialLuckFactor = (avgKarma + final_karma_width) / (2 * final_karma_width);
+    // On s'assure que le ratio soit bien entre 0 et 1
+    const clampedInitialLuckFactor = Math.max(0, Math.min(1, initialLuckFactor));
+
+    // 3. Calcul du multiplicateur final pour le luck factor à partir des modificateurs ciblant "luck_factor_multiplier"
+    const finalLuckFactorMultiplier = calculateFinalStat(1, allModifiers.filter(mod => mod.target === "luck_factor_multiplier"));
+
+    // 4. Le luck factor final est le produit du ratio normalisé par le multiplicateur
+    const luckFactor = clampedInitialLuckFactor * finalLuckFactorMultiplier;
+
     const frontendDino: FrontendDinosaurDTO = {
       id: dbDino.id,
       userId: dbDino.userId,
@@ -217,7 +249,7 @@ export class DinosaurFactory {
       initial_hunger_increase_per_second: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND,
       initial_hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
       initial_karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
-      // Valeurs après modifieurs (de base)
+      // Valeurs après modificateurs (de base)
       base_max_energy,
       energy_decay_per_second: final_energy_decay_per_second,
       energy_recovery_per_second: final_energy_recovery_per_second,
@@ -252,10 +284,7 @@ export class DinosaurFactory {
       type: dbDino.type,
       diet: dbDino.diet,
       // Modificateurs
-      stats_modifiers: [
-        ...dbDino.type.statModifiers,
-        ...dbDino.diet.statModifiers
-      ],
+      stats_modifiers: allModifiers,
       // Multiplicateurs et productions finales
       final_max_energy,
       final_max_food,
@@ -276,6 +305,12 @@ export class DinosaurFactory {
       final_armor_production,
       final_friend_production,
       final_employee_production,
+      // Nouveaux attributs pour le luck factor
+      past_lives_average_karma: pastLivesAverageKarma,
+      initial_luck_factor: clampedInitialLuckFactor,
+      final_luck_factor_multiplier: finalLuckFactorMultiplier,
+      final_luck_factor: luckFactor,
+      // Assets récents
       skills: dbDino.skills,
       items: dbDino.items,
       buildings: dbDino.buildings,

@@ -29,7 +29,7 @@ export class HerbivoreActionsService {
             throw new Error('Le dinosaure ne peut pas cueillir.');
         }
 
-        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Graze, dinosaur.level);
+        const event = await this.dinosaurEventService.getRandomEventForAction(DinosaurAction.Graze, dinosaur);
         this.dinosaurEventService.applyEventToDinosaur(dinosaur, DinosaurAction.Graze, event);
 
         this.dinosaurRepository.updateDinosaur(dinosaur.id, dinosaur);

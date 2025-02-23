@@ -90,15 +90,9 @@ export class DinosaurTimeService {
           await this.basicActionsService.wakeDinosaur(dino);
         }
       } else {
-        // Perte d'énergie en état éveillé
-        const energyLost = elapsedSeconds * dino.energy_decay_per_second;
-        dino.energy = Math.max(0, dino.energy - energyLost);
 
-        // Augmentation de la faim en état éveillé
-        const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second;
-        dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
-
-        // Production de food, weapons, armors, friends et employees pendant le sommeil
+        
+        // Production de food, weapons, armors, friends et employees pendant la journée
 
         const foodProduction = elapsedSeconds * dino.final_food_production;
         dino.food = dino.food + Math.min(dino.final_food_production, dino.food + foodProduction);
@@ -114,6 +108,16 @@ export class DinosaurTimeService {
 
         const employeesProduction = elapsedSeconds * dino.final_employee_production;
         dino.employees = dino.employees + Math.min(dino.final_employee_production, dino.employees + employeesProduction);
+
+        
+        // Perte d'énergie en état éveillé
+        const energyLost = elapsedSeconds * dino.energy_decay_per_second;
+        dino.energy = Math.max(0, dino.energy - energyLost);
+
+        // Augmentation de la faim en état éveillé
+        const hungerIncrease = elapsedSeconds * dino.hunger_increase_per_second;
+        dino.hunger = Math.min(dino.final_max_hunger, dino.hunger + hungerIncrease);
+
 
         // Si l'énergie tombe à zéro, passage en sommeil
         if (dino.energy === 0) {

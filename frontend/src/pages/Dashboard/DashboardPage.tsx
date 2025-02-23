@@ -76,13 +76,10 @@ const DashboardPage: React.FC = () => {
             const maxExperienceResponse = await getNextLevelXp();
             const maxExperience = maxExperienceResponse.nextLevelXp;
 
-            console.log('Dino:', updatedDinosaur);
-
             if (dinosaur && updatedDinosaur.level > dinosaur.level) {           
                 setDinosaur(updatedDinosaur);
                 setLevelUp(true);
                 setTimeout(() => {
-                    console.log('leveled up !!!')
                     setLevelUp(false);
                 }, 2000); // Durée de l'animation
             }              
@@ -235,6 +232,7 @@ const DashboardPage: React.FC = () => {
                     {/* Affichage conditionnel du composant Actions */}
                     {dinosaur && (
                         <Actions
+                            dinosaur={dinosaur}
                             refreshDinosaur={refreshDinosaur}
                             availableActions={availableActions}
                             onActionEvent={handleEventDisplay}
