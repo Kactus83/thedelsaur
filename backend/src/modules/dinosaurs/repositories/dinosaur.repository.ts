@@ -30,6 +30,7 @@ export class DinosaurRepository {
     try {
       const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
         `SELECT d.*, 
+                d.death_date, 
                 dt.name AS type_name, dt.stat_modifiers AS type_stat_modifiers, 
                 dd.name AS diet_name, dd.stat_modifiers AS diet_stat_modifiers
          FROM dinosaurs d
@@ -74,6 +75,8 @@ export class DinosaurRepository {
         epoch: row.epoch as Epoch,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
+        // Lecture de la death_date (null si encore vivant)
+        death_date: row.death_date ? new Date(row.death_date) : null,
         reborn_amount: row.reborn_amount,
         last_update_by_time_service: new Date(row.last_update_by_time_service),
         is_sleeping: row.is_sleeping,
@@ -109,6 +112,7 @@ export class DinosaurRepository {
     try {
       const [results] = await pool.query<(DatabaseDinosaurDataRow & RowDataPacket)[]>(
         `SELECT d.*, 
+                d.death_date,
                 dt.name AS type_name, dt.stat_modifiers AS type_stat_modifiers, 
                 dd.name AS diet_name, dd.stat_modifiers AS diet_stat_modifiers
          FROM dinosaurs d
@@ -150,6 +154,7 @@ export class DinosaurRepository {
         epoch: row.epoch as Epoch,
         created_at: row.created_at,
         last_reborn: new Date(row.last_reborn),
+        death_date: row.death_date ? new Date(row.death_date) : null,
         reborn_amount: row.reborn_amount,
         last_update_by_time_service: new Date(row.last_update_by_time_service),
         is_sleeping: row.is_sleeping,
@@ -200,13 +205,13 @@ export class DinosaurRepository {
         "created_at",
         "last_reborn",
         "reborn_amount",
+        "death_date",
         "last_update_by_time_service",
         "is_sleeping",
         "is_dead"
       ]);
       
       // On ne met pas à jour les champs complexes (type, diet, lives)
-      // On devrait peut etre utiliser clas validator et lcass transformer pour faire ca
       const updatesFiltered = { ...updates };
       delete updatesFiltered.type;
       delete updatesFiltered.diet;
@@ -269,9 +274,9 @@ export class DinosaurRepository {
   public async createDinosaur(dinosaur: DatabaseDinosaur): Promise<DatabaseDinosaur | null> {
     const query = `INSERT INTO dinosaurs 
       (name, user_id, diet_id, type_id, energy, food, hunger, weapons, armors, friends, employees, karma, experience, level, money, skill_points, epoch,
-       created_at, last_reborn, reborn_amount, last_update_by_time_service, is_sleeping, is_dead)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-  
+       created_at, last_reborn, death_date, reborn_amount, last_update_by_time_service, is_sleeping, is_dead)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;  
+
     const values = [
       dinosaur.name,
       dinosaur.userId,
@@ -292,6 +297,8 @@ export class DinosaurRepository {
       dinosaur.epoch,
       dinosaur.created_at,
       dinosaur.last_reborn,
+      // `death_date` peut être null (pas encore mort) ou une date
+      dinosaur.death_date || null,
       dinosaur.reborn_amount,
       dinosaur.last_update_by_time_service,
       dinosaur.is_sleeping,
@@ -331,6 +338,7 @@ interface DatabaseDinosaurDataRow extends RowDataPacket {
   
   created_at: Date;
   last_reborn: string;
+  death_date: string | null;
   reborn_amount: number;
   last_update_by_time_service: string;
   is_sleeping: boolean;
