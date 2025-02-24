@@ -140,15 +140,23 @@ const ClickableStatDetailOverlay: React.FC<ClickableStatDetailOverlayProps> = ({
           </div>
         );
       }
-      // --- Nouveaux cas pour Age et Epoch ---
       case ClickableStatTarget.AGE: {
         return (
           <div className="stat-details-container">
             <h3>Âge – Détails</h3>
             <p>
-              La valeur affichée correspond au temps écoulé depuis la dernière renaissance du dinosaure.
-              Le format s'adapte en fonction de la durée : secondes, minutes, heures, jours ou années.
+              La valeur affichée correspond au temps écoulé depuis la dernière renaissance du dinosaure,
+              formatée de manière intuitive (ex. "2 j 5 h").<br/>
+              Le facteur d'âge final reflète l'influence des modificateurs appliqués sur l'âge.
             </p>
+            <StatCalculationBreakdown 
+              label="Âge (base)" 
+              base={dinosaur.initial_age_factor} 
+              modifiers={dinosaur.stats_modifiers.filter(mod => mod.target === "age_factor")} 
+            />
+            <div className="age-ratio-info">
+              <strong>Facteur d'âge final :</strong> {dinosaur.final_age_factor.toFixed(2)}
+            </div>
           </div>
         );
       }
