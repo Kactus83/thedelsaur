@@ -24,6 +24,39 @@ api.interceptors.request.use(
         // Gestion des erreurs de requête
         return Promise.reject(error);
     }
+    
+);
+// Configuration d'Axios pour inclure automatiquement le token JWT
+    axios.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }else{
+                window.location.href = '../../index.html';
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error);
+        }
+);
+axios.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            window.location.href = '../../index.html'; // Redirection vers la page de login si pas de token
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
 );
 
 export default api;
+
+
+

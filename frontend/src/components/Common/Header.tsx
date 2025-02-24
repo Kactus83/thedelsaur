@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { useOverlay } from '../../contexts/OverlayContext';
+import { FaWindows } from 'react-icons/fa';
 
 const handleLogout = () => {
   localStorage.removeItem('token');
+  window.location.reload();
 };
 
 const Header: React.FC = () => {
