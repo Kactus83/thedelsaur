@@ -13,7 +13,7 @@ export function calculateEpochThresholds(): { epoch: Epoch, threshold: number }[
     for (let i = 0; i < epochValues.length; i++) {
         // Calcul de la durée de chaque époque selon une courbe progressive
         const normalizedIndex = i / (epochValues.length - 1);
-        const epochDuration = EPOCH_CONSTANTS.MIN_EPOCH_DURATION + (EPOCH_CONSTANTS.MAX_EPOCH_DURATION - EPOCH_CONSTANTS.MIN_EPOCH_DURATION) * (1 - Math.exp(-EPOCH_CONSTANTS.CURVE_STEEPNESS * normalizedIndex));
+        const epochDuration = (EPOCH_CONSTANTS.MIN_EPOCH_DURATION + (EPOCH_CONSTANTS.MAX_EPOCH_DURATION - EPOCH_CONSTANTS.MIN_EPOCH_DURATION) * (1 - Math.exp(-EPOCH_CONSTANTS.CURVE_STEEPNESS * normalizedIndex))) * EPOCH_CONSTANTS.INITIAL_EPOCH_DURATION_FACTOR;
         
         cumulativeTime += epochDuration;
 
