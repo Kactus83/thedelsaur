@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { User } from '../../users/models/user.interface';
 import { UsersService } from '../../users/services/users.service';
 import { FrontendDinosaurDTO } from '../../dinosaurs/models/frontend-dinosaur.dto';
+import { PlayerScoreRepository } from '../../users/repositories/player-score.repository';
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ export const authenticateJWT = async (
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: number };
 
-      const usersService = new UsersService();
+      const usersService = new UsersService(new PlayerScoreRepository());
       const user = await usersService.getUserById(decoded.id);
 
       if (!user) {
