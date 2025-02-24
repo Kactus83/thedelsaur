@@ -87,3 +87,27 @@
     margin-top: 5px;
   }
   
+  @media only screen and (max-width: 768px) {
+    #luck-gauge-container{
+      display: none;
+  }
+  .luck-gauge-info {
+    display: none;
+  }
+  
+  .luck-gauge-percentage-text {
+    display: none;
+  }
+  
+  .luck-gauge-label {
+    display: none;
+  }
+
+  .luck-gauge-container {
+    display: none;
+  }
+  
+  .luck-gauge-svg {
+    display: none;
+  }
+  }
