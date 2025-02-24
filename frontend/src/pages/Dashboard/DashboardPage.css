@@ -117,7 +117,30 @@ body, html {
     flex-direction: column;
     width: 20rem;
 }
+/* Positionne la barre d'icônes (Shop, Inventaire, etc.) 
+ * dans le coin supérieur droit de .bottomMiddle 
+ */
+ .overlay-icons-bar {
+    position: absolute;   /* L'élément parent (.bottomMiddle) est already "position: relative" */
+    top: 10px;
+    right: 8px;
+    display: flex;
+    gap: 15px;            /* Espace horizontal entre les icônes */
+    z-index: 10;          /* S'assurer qu'elle apparaisse au-dessus de l'image du dino */
+}
 
+/* Styles de base pour chaque icône */
+.overlay-icon {
+    font-size: 2rem;      /* Ajustez selon la taille désirée */
+    cursor: pointer;
+    user-select: none;    /* Empêche la sélection de texte sur clic */
+    transition: transform 0.2s ease;
+}
+
+/* Un petit effet "hover" pour l’interactivité */
+.overlay-icon:hover {
+    transform: scale(1.1);
+}
 /* Mobile layout */
 @media only screen and (max-width: 768px) {
     #main {
@@ -244,6 +267,12 @@ body, html {
         text-align: left;
         padding: 0 10px;
     }
+    .overlay-icons-bar {
+        top: -1vh;
+        right:6vh;
+       /* S'assurer qu'elle apparaisse au-dessus de l'image du dino */
+    }
+
 }
 
 
@@ -255,28 +284,5 @@ body, html {
     src: url("../../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
 }
 
-/* Positionne la barre d'icônes (Shop, Inventaire, etc.) 
- * dans le coin supérieur droit de .bottomMiddle 
- */
- .overlay-icons-bar {
-    position: absolute;   /* L'élément parent (.bottomMiddle) est already "position: relative" */
-    top: 10px;
-    right: 10px;
-    display: flex;
-    gap: 15px;            /* Espace horizontal entre les icônes */
-    z-index: 10;          /* S'assurer qu'elle apparaisse au-dessus de l'image du dino */
-}
 
-/* Styles de base pour chaque icône */
-.overlay-icon {
-    font-size: 2rem;      /* Ajustez selon la taille désirée */
-    cursor: pointer;
-    user-select: none;    /* Empêche la sélection de texte sur clic */
-    transition: transform 0.2s ease;
-}
-
-/* Un petit effet "hover" pour l’interactivité */
-.overlay-icon:hover {
-    transform: scale(1.1);
-}
 
