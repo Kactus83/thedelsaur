@@ -30,7 +30,8 @@ export type StatTarget =
   | "hunger_increase_per_second"
   | "hunger_increase_per_second_when_recovery"
   | "karma_width"
-  | "luck_factor_multiplier";
+  | "luck_factor_multiplier"
+  | "age_factor";
 
 
 /**

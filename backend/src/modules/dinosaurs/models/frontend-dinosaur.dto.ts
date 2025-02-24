@@ -44,6 +44,7 @@ export class FrontendDinosaurDTO {
   @Expose() initial_luck_factor!: number;
 
   // issues des constantes du jeu
+  @Expose() initial_age_factor!: number;
   @Expose() initial_base_max_energy!: number;
   @Expose() initial_energy_decay_per_second!: number;
   @Expose() initial_energy_recovery_per_second!: number;
@@ -93,6 +94,7 @@ export class FrontendDinosaurDTO {
   */
 
   //- Leveling
+  @Expose() age!: number;
   @Expose() experience!: number;
   @Expose() level!: number;
   @Expose() money!: number;
@@ -131,6 +133,7 @@ export class FrontendDinosaurDTO {
   /*
   * Multiplicateurs finaux apres application des modificateurs
   */
+  @Expose() final_age_factor!: number;
   @Expose() final_luck_factor!: number;
   @Expose() final_max_energy!: number;
   @Expose() final_max_food!: number;
