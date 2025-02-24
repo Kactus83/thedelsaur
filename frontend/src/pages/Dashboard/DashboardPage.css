@@ -13,6 +13,7 @@ body, html {
     height: 92vh;
     width: 100%;
     overflow-y: hidden;
+    overflow-x: hidden;
     z-index: 0;
     display: flex;
     flex-wrap: wrap;

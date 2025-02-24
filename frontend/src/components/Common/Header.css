@@ -6,9 +6,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    border-bottom: 2px solid black;
     position: relative; /* Nécessaire pour positionner le burger en mobile */
-    background: linear-gradient(to right, #f5f5f5, #eaeaea);
 }
 
 /****************************************
@@ -20,6 +18,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Peanut', sans-serif;
+    font-size: 1.2rem;
 }
 
 .header-btn-left,
@@ -32,7 +32,8 @@
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 0.9rem;
+    font-family: 'Peanut', sans-serif;
+    font-size: 1.2rem;
 }
 
 /****************************************
@@ -123,6 +124,7 @@
     /* Afficher l'icône burger en mobile */
     .burger-icon {
         display: flex;
+        
         margin-left: auto;
         margin-right: auto;
     }
@@ -194,4 +196,10 @@
     .burger-icon {
         display: none;
     }
+}
+
+
+@font-face {
+    font-family:"Peanut";
+    src: url("../../../public/assets/fonts/PeanutMoney.ttf") format("truetype");
 }
