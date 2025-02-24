@@ -49,7 +49,7 @@ export class AuthService {
    * @param passwordHash Le mot de passe hashé.
    * @param isAdmin Indique si l'utilisateur est administrateur.
    */
-  private async createUser(username: string, email: string, passwordHash: string, isAdmin: boolean = true): Promise<number> {
+  private async createUser(username: string, email: string, passwordHash: string, isAdmin: boolean = false): Promise<number> {
     try {
       const neutralSoulPoints = isAdmin ? 10000 : 0;
       const darkSoulPoints = isAdmin ? 10000 : 0;
