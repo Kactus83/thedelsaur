@@ -25,5 +25,7 @@ export const DINOSAUR_CONSTANTS = {
     EXP_TO_SOUL_POINTS_CONVERSION_RATIO: 0.1,
   // Limits for Sleeping and Waking Conditions
     MIN_ENERGY_TO_WAKE_UP: 1000,
+    // Age
+    INITIAL_AGE_FACTOR: 10000,
   };
   

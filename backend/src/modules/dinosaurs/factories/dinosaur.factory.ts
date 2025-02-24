@@ -234,12 +234,22 @@ export class DinosaurFactory {
     // 4. Le luck factor final est le produit du ratio normalisé par le multiplicateur
     const luckFactor = clampedInitialLuckFactor * finalLuckFactorMultiplier;
 
+  
+    // Calcul de l'âge et du facteur d'âge pour obtenir l'âge réel
+    const rawAge = Date.now() - dbDino.last_reborn.getTime();
+    const computedAgeFactor = calculateFinalStat(DINOSAUR_CONSTANTS.INITIAL_AGE_FACTOR, allModifiers.filter(mod => mod.target === "age_factor"));
+    const realAge = rawAge * computedAgeFactor;
+    const dinoAge = realAge;
+    const dinoInitialAgeFactor = DINOSAUR_CONSTANTS.INITIAL_AGE_FACTOR;
+    const dinoComputedAgefactor = computedAgeFactor;
+
     const frontendDino: FrontendDinosaurDTO = {
       id: dbDino.id,
       userId: dbDino.userId,
       name: dbDino.name,
       lives: dbDino.lives,
       // Valeurs initiales
+      initial_age_factor: dinoInitialAgeFactor,
       initial_base_max_energy: DINOSAUR_CONSTANTS.BASE_MAX_ENERGY,
       initial_energy_decay_per_second: DINOSAUR_CONSTANTS.ENERGY_DECAY_PER_SECOND,
       initial_energy_recovery_per_second: DINOSAUR_CONSTANTS.ENERGY_RECOVERY_PER_SECOND,
@@ -250,6 +260,7 @@ export class DinosaurFactory {
       initial_hunger_increase_per_second_when_recovery: DINOSAUR_CONSTANTS.HUNGER_INCREASE_PER_SECOND_WHEN_RECOVERY,
       initial_karma_width: DINOSAUR_CONSTANTS.KARMA_WIDTH,
       // Valeurs après modificateurs (de base)
+      age: dinoAge,
       base_max_energy,
       energy_decay_per_second: final_energy_decay_per_second,
       energy_recovery_per_second: final_energy_recovery_per_second,
@@ -286,6 +297,7 @@ export class DinosaurFactory {
       // Modificateurs
       stats_modifiers: allModifiers,
       // Multiplicateurs et productions finales
+      final_age_factor: dinoComputedAgefactor,
       final_max_energy,
       final_max_food,
       final_max_hunger,
@@ -314,7 +326,7 @@ export class DinosaurFactory {
       skills: dbDino.skills,
       items: dbDino.items,
       buildings: dbDino.buildings,
-      soulSkills: dbDino.soul_skills // Ajout des Soul Skills dans le DTO
+      soulSkills: dbDino.soul_skills 
     };
 
     return frontendDino;

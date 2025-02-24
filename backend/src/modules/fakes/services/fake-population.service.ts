@@ -14,11 +14,19 @@ const computeExponentialValue = (xp: number, minValue: number, maxValue: number,
 };
 
 const computeLevel = (xp: number): number => {
-  const ratio = (xp - XP_MIN) / (XP_MAX - XP_MIN);
+  // Si xp est inférieur à XP_MIN, utiliser XP_MIN pour éviter NaN
+  const safeXp = xp < XP_MIN ? XP_MIN : xp;
+  const ratio = (safeXp - XP_MIN) / (XP_MAX - XP_MIN);
   return Math.floor(1 + 49 * Math.pow(ratio, 0.5));
 };
 
 const formatSqlDate = (date: Date): string => date.toISOString().slice(0, 19).replace('T', ' ');
+
+// Constantes pour le nombre d'assets insérés par défaut
+const DEFAULT_SKILL_COUNT = 10;
+const DEFAULT_ITEM_COUNT = 10;
+const DEFAULT_BUILDING_COUNT = 5;
+const DEFAULT_SOUL_SKILL_COUNT = 5;
 
 const availableEpochs: Epoch[] = [
   Epoch.Prehistoric_Epoch1, Epoch.Prehistoric_Epoch2, Epoch.Prehistoric_Epoch3, Epoch.Prehistoric_Epoch4,
@@ -73,9 +81,7 @@ export class FakePopulationService {
     for (let i = 0; i < dinosaursToCreate; i++) {
       // On utilise l'utilisateur à l'index i pour garantir l'unicité
       const userId = userIds[i];
-      // Pour les diètes et types, on suppose que :
-      //   - dinosaur_diets : 1 = Herbivore, 2 = Carnivore, 3 = Omnivore
-      //   - dinosaur_types : 1 = Land, 2 = Air, 3 = Sea
+      // Pour les diètes et types, on suppose que les id vont de 1 à 3
       const diet_id = randomInt(1, 4);
       const type_id = randomInt(1, 4);
 
@@ -123,11 +129,12 @@ export class FakePopulationService {
         });
         dinosaursCreated++;
 
-        // Générer un nombre aléatoire (1 à 10) de vies antérieures pour ce dinosaure
+        // Pour les vies, on s'assure que l'expérience est toujours >= XP_MIN
         const livesCount = randomInt(1, 11);
         for (let j = 0; j < livesCount; j++) {
           const lifeName = `Life_${j + 1}`;
-          const lifeExperience = randomInt(100, 50000);
+          // Assurer que l'expérience de vie est >= XP_MIN
+          const lifeExperience = randomInt(XP_MIN, 50000 + 1);
           const lifeKarma = randomInt(-DINOSAUR_CONSTANTS.KARMA_WIDTH, DINOSAUR_CONSTANTS.KARMA_WIDTH + 1);
           const lifeLevel = computeLevel(lifeExperience);
           const birthDate = formatSqlDate(new Date(now.getTime() - randomInt(1000000, 5000000)));
@@ -147,37 +154,61 @@ export class FakePopulationService {
           });
         }
 
-        // Peuplement basique des assets
+        // Peuplement des assets en s'assurant l'unicité pour éviter les doublons
+
+        // Pour skills
         const skillsCount = randomInt(0, 4);
-        for (let k = 0; k < skillsCount; k++) {
+        const chosenSkillIds = new Set<number>();
+        while (chosenSkillIds.size < skillsCount) {
+          chosenSkillIds.add(randomInt(1, DEFAULT_SKILL_COUNT + 1));
+        }
+        for (const skillId of chosenSkillIds) {
           await this.repo.createFakeSkillInstance({
             dinosaur_id: dinoId,
-            skill_id: randomInt(1, 11),
+            skill_id: skillId,
             is_purchased: true
           });
         }
+
+        // Pour items
         const itemsCount = randomInt(0, 4);
-        for (let k = 0; k < itemsCount; k++) {
+        const chosenItemIds = new Set<number>();
+        while (chosenItemIds.size < itemsCount) {
+          chosenItemIds.add(randomInt(1, DEFAULT_ITEM_COUNT + 1));
+        }
+        for (const itemId of chosenItemIds) {
           await this.repo.createFakeItemInstance({
             dinosaur_id: dinoId,
-            item_id: randomInt(1, 11),
+            item_id: itemId,
             current_level_or_quantity: randomInt(1, 6),
             is_equipped: Math.random() < 0.5
           });
         }
+
+        // Pour buildings (éviter les doublons car une instance unique par bâtiment)
         const buildingsCount = randomInt(0, 3);
-        for (let k = 0; k < buildingsCount; k++) {
+        const chosenBuildingIds = new Set<number>();
+        while (chosenBuildingIds.size < buildingsCount) {
+          chosenBuildingIds.add(randomInt(1, DEFAULT_BUILDING_COUNT + 1));
+        }
+        for (const buildingId of chosenBuildingIds) {
           await this.repo.createFakeBuildingInstance({
             dinosaur_id: dinoId,
-            building_id: randomInt(1, 6),
+            building_id: buildingId,
             current_level: randomInt(1, 4)
           });
         }
+
+        // Pour soul skills
         const soulSkillsCount = randomInt(0, 3);
-        for (let k = 0; k < soulSkillsCount; k++) {
+        const chosenSoulSkillIds = new Set<number>();
+        while (chosenSoulSkillIds.size < soulSkillsCount) {
+          chosenSoulSkillIds.add(randomInt(1, DEFAULT_SOUL_SKILL_COUNT + 1));
+        }
+        for (const soulSkillId of chosenSoulSkillIds) {
           await this.repo.createFakeSoulSkillInstance({
             dinosaur_id: dinoId,
-            soul_skill_id: randomInt(1, 6),
+            soul_skill_id: soulSkillId,
             is_unlocked: true,
             purchased_at: nowSql
           });

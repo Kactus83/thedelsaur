@@ -103,8 +103,13 @@ export interface Dinosaur {
   final_earn_skill_point_multiplier: number;
   final_earn_money_multiplier: number;
   final_earn_karma_multiplier: number;
-
+  
   // Champs pour le calcul du luck factor
   final_luck_factor: number;
   final_luck_factor_multiplier: number;
+
+  // Nouveaux champs pour l'âge
+  age: number;                // Durée écoulée (en secondes, par exemple)
+  initial_age_factor: number; // Valeur de base pour l'âge
+  final_age_factor: number;   // Ratio final calculé pour l'âge
 }

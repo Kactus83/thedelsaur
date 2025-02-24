@@ -1,10 +1,8 @@
 import pool from '../../../common/database/db';
-import { RowDataPacket } from 'mysql2';
 
 export class FakePopulationRepository {
   /**
    * Insère un faux utilisateur dans la table `user`.
-   * Seuls username, email, password_hash et isAdmin sont renseignés.
    */
   public async createFakeUser(user: {
     username: string;
@@ -29,7 +27,6 @@ export class FakePopulationRepository {
 
   /**
    * Insère un faux dinosaure dans la table `dinosaurs`.
-   * Les valeurs sont fournies dans l'ordre et au format attendu.
    */
   public async createFakeDinosaur(dino: {
     name: string;
