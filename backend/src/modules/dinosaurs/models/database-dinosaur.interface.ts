@@ -50,6 +50,7 @@ export interface DatabaseDinosaur {
   
   // Informations techniques
   created_at: Date;
+  death_date: Date | null;
   last_reborn: Date;
   reborn_amount: number;
   last_update_by_time_service: Date;

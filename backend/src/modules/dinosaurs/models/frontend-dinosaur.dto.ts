@@ -81,6 +81,7 @@ export class FrontendDinosaurDTO {
   * Details techniques
   */
   @Expose() created_at!: Date;
+  @Expose() death_date!: Date | null;
   @Expose() last_reborn!: Date;
   @Expose() reborn_amount!: number;
   @Expose() last_update_by_time_service!: Date;

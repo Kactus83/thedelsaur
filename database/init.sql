@@ -148,6 +148,7 @@ CREATE TABLE dinosaurs (
     
     -- Détails techniques
     created_at DATETIME NOT NULL,
+    death_date DATETIME DEFAULT NULL,
     last_reborn DATETIME NOT NULL,
     reborn_amount INT NOT NULL,
     last_update_by_time_service DATETIME NOT NULL,

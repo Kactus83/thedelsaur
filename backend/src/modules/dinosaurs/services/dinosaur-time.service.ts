@@ -20,22 +20,20 @@ export class DinosaurTimeService {
     this.basicActionsService = basicActionsService;
   }
 
-  /**
-   * Calcule l'époque du dinosaure en fonction du temps écoulé depuis sa dernière renaissance.
-   * @param lastReborn Date de la dernière renaissance du dinosaure.
-   * @returns L'époque calculée.
-   */
-  private calculateEpoch(lastReborn: Date): Epoch {
-    const now = new Date();
-    const elapsedSeconds = (now.getTime() - lastReborn.getTime()) / 1000;
 
+  /**
+   * Calcule l'époque du dinosaure en fonction de son âge (en secondes).
+   * @param ageInSeconds Âge du dinosaure en secondes
+   * @returns L'époque calculée
+   */
+  private calculateEpochFromAge(ageInSeconds: number): Epoch {
     // Parcours des seuils pour déterminer l'époque
     for (const { epoch, threshold } of this.epochThresholds) {
-      if (elapsedSeconds < threshold) {
+      if (ageInSeconds < threshold) {
         return epoch;
       }
     }
-    // Si tous les seuils sont dépassés, renvoyer le dernier
+    // Si tous les seuils sont dépassés, renvoyer la dernière
     return this.epochThresholds[this.epochThresholds.length - 1].epoch;
   }
 
@@ -73,7 +71,7 @@ export class DinosaurTimeService {
     const elapsedSeconds = Math.floor((now.getTime() - lastUpdate.getTime()) / 1000);
 
     // Mise à jour de l'époque en fonction du temps écoulé depuis le dernier reborn
-    dino.epoch = this.calculateEpoch(dino.last_reborn);
+    dino.epoch = this.calculateEpochFromAge(dino.age);
 
     if (elapsedSeconds > 0) {
       if (dino.is_sleeping) {
@@ -140,6 +138,7 @@ export class DinosaurTimeService {
         dino = result.dinosaur;
       } else {
         dino.is_dead = true;
+        dino.death_date = new Date();
       }
     }
 

@@ -48,6 +48,7 @@ export class DinosaurFactory {
       skill_points: isAdmin ? 100000 : 0,   
       epoch: Epoch.Ancient_Epoch1,
       created_at: new Date(),
+      death_date: null,
       last_reborn: new Date(),
       reborn_amount: 0,
       last_update_by_time_service: new Date(),
@@ -89,6 +90,7 @@ export class DinosaurFactory {
       skill_points: isAdmin ? 100000 : 0, 
       epoch: Epoch.Ancient_Epoch1,
       created_at: dinoDto.created_at,
+      death_date: null,
       last_reborn: new Date(),
       reborn_amount: dinoDto.reborn_amount + 1,
       last_update_by_time_service: new Date(),
@@ -236,7 +238,12 @@ export class DinosaurFactory {
 
   
     // Calcul de l'âge et du facteur d'âge pour obtenir l'âge réel
-    const rawAge = Date.now() - dbDino.last_reborn.getTime();
+
+    let referenceTime = Date.now();
+    if (dbDino.is_dead && dbDino.death_date) {
+      referenceTime = dbDino.death_date.getTime();
+    }
+    const rawAge = referenceTime - dbDino.last_reborn.getTime();
     const computedAgeFactor = calculateFinalStat(DINOSAUR_CONSTANTS.INITIAL_AGE_FACTOR, allModifiers.filter(mod => mod.target === "age_factor"));
     const realAge = rawAge * computedAgeFactor;
     const dinoAge = realAge;
@@ -271,6 +278,7 @@ export class DinosaurFactory {
       hunger_increase_per_second_when_recovery: final_hunger_increase_per_second_when_recovery,
       karma_width: final_karma_width,
       // Détails techniques
+      death_date: dbDino.death_date,
       created_at: dbDino.created_at,
       last_reborn: dbDino.last_reborn,
       reborn_amount: dbDino.reborn_amount,
