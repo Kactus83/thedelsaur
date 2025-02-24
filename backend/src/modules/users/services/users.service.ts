@@ -1,16 +1,32 @@
 import pool from '../../../common/database/db';
 import { User } from '../models/user.interface';
+import { PlayerScoreRepository } from '../repositories/player-score.repository';
 
 /**
  * Service de gestion des utilisateurs.
  */
 export class UsersService {
+  private scoreRepo: PlayerScoreRepository;
+
+  constructor(playerScoreRepo: PlayerScoreRepository) {
+    this.scoreRepo = playerScoreRepo;
+  }
+
   /**
    * Récupère tous les utilisateurs.
+   * Avant de renvoyer les utilisateurs, on met à jour leur score.
    * @returns {Promise<User[]>} Liste de tous les utilisateurs.
    */
   public async getAllUsers(): Promise<User[]> {
     try {
+      // Récupérer tous les ID d'utilisateurs
+      const [idsResults] = await pool.query('SELECT id FROM user');
+      const usersIds = (idsResults as { id: number }[]).map(u => u.id);
+
+      // Recalculer et sauvegarder le score pour chaque utilisateur via le repository dédié
+      await Promise.all(usersIds.map(id => this.scoreRepo.recalculateAndSaveUserScore(id)));
+
+      // Maintenant récupérer l'ensemble des utilisateurs avec les scores actualisés
       const [results] = await pool.query('SELECT * FROM user');
       return results as User[];
     } catch (err) {
@@ -21,11 +37,16 @@ export class UsersService {
 
   /**
    * Récupère un utilisateur par son identifiant.
+   * Avant de renvoyer l'utilisateur, on met à jour son score.
    * @param userId L'identifiant de l'utilisateur.
    * @returns {Promise<User | null>} L'utilisateur trouvé ou null si non existant.
    */
   public async getUserById(userId: number): Promise<User | null> {
     try {
+      // Recalculer le score pour cet utilisateur
+      await this.scoreRepo.recalculateAndSaveUserScore(userId);
+
+      // Récupérer l'utilisateur actualisé
       const [results] = await pool.query('SELECT * FROM user WHERE id = ?', [userId]);
       const users = results as User[];
       return users.length > 0 ? users[0] : null;
@@ -79,7 +100,7 @@ export class UsersService {
       const darkSoulPoints = isAdmin ? 10000 : 0;
       const brightSoulPoints = isAdmin ? 10000 : 0;
 
-      // On peut construire un player_score initial (si on veut écraser le DEFAULT)
+      // Construction d'un player_score initial
       const initialPlayerScore = {
         totalSoulPoints: 0,
         totalDarkSoulPoints: 0,
