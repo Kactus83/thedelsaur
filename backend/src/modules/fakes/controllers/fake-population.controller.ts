@@ -14,9 +14,7 @@ export class FakePopulationController {
    */
   public populate = async (req: Request, res: Response) => {
     try {
-      const userCount = req.query.userCount ? parseInt(req.query.userCount as string, 10) : 10;
-      const dinoCount = req.query.dinoCount ? parseInt(req.query.dinoCount as string, 10) : 20;
-      const result = await this.fakePopulationService.populateFakeData(userCount, dinoCount);
+      const result = await this.fakePopulationService.populateFakeData();
       res.status(200).json({ message: 'Peuplement effectué avec succès', result });
     } catch (error) {
       console.error("Erreur lors du peuplement des données factices :", error);

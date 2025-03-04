@@ -14,7 +14,6 @@ const computeExponentialValue = (xp: number, minValue: number, maxValue: number,
 };
 
 const computeLevel = (xp: number): number => {
-  // Si xp est inférieur à XP_MIN, utiliser XP_MIN pour éviter NaN
   const safeXp = xp < XP_MIN ? XP_MIN : xp;
   const ratio = (safeXp - XP_MIN) / (XP_MAX - XP_MIN);
   return Math.floor(1 + 49 * Math.pow(ratio, 0.5));
@@ -36,6 +35,34 @@ const availableEpochs: Epoch[] = [
   Epoch.Future_Epoch1, Epoch.Future_Epoch2, Epoch.Future_Epoch3, Epoch.Future_Epoch4,
 ];
 
+// Liste de pseudos gamers un peu caricaturés
+const GAMER_PSEUDOS = [
+  'xXxRaptorLordxXx','DinoRider_3000','KillerInstinct','GodzillaJr','SauriaNerd',
+  'TyrantRex97','VoltZilla','M4dF0ssil','RebelGamer69','BrontoSlap',
+  'PteranodonLover','StegoKing','Ch0mpMaster','EggHunterPro','JurassicJake',
+  'PrimordialGeek','DinoTamer777','HardcoreSauro','VelociTyler','SkullBasher',
+  'BoneCollector','StoneAgeHero','SwiftRaptor','DinoDozer','NightfallJurassic',
+  'SaurianChamp','EvoTrooper','CarboniferousXD','PaleoDestroyer','Fangz4Ever',
+  'Ancient_Sniper','DreadnoughtFan','Prehist0ryBuff','BloodMoonRex','ProtoRider',
+  'ArchaicSoul','NeoJurassic','SwampFang','DustyVeloci','PrimalInstinct',
+  'SkeleTek','DinoDusk','Rexosaurus','TeethOfSteel','BoneCruncher92',
+  'SandstormCarni','AshenHerbivore','PteroPhobia','DracoByte','MeteorShower99',
+  'ExtinctCore','RexRevenant','JurassicJuggernaut','FossilFighter','MesozoicMauler','CretaceousConqueror'
+];
+
+// Liste de noms de dinos plus variés
+const DINO_NAMES = [
+  'Arlo','Brax','Zaru','Kron','Nala','Glimmer','Rexy','Roarstorm','Stomper','Spike',
+  'Nova','Loki','Basil','Tango','Tyranno','Fang','Scales','Blazer','Trini','Shiva',
+  'Nero','Echo','Zara','Turbo','Aster','Darwin','Raptor','Grimm','Zuko','Silver',
+  'Flare','Orion','Tempest','Xeno','Fossil','Thorn','Stormy','Rune','Midnight',
+  'Blitz','Draco','Roc','Groudon','Berry','Warden','SpikeTail','Clover','Wings',
+  'Dasher','Vortex','Phantom','Titan','Cyclone','Inferno','Mystic','Boulder','Specter','Zephyr'
+];
+
+/**
+ * Service de peuplement.
+ */
 export class FakePopulationService {
   private repo: FakePopulationRepository;
 
@@ -45,26 +72,34 @@ export class FakePopulationService {
 
   /**
    * Génère des faux utilisateurs et dinosaures cohérents.
-   * Un utilisateur ne peut avoir qu'un seul dinosaure.
-   * @param userCount Nombre de faux utilisateurs à créer.
-   * @param dinoCount Nombre de dinosaures à créer (sera limité au nombre d'utilisateurs créés).
+   * Pour chaque pseudo de GAMER_PSEUDOS, si l'utilisateur existe déjà, son ID est récupéré ;
+   * sinon, un nouvel utilisateur est créé.
+   * Chaque utilisateur se voit associé un dinosaure.
    */
-  public async populateFakeData(userCount: number, dinoCount: number): Promise<{ usersCreated: number; dinosaursCreated: number }> {
+  public async populateFakeData(): Promise<{ usersCreated: number; dinosaursCreated: number }> {
     let usersCreated = 0;
     let dinosaursCreated = 0;
     const userIds: number[] = [];
+    const userCount = GAMER_PSEUDOS.length;
 
-    // Création des faux utilisateurs
+    // Création (ou récupération) des faux utilisateurs
     for (let i = 0; i < userCount; i++) {
-      const username = `fakeUser_${Date.now()}_${i}`;
+      const username = GAMER_PSEUDOS[i];
       const email = `${username}@example.com`;
-      const passwordHash = "hashed_password"; // Chaîne fixe pour les tests
+      const passwordHash = "hashed_password";
       try {
-        const userId = await this.repo.createFakeUser({ username, email, passwordHash, isAdmin: false });
-        userIds.push(userId);
-        usersCreated++;
+        // Vérification si l'utilisateur existe déjà
+        const existingId = await this.repo.getUserByUsername(username);
+        if (existingId) {
+          userIds.push(existingId);
+          usersCreated++;
+        } else {
+          const userId = await this.repo.createFakeUser({ username, email, passwordHash, isAdmin: false });
+          userIds.push(userId);
+          usersCreated++;
+        }
       } catch (error) {
-        console.error(`Erreur lors de la création de l'utilisateur ${username} :`, error);
+        console.error(`Erreur lors de la création/récupération de l'utilisateur ${username} :`, error);
       }
     }
 
@@ -74,22 +109,21 @@ export class FakePopulationService {
 
     const now = new Date();
     const nowSql = formatSqlDate(now);
+    const dinosaursToCreate = userIds.length;
 
-    // On ne peut créer qu'un dinosaure par utilisateur
-    const dinosaursToCreate = Math.min(userIds.length, dinoCount);
-
+    // Création des dinosaures (un par utilisateur)
     for (let i = 0; i < dinosaursToCreate; i++) {
-      // On utilise l'utilisateur à l'index i pour garantir l'unicité
       const userId = userIds[i];
-      // Pour les diètes et types, on suppose que les id vont de 1 à 3
       const diet_id = randomInt(1, 4);
       const type_id = randomInt(1, 4);
+      let name = DINO_NAMES[i % DINO_NAMES.length];
+      if (i >= DINO_NAMES.length) {
+        name += '_' + i;
+      }
 
-      const name = `FakeDino_${Date.now()}_${i}`;
       const energy = DINOSAUR_CONSTANTS.INITIAL_ENERGY;
       const food = DINOSAUR_CONSTANTS.INITIAL_FOOD;
       const hunger = DINOSAUR_CONSTANTS.INITIAL_HUNGER;
-
       const experience = randomInt(XP_MIN, XP_MAX + 1);
       const level = computeLevel(experience);
       const money = Math.round(1000 + computeExponentialValue(experience, 0, 4000));
@@ -98,7 +132,6 @@ export class FakePopulationService {
       const friends = Math.round(computeExponentialValue(experience, 0, 50));
       const employees = Math.round(computeExponentialValue(experience, 0, 20));
       const skill_points = Math.round(computeExponentialValue(experience, 0, 100));
-
       const epoch = availableEpochs[randomInt(0, availableEpochs.length)];
 
       try {
@@ -129,11 +162,10 @@ export class FakePopulationService {
         });
         dinosaursCreated++;
 
-        // Pour les vies, on s'assure que l'expérience est toujours >= XP_MIN
+        // Création des vies
         const livesCount = randomInt(1, 11);
         for (let j = 0; j < livesCount; j++) {
           const lifeName = `Life_${j + 1}`;
-          // Assurer que l'expérience de vie est >= XP_MIN
           const lifeExperience = randomInt(XP_MIN, 50000 + 1);
           const lifeKarma = randomInt(-DINOSAUR_CONSTANTS.KARMA_WIDTH, DINOSAUR_CONSTANTS.KARMA_WIDTH + 1);
           const lifeLevel = computeLevel(lifeExperience);
@@ -154,9 +186,7 @@ export class FakePopulationService {
           });
         }
 
-        // Peuplement des assets en s'assurant l'unicité pour éviter les doublons
-
-        // Pour skills
+        // Création des assets
         const skillsCount = randomInt(0, 4);
         const chosenSkillIds = new Set<number>();
         while (chosenSkillIds.size < skillsCount) {
@@ -170,7 +200,6 @@ export class FakePopulationService {
           });
         }
 
-        // Pour items
         const itemsCount = randomInt(0, 4);
         const chosenItemIds = new Set<number>();
         while (chosenItemIds.size < itemsCount) {
@@ -185,7 +214,6 @@ export class FakePopulationService {
           });
         }
 
-        // Pour buildings (éviter les doublons car une instance unique par bâtiment)
         const buildingsCount = randomInt(0, 3);
         const chosenBuildingIds = new Set<number>();
         while (chosenBuildingIds.size < buildingsCount) {
@@ -199,7 +227,6 @@ export class FakePopulationService {
           });
         }
 
-        // Pour soul skills
         const soulSkillsCount = randomInt(0, 3);
         const chosenSoulSkillIds = new Set<number>();
         while (chosenSoulSkillIds.size < soulSkillsCount) {

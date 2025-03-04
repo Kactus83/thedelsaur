@@ -2,12 +2,13 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // Création d'une instance Axios avec une configuration de base
 const api = axios.create({
-    baseURL: 'http://localhost:3000/', // URL de base de votre backend
+    baseURL: "https://backend-service-783225847333.europe-west9.run.app/",
     headers: {
-        'Content-Type': 'application/json', // Type de contenu par défaut
+        'Content-Type': 'application/json',
     },
-    timeout: 10000, // Temps d'attente maximal pour une requête (en ms)
+    timeout: 10000,
 });
+
 
 // Intercepteur de requête pour ajouter le token JWT
 api.interceptors.request.use(
