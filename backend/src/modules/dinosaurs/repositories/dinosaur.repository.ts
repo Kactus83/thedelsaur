@@ -7,6 +7,11 @@ import { DinosaurDiet } from '../models/dinosaur-diet.interface';
 import { DinosaurGameAssetsRepository } from './dinosaur-game-assets.repository';
 import { DinosaurLivesRepository } from './dinosaur-lives.repository';
 
+// Fonction utilitaire pour parser uniquement si la valeur est une chaîne
+const parseIfString = (value: any): any => {
+  return typeof value === 'string' ? JSON.parse(value) : value;
+};
+
 /**
  * Repository pour gérer les opérations sur la table des dinosaures.
  * Les requêtes effectuent une jointure avec les tables dinosaur_types et dinosaur_diets
@@ -42,9 +47,9 @@ export class DinosaurRepository {
       if (results.length === 0) return null;
       const row = results[0];
 
-      // Parser les modificateurs stockés en JSON
-      const typeModifiers = JSON.parse(row.type_stat_modifiers) as any[];
-      const dietModifiers = JSON.parse(row.diet_stat_modifiers) as any[];
+      // Utilisation de parseIfString pour éviter le double parsing
+      const typeModifiers = parseIfString(row.type_stat_modifiers) as any[];
+      const dietModifiers = parseIfString(row.diet_stat_modifiers) as any[];
 
       const dinosaur: DatabaseDinosaur = {
         id: row.id,
@@ -123,8 +128,8 @@ export class DinosaurRepository {
       );
       if (results.length === 0) return null;
       const row = results[0];
-      const typeModifiers = JSON.parse(row.type_stat_modifiers) as any[];
-      const dietModifiers = JSON.parse(row.diet_stat_modifiers) as any[];
+      const typeModifiers = parseIfString(row.type_stat_modifiers) as any[];
+      const dietModifiers = parseIfString(row.diet_stat_modifiers) as any[];
       const dinosaur: DatabaseDinosaur = {
         id: row.id,
         name: row.name,
@@ -162,8 +167,8 @@ export class DinosaurRepository {
         skills: [],
         items: [],
         buildings: [],
-        lives: [], // Historique des vies
-        soul_skills: [] // Ajout des Soul Skills
+        lives: [],
+        soul_skills: []
       };
       const [skillInstances, itemInstances, buildingInstances, lives] = await Promise.all([
         this.gameAssetsRepo.getSkillInstancesByDinosaurId(row.id),
@@ -258,19 +263,23 @@ export class DinosaurRepository {
     return (rows as any[]).map(row => ({
       id: row.id,
       name: row.name,
-      statModifiers: JSON.parse(row.stat_modifiers)
+      statModifiers: typeof row.stat_modifiers === 'string'
+        ? JSON.parse(row.stat_modifiers)
+        : row.stat_modifiers
     }));
   }
-
+  
   public async getAllDinosaurDiets(): Promise<DinosaurDiet[]> {
     const [rows] = await pool.query('SELECT * FROM dinosaur_diets');
     return (rows as any[]).map(row => ({
       id: row.id,
       name: row.name,
-      statModifiers: JSON.parse(row.stat_modifiers)
+      statModifiers: typeof row.stat_modifiers === 'string'
+        ? JSON.parse(row.stat_modifiers)
+        : row.stat_modifiers
     }));
   }
-
+  
   public async createDinosaur(dinosaur: DatabaseDinosaur): Promise<DatabaseDinosaur | null> {
     const query = `INSERT INTO dinosaurs 
       (name, user_id, diet_id, type_id, energy, food, hunger, weapons, armors, friends, employees, karma, experience, level, money, skill_points, epoch,

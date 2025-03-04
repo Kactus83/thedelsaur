@@ -18,7 +18,7 @@ export class FakesModule {
    * Effectue le peuplement des données factices et affiche le résultat dans la console.
    */
   public async seedFakes(): Promise<void> {
-    const { usersCreated, dinosaursCreated } = await this.fakePopulationService.populateFakeData(10, 20);
+    const { usersCreated, dinosaursCreated } = await this.fakePopulationService.populateFakeData();
     console.log(`Seed Fakes: ${usersCreated} utilisateurs et ${dinosaursCreated} dinosaures créés.`);
   }
 }

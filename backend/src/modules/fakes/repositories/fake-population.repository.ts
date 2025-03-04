@@ -26,6 +26,19 @@ export class FakePopulationRepository {
   }
 
   /**
+   * Recherche un utilisateur par son pseudo.
+   * Retourne son identifiant s'il existe, sinon null.
+   */
+  public async getUserByUsername(username: string): Promise<number | null> {
+    const query = `SELECT id FROM user WHERE username = ? LIMIT 1`;
+    const [rows] = await pool.query(query, [username]) as any;
+    if (rows.length > 0) {
+      return rows[0].id;
+    }
+    return null;
+  }
+
+  /**
    * Insère un faux dinosaure dans la table `dinosaurs`.
    */
   public async createFakeDinosaur(dino: {
@@ -175,7 +188,6 @@ export class FakePopulationRepository {
 
   /**
    * Insère une instance de building pour un dinosaure dans la table `dinosaur_buildings_instance`.
-   * Ici, purchased_upgrades est inséré sous forme de JSON vide.
    */
   public async createFakeBuildingInstance(instance: {
     dinosaur_id: number;

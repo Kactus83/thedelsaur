@@ -1,4 +1,4 @@
-import api from '../../../frontend/src/services/api';
+import api from '../services/api';
 
 /**
  * Service pour gérer les actions de gameplay (activation de skills, consommation d'items).
