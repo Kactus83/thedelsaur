@@ -161,6 +161,6 @@ public async updateSoulPoints(userId: number, type: 'neutral' | 'bright' | 'dark
       SET current_level = ?, purchased_upgrades = ?
       WHERE dinosaur_id = ? AND building_id = ?
     `;
-    await pool.query(query, [currentLevel, JSON.stringify(purchasedUpgrades), dinosaurId, buildingId]);
+    await pool.query(query, [currentLevel, typeof purchasedUpgrades === 'string' ? JSON.parse(purchasedUpgrades) : JSON.stringify(purchasedUpgrades), dinosaurId, buildingId]);
   }
 }
