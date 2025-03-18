@@ -8,13 +8,13 @@ echo ********************************************
 echo.
 
 REM -- Configuration du projet et des images --
-set "PROJECT_ID=iddlesaur"
+set "PROJECT_ID=iddlesaur-452708"
 REM Utilisez la région où se trouve votre instance Cloud SQL.
 set "REGION=europe-west9"
 
 REM On ne déploie plus MariaDB, on déploie uniquement backend et frontend
-set "BACKEND_IMAGE=gcr.io/%PROJECT_ID%/backend"
-set "FRONTEND_IMAGE=gcr.io/%PROJECT_ID%/frontend"
+set "BACKEND_IMAGE=eu.gcr.io/%PROJECT_ID%/backend"
+set "FRONTEND_IMAGE=eu.gcr.io/%PROJECT_ID%/frontend"
 
 echo [DEBUG] Configuration du projet GCP vers %PROJECT_ID%...
 call gcloud config set project %PROJECT_ID%
@@ -75,13 +75,13 @@ echo ********************************************
 echo Déploiement du service backend sur Cloud Run (avec Cloud SQL et timeout augmenté)
 echo ********************************************
 call gcloud run deploy backend-service ^
-  --image gcr.io/iddlesaur/backend ^
+  --image eu.gcr.io/iddlesaur-452708/backend ^
   --region %REGION% ^
   --platform managed ^
   --allow-unauthenticated ^
   --port 3000 ^
-  --set-env-vars DB_HOST=/cloudsql/iddlesaur:europe-west9:iddlesaur,DB_USER=myuser,DB_PASSWORD=mypassword,DB_NAME=iddlesaur,JWT_SECRET=mySuperSecretKey,DEFAULT_ADMIN_NAME=admin,DEFAULT_ADMIN_PASSWORD=password ^
-  --add-cloudsql-instances=iddlesaur:europe-west9:iddlesaur ^
+  --set-env-vars DB_HOST=/cloudsql/iddlesaur-452708:europe-west9:iddlesaur,DB_USER=myuser,DB_PASSWORD=mypassword,DB_NAME=iddlesaur,JWT_SECRET=mySuperSecretKey,DEFAULT_ADMIN_NAME=admin,DEFAULT_ADMIN_PASSWORD=password ^
+  --add-cloudsql-instances=iddlesaur-452708:europe-west9:iddlesaur ^
   --timeout=300s
 if errorlevel 1 (
     echo ERREUR : Une erreur s'est produite lors du déploiement du service backend.
@@ -95,7 +95,7 @@ echo ********************************************
 echo Déploiement du service frontend sur Cloud Run
 echo ********************************************
 call gcloud run deploy frontend-service ^
-  --image gcr.io/iddlesaur/frontend ^
+  --image eu.gcr.io/iddlesaur-452708/frontend ^
   --region %REGION% ^
   --platform managed ^
   --allow-unauthenticated ^

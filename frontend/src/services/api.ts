@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // Création d'une instance Axios avec une configuration de base
 const api = axios.create({
-    baseURL: "https://backend-service-783225847333.europe-west9.run.app/",
+    baseURL: "https://backend-service-400887177421.europe-west9.run.app/",
     headers: {
         'Content-Type': 'application/json',
     },

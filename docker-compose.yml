@@ -1,9 +1,10 @@
+
 version: "3.8"
 
 services:
   mariadb:
     build: ./database
-    image: gcr.io/iddlesaur/mariadb
+    image: eu.gcr.io/iddlesaur-452708/mariadb
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: iddlesaur
@@ -18,13 +19,13 @@ services:
 
   backend:
     build: ./backend
-    image: gcr.io/iddlesaur/backend
+    image: eu.gcr.io/iddlesaur-452708/backend
     ports:
       - "3000:3000"
     depends_on:
       - mariadb
     environment:
-      DB_HOST: /cloudsql/iddlesaur:europe-west9:iddlesaur
+      DB_HOST: /cloudsql/iddlesaur-452708:europe-west9:iddlesaur
       DB_USER: myuser
       DB_PASSWORD: mypassword
       DB_NAME: iddlesaur
@@ -36,7 +37,7 @@ services:
 
   frontend:
     build: ./frontend
-    image: gcr.io/iddlesaur/frontend
+    image: eu.gcr.io/iddlesaur-452708/frontend
     ports:
       - "8080:80"
     networks:
@@ -48,3 +49,4 @@ volumes:
 networks:
   backend-network:
     driver: bridge
+

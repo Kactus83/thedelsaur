@@ -34,6 +34,7 @@
     transition: background-color 0.3s ease;
     font-family: 'Peanut', sans-serif;
     font-size: 1.2rem;
+    color: black;
 }
 
 /****************************************
@@ -60,6 +61,7 @@
 .nav-grid a:hover,
 .nav-grid button:hover {
     background-color: rgba(200, 200, 200, 0.8);
+    color: white;
 }
 
 /****************************************
