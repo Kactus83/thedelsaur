@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dinosaur } from '../../types/Dinosaur';
 import './DinosaurInfo.css';
-import DinoStats from './utils/DinoStats';
 import KarmaGauge from './utils/KarmaGauge';
 import EnergyGauge from './utils/EnergyGauge';
 import FoodGauge from './utils/FoodGauge';
@@ -34,7 +33,6 @@ const DinosaurInfo: React.FC<{ dinosaur: Dinosaur }> = ({ dinosaur }) => {
       <div className="dino-basic-info">
         <AgeEpochDisplay dinosaur={dinosaur} />
       </div>
-      <DinoStats dinosaur={dinosaur} />
       <div className="dino-gauges">
         <EnergyGauge dinosaur={dinosaur} />
         <FoodGauge dinosaur={dinosaur} />

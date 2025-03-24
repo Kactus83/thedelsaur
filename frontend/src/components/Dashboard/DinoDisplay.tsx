@@ -4,7 +4,6 @@ import { Dinosaur } from '../../types/Dinosaur';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import { ActionDetail } from './Actions';
 import './DinoDisplay.css';
-import DinoActionWheel from './DinoActionWheel';
 import { GameplayService } from '../../services/gameplay.service';
 
 /**
@@ -132,13 +131,6 @@ const DinoDisplay: React.FC<DinoDisplayProps> = ({ dinosaur, lastEvent, action, 
         alt={`Dinosaure ${dinosaur.name}`}
         className={className}
       />
-      {showActionWheel && (
-        <DinoActionWheel
-          dinosaur={dinosaur}
-          gameplayService={gameplayService}
-          onClose={() => setShowActionWheel(false)}
-        />
-      )}
     </div>
   );
 };

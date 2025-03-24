@@ -6,7 +6,7 @@ import { FaWindows } from 'react-icons/fa';
 
 const handleLogout = () => {
   localStorage.removeItem('token');
-  window.location.reload();
+  window.location.assign(`https://frontend-service-400887177421.europe-west9.run.app`);
 };
 
 const Header: React.FC = () => {
@@ -39,12 +39,7 @@ const Header: React.FC = () => {
 
       {/* -- Zone droite (desktop) : PvP / Classements -- */}
       <div className="desktop-right">
-        <button
-          className="header-btn-right"
-          onClick={() => openOverlay('pvp')}
-        >
-          PvP&nbsp;⚔
-        </button>
+
         <button
           className="header-btn-right"
           onClick={() => openOverlay('ranking')}
@@ -82,14 +77,6 @@ const Header: React.FC = () => {
             }}
           >
             Disconnect&nbsp;🚪
-          </button>
-          <button
-            onClick={() => {
-              openOverlay('pvp');
-              toggleMenu();
-            }}
-          >
-            PvP&nbsp;⚔
           </button>
           <button
             onClick={() => {

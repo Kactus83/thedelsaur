@@ -34,7 +34,7 @@ api.interceptors.request.use(
             if (token) {
                 config.headers['Authorization'] = `Bearer ${token}`;
             }else{
-                window.location.href = '../../index.html';
+                window.location.href = '../';
             }
             return config;
         },
@@ -48,7 +48,7 @@ axios.interceptors.request.use(
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         } else {
-            window.location.href = '../../index.html'; // Redirection vers la page de login si pas de token
+            window.location.href = '../'; // Redirection vers la page de login si pas de token
         }
         return config;
     },

@@ -14,12 +14,7 @@ import Gauge_XP from '../../components/Dashboard/utils/Gauge_XP';
 import { DinosaurEvent } from '../../types/DinosaurEvent';
 import DinoDisplay from '../../components/Dashboard/DinoDisplay';
 import { useOverlay } from '../../contexts/OverlayContext';
-import InventoryOverlay from '../../components/Dashboard/overlays/InventoryOverlay';
-import BuildingsOverlay from '../../components/Dashboard/overlays/BuildingsOverlay';
-import ShopOverlay from '../../components/Dashboard/overlays/ShopOverlay';
 import RankingOverlay from '../../components/Dashboard/overlays/RankingOverlay';
-import PvpOverlay from '../../components/Dashboard/overlays/PvpOverlay';
-import ClickableStatDetailOverlay from '../../components/Dashboard/overlays/ClickableStatDetailOverlay';
 import DinoSoulOverlay from '../../components/Dashboard/overlays/DinoSoulOverlay';
 
 /**
@@ -182,33 +177,6 @@ const DashboardPage: React.FC = () => {
                             >
                                 💀
                             </span>
-
-                            {/* 2) Inventaire */}
-                            <span
-                                className="overlay-icon"
-                                onClick={() => openOverlay('inventory')}
-                                title="Inventaire"
-                            >
-                                👜
-                            </span>
-
-                            {/* 3) Bâtiments */}
-                            <span
-                                className="overlay-icon"
-                                onClick={() => openOverlay('buildings')}
-                                title="Bâtiments"
-                            >
-                                🏠
-                            </span>
-
-                            {/* 4) Shop */}
-                            <span
-                                className="overlay-icon"
-                                onClick={() => openOverlay('shop')}
-                                title="Boutique"
-                            >
-                                🛒
-                            </span>
                             </div>
                         )}
                         {/* La div "middleContent" reçoit un style inline pour position relative */}
@@ -266,48 +234,10 @@ const DashboardPage: React.FC = () => {
                   active={true}
                 />
             )}
-            
-            {/* Nouveaux overlays déclenchés via le Header */}
-            {currentOverlay === 'inventory' && dinosaur && (
-                <InventoryOverlay 
-                  dinosaur={dinosaur}
-                  onDinosaurUpdate={setDinosaur}
-                  onClose={closeOverlay}
-                  active={true}
-                />
-            )}
-            {currentOverlay === 'buildings' && dinosaur && (
-                <BuildingsOverlay 
-                  dinosaur={dinosaur}
-                  onDinosaurUpdate={setDinosaur}
-                  onClose={closeOverlay}
-                  active={true}
-                />
-            )}
-            {currentOverlay === 'shop' && dinosaur && user && (
-                <ShopOverlay 
-                  onDinosaurUpdate={setDinosaur} 
-                  active={true}
-                  dinosaur={dinosaur}
-                  user={user}
-                />
-            )}
-            
             {currentOverlay === 'ranking' && dinosaur && (
                 <RankingOverlay onClose={closeOverlay} active />
             )}
 
-            {currentOverlay === 'pvp' && dinosaur && (
-                <PvpOverlay onClose={closeOverlay} active />
-            )}
-
-            {currentOverlay === 'stat-detail' && dinosaur && statDetailTarget && (
-                <ClickableStatDetailOverlay 
-                  dinosaur={dinosaur} 
-                  target={statDetailTarget} 
-                  onClose={closeOverlay}
-                />
-            )}
         </>
     );
 };
