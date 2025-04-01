@@ -19,9 +19,37 @@
 .wonder {
   animation: dinoActionWonder 0.45s forwards;
 }
+@keyframes dinoActionWonder {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
 
 .baisser {
   animation: dinoActionBaisser 0.5s forwards;
+}
+@keyframes dinoActionBaisser {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(10px) scaleY(0.9);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
 }
 
 .sleep {
