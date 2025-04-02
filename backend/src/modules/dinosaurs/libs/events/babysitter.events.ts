@@ -19,7 +19,7 @@ export const babysitterEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "babysitter",
-        target: "money",
+        target: "experience",
         base_value: 500,
         additiveStep: 5,
         additiveIncrement: 100,
@@ -45,7 +45,7 @@ export const babysitterEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "babysitter",
-        target: "money",
+        target: "experience",
         base_value: 500,  // gain faible
         additiveStep: 5,
         additiveIncrement: 100,
@@ -71,7 +71,7 @@ export const babysitterEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "babysitter",
-        target: "money",
+        target: "experience",
         base_value: 200,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -106,7 +106,7 @@ export const babysitterEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "babysitter",
-        target: "money",
+        target: "experience",
         base_value: 1000,
         additiveStep: 20,
         additiveIncrement: 2500,

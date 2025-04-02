@@ -222,7 +222,7 @@ export const prayEvents: DynamicEventData[] = [
       },
       {
         source: "pray",
-        target: "money",
+        target: "experience",
         base_value: -500,
         additiveStep: 25,
         additiveIncrement: -100,
@@ -248,7 +248,7 @@ export const prayEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "pray",
-        target: "friends",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -274,7 +274,7 @@ export const prayEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "pray",
-        target: "friends",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -300,7 +300,7 @@ export const prayEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "pray",
-        target: "employees",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -326,7 +326,7 @@ export const prayEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "pray",
-        target: "employees",
+        target: "experience",
         base_value: 2,
         additiveStep: 0,
         additiveIncrement: 0,

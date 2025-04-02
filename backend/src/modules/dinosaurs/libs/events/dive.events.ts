@@ -171,7 +171,7 @@ export const diveEvents: DynamicEventData[] = [
       },
       {
         source: "dive",
-        target: "money",
+        target: "experience",
         base_value: 1000,
         additiveStep: 10,
         additiveIncrement: 1000,
@@ -197,7 +197,7 @@ export const diveEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dive",
-        target: "weapons",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -206,7 +206,7 @@ export const diveEvents: DynamicEventData[] = [
       },
       {
         source: "dive",
-        target: "armors",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -232,7 +232,7 @@ export const diveEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dive",
-        target: "weapons",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -241,7 +241,7 @@ export const diveEvents: DynamicEventData[] = [
       },
       {
         source: "dive",
-        target: "armors",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -267,7 +267,7 @@ export const diveEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dive",
-        target: "friends",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -276,7 +276,7 @@ export const diveEvents: DynamicEventData[] = [
       },
       {
         source: "dive",
-        target: "employees",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -302,7 +302,7 @@ export const diveEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dive",
-        target: "friends",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -311,7 +311,7 @@ export const diveEvents: DynamicEventData[] = [
       },
       {
         source: "dive",
-        target: "employees",
+        target: "experience",
         base_value: 2,
         additiveStep: 0,
         additiveIncrement: 0,

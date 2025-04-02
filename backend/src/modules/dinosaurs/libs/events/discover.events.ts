@@ -318,7 +318,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "money",
+        target: "experience",
         base_value: 500,
         additiveStep: 10,
         additiveIncrement: 500,
@@ -353,7 +353,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "money",
+        target: "experience",
         base_value: 1000,
         additiveStep: 10,
         additiveIncrement: 2000,
@@ -388,7 +388,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "skillPoints",
+        target: "experience",
         base_value: 0,
         additiveStep: 5,
         additiveIncrement: 10,
@@ -423,7 +423,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "friends",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -449,7 +449,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "friends",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -475,7 +475,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "weapons",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -501,7 +501,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "weapons",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -527,7 +527,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "armors",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -553,7 +553,7 @@ export const discoverEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "discover",
-        target: "armors",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,

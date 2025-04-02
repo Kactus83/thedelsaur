@@ -38,7 +38,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "money",
+        target: "experience",
         base_value: 2000,
         additiveStep: 5,
         additiveIncrement: 200,
@@ -82,7 +82,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "money",
+        target: "experience",
         base_value: 2500,
         additiveStep: 5,
         additiveIncrement: 300,
@@ -124,7 +124,7 @@ export const digEvents: DynamicEventData[] = [
         multiplicativeStep: 0,
         multiplicativeIncrement: 0
       }
-      // Aucun modificateur pour money
+      // Aucun modificateur pour experience
     ]
   },
   {
@@ -162,7 +162,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "money",
+        target: "experience",
         base_value: 5000,
         additiveStep: 5,
         additiveIncrement: 2000,
@@ -171,7 +171,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "skillPoints",
+        target: "experience",
         base_value: 50,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -197,7 +197,7 @@ export const digEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dig",
-        target: "weapons",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -206,7 +206,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "armors",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -232,7 +232,7 @@ export const digEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dig",
-        target: "weapons",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -241,7 +241,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "armors",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -267,7 +267,7 @@ export const digEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dig",
-        target: "friends",
+        target: "experience",
         base_value: 5,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -276,7 +276,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "employees",
+        target: "experience",
         base_value: 1,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -302,7 +302,7 @@ export const digEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "dig",
-        target: "friends",
+        target: "experience",
         base_value: 10,
         additiveStep: 0,
         additiveIncrement: 0,
@@ -311,7 +311,7 @@ export const digEvents: DynamicEventData[] = [
       },
       {
         source: "dig",
-        target: "employees",
+        target: "experience",
         base_value: 2,
         additiveStep: 0,
         additiveIncrement: 0,

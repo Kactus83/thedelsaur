@@ -330,7 +330,7 @@ export const stealEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "steal",
-        target: "money",
+        target: "experience",
         base_value: 200,
         additiveStep: 5,
         additiveIncrement: 50,
@@ -374,7 +374,7 @@ export const stealEvents: DynamicEventData[] = [
     baseModifiers: [
       {
         source: "steal",
-        target: "money",
+        target: "experience",
         base_value: 5000,
         additiveStep: 10,
         additiveIncrement: 1000,
