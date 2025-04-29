@@ -4,7 +4,6 @@ import { AuthenticatedRequest } from '../../auth/middlewares/authMiddleware';
 import { plainToInstance } from 'class-transformer';
 import { UserDTO } from '../models/user.dto';
 import { ChangeUsernameRequestBody } from '../../auth/models/change-username.dto';
-import { PlayerScoreDTO } from '../models/player-score.dto';
 
 export class UsersController {
   private usersService: UsersService;
