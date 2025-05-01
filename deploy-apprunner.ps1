@@ -31,8 +31,10 @@ Get-Content $envFile | ForEach-Object {
     }
 }
 # Monte la chaîne "KEY1=Value1,KEY2=Value2,…"
-$envPairs = $runtimeEnv.GetEnumerator() |
-    ForEach-Object { "$($_.Key)=$($_.Value)" } -join ','
+$envPairs = (
+    $runtimeEnv.GetEnumerator() |
+    ForEach-Object { "$($_.Key)=$($_.Value)" }
+) -join ','
 
 # 0.1) ARN du rôle IAM qu’App Runner assumera pour accéder à ECR
 $accessRoleArn = 'arn:aws:iam::645583760972:role/AppRunnerECRAccess'
