@@ -1,0 +1,31 @@
+{
+    "SourceConfiguration":  {
+                                "AuthenticationConfiguration":  {
+                                                                    "AccessRoleArn":  "arn:aws:iam::645583760972:role/AppRunnerECRAccess"
+                                                                },
+                                "ImageRepository":  {
+                                                        "ImageIdentifier":  "645583760972.dkr.ecr.eu-west-3.amazonaws.com/iddlesaur-backend:latest",
+                                                        "ImageConfiguration":  {
+                                                                                   "RuntimeEnvironmentVariables":  {
+                                                                                                                       "MARIADB_PORT":  "3306",
+                                                                                                                       "MARIADB_HOST":  "iddlesaur-db.cxcq2yeywrpm.eu-west-3.rds.amazonaws.com",
+                                                                                                                       "AWS_ACCOUNT_ID":  "123456789012",
+                                                                                                                       "DEFAULT_ADMIN_NAME":  "admin",
+                                                                                                                       "MARIADB_USER":  "myuser",
+                                                                                                                       "JWT_SECRET":  "productionSuperSecret",
+                                                                                                                       "FRONTEND_URL":  "",
+                                                                                                                       "REACT_APP_API_URL":  "",
+                                                                                                                       "MARIADB_DATABASE":  "iddlesaur",
+                                                                                                                       "AWS_REGION":  "eu-west-3",
+                                                                                                                       "DEFAULT_ADMIN_PASSWORD":  "prodAdminPass",
+                                                                                                                       "TAG":  "latest",
+                                                                                                                       "MARIADB_PASSWORD":  "secureProdPassword"
+                                                                                                                   },
+                                                                                   "Port":  "3000"
+                                                                               },
+                                                        "ImageRepositoryType":  "ECR"
+                                                    },
+                                "AutoDeploymentsEnabled":  false
+                            },
+    "ServiceArn":  "arn:aws:apprunner:eu-west-3:645583760972:service/iddlesaur-backend/c0a2509bb50b411e88eabc04ab5cd275"
+}

@@ -39,6 +39,8 @@ RUN npm install --only=production
 
 # Copier le code compilé depuis l'étape de build
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src/common/database/scripts \
+                   ./dist/common/database/scripts
 
 # Exposer le port
 EXPOSE 3000

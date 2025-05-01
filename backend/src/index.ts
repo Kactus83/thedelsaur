@@ -19,6 +19,7 @@ import { GameAssetsModule } from './modules/game-assets/game-assets.module';
 import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
 import pool from './common/database/db';
 import { FakesModule } from './modules/fakes/fakes.module';
+import { initDbSchema } from './common/database/init-db';  
 
 dotenv.config();
 
@@ -65,7 +66,11 @@ app.use(errorHandlerMiddleware);
 /**
  * Attendre que la base de données soit prête.
  */
-async function waitForDatabaseReady(maxRetries = 10, delayMs = 2000, initialDelay = 5000): Promise<void> {
+async function waitForDatabaseReady(
+  maxRetries = 10,
+  delayMs = 2000,
+  initialDelay = 5000
+): Promise<void> {
   let retries = 0;
 
   // On attend un peu avant de commencer les tentatives
@@ -86,26 +91,22 @@ async function waitForDatabaseReady(maxRetries = 10, delayMs = 2000, initialDela
 }
 
 // Démarrage du serveur
-waitForDatabaseReady()
-  .then(async () => {
-    // Une fois la DB prête, on lance le seed pour les deux modules
-    await authModule.populateDefaultAdmins().catch(err => {
-      console.error("Erreur lors du seed des administrateurs par défaut:", err);
-    });
-    await gameAssetsModule.seedGameAssets().catch(err => {
-      console.error("Erreur lors du seed des Game Assets:", err);
-    });
-    await dinosaursModule.seedDinosaurs().catch(err => {
-      console.error("Erreur lors du seed des Dynamic Events (Dinosaurs):", err);
-    });
-    await fakesModule.seedFakes().catch(err => {
-      console.error("Erreur lors du seed des données factices:", err);
-    });
-    app.listen(PORT, () => {
-      console.log(`Backend server is running on http://localhost:${PORT}`);
-    });
-  })
-  .catch(error => {
-    console.error("Erreur lors de l'attente de la DB:", error);
+(async () => {
+  try {
+    await waitForDatabaseReady();
+    await initDbSchema();                       // ← ajouté
+
+    // → Vos seeds métier :
+    await authModule.populateDefaultAdmins();
+    await gameAssetsModule.seedGameAssets();
+    await dinosaursModule.seedDinosaurs();
+    await fakesModule.seedFakes();
+
+    app.listen(PORT, () =>
+      console.log(`🚀 Server running at http://localhost:${PORT}`)
+    );
+  } catch (err) {
+    console.error('❌ Erreur au démarrage:', err);
     process.exit(1);
-  });
+  }
+})();
