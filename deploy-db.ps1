@@ -29,16 +29,16 @@ foreach ($l in $lines) {
     $kv = $l -split '=', 2
     if ($kv.Count -eq 2) { $vars[$kv[0]] = $kv[1] }
 }
-foreach ($v in 'MARIADB_NAME','MARIADB_USER','MARIADB_PASSWORD') {
+foreach ($v in 'MARIADB_DATABASE','MARIADB_USER','MARIADB_PASSWORD') {
     if (-not $vars.ContainsKey($v) -or [string]::IsNullOrWhiteSpace($vars[$v])) {
         Write-Error "Variable `$v` manquante ou vide dans .env.prod"
         exit 2
     }
 }
-$DB_NAME     = $vars['MARIADB_NAME']
+$DB_NAME     = $vars['MARIADB_DATABASE']
 $DB_USER     = $vars['MARIADB_USER']
 $DB_PASSWORD = $vars['MARIADB_PASSWORD']
-Write-Host "Variables chargées : MARIADB_NAME=$DB_NAME  MARIADB_USER=$DB_USER"
+Write-Host "Variables chargées : MARIADB_DATABASE=$DB_NAME  MARIADB_USER=$DB_USER"
 
 # 2) Terraform init/apply + capture de l’output JSON
 Write-Host "`n[Terraform] init/apply dans infra\prod"

@@ -31,15 +31,16 @@ resource "aws_security_group" "rds_access" {
   }
 }
 
-resource "aws_security_group_rule" "rds_mysql_ingress" {
+resource "aws_security_group_rule" "rds_ingress_all" {
   type              = "ingress"
+  security_group_id = aws_security_group.rds_access.id
   from_port         = 3306
   to_port           = 3306
   protocol          = "tcp"
-  security_group_id = aws_security_group.rds_access.id
-  cidr_blocks       = [local.my_cidr]
-  description       = "Autorise MySQL 3306 depuis ma machine (${local.my_cidr})"
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "A modifier car pas securise"
 }
+
 
 resource "aws_db_instance" "mariadb" {
   identifier            = "${var.db_name}-db"
