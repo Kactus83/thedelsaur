@@ -20,6 +20,7 @@ import { errorHandlerMiddleware } from './common/middlewares/errorHandler';
 import pool from './common/database/db';
 import { FakesModule } from './modules/fakes/fakes.module';
 import { initDbSchema } from './common/database/init-db';  
+import { morganMiddleware } from './common/middlewares/morganMiddleware';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ const PORT = process.env.PORT || 3000;
 
 Sentry.setupExpressErrorHandler(app);
 
+app.use(morganMiddleware());
 app.use(cors());
 app.use(express.json());
 
