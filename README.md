@@ -82,7 +82,7 @@ docker-compose -f docker-compose.dev.yml up --build
 ```
 
 * Frontend will be available at [http://localhost:8080](http://localhost:8080)
-* Backend (dev) runs on [http://localhost:3000](http://localhost:3000)
+* Backend runs on [http://localhost:3000](http://localhost:3000)
 * MariaDB (dev) is exposed on port 3307
 
 > **Tip:** With Docker Compose v2 you can also use:
