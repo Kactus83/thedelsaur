@@ -81,7 +81,7 @@ A Docker Compose file for development is provided at `docker-compose.dev.yml`. I
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
-* Frontend will be available at [http://localhost:8080](http://localhost:8080)
+* Frontend will be available at [http://localhost:8081](http://localhost:8081)
 * Backend runs on [http://localhost:3000](http://localhost:3000)
 * MariaDB (dev) is exposed on port 3307
 
