@@ -13,8 +13,8 @@ import { useOverlay } from '../../../contexts/OverlayContext';
 import ShopSkillCard from '../../Dashboard/utils/ShopSkillCard';
 import ShopItemCard from '../../Dashboard/utils/ShopItemCard';
 import ShopBuildingCard from '../../Dashboard/utils/ShopBuildingCard';
-import './ShopOverlay.css';
 import ShopSoulSkillCard from '../utils/ShopSoulSkillCard';
+import './ShopOverlay.css';
 
 interface ShopOverlayProps {
   onDinosaurUpdate?: (dino: Dinosaur) => void;
@@ -31,6 +31,8 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
   const { closeOverlay } = useOverlay();
   // Onglets: skills, soulSkills, items, buildings
   const [selectedTab, setSelectedTab] = useState<'skills' | 'items' | 'soulSkills' | 'buildings'>('skills');
+  // Sous-onglets pour Items : consommables vs persistants
+  const [selectedItemTab, setSelectedItemTab] = useState<'consommables' | 'persistants'>('consommables');
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -87,6 +89,14 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
   const itemsToDisplay = [...itemsData.available, ...itemsData.preview];
   const soulSkillsToDisplay = [...soulSkillsData.available, ...soulSkillsData.preview];
   const buildingsToDisplay = [...buildingsData.available, ...buildingsData.preview];
+
+  // Préparation des sous-listes d'items
+  const consumablesToDisplay = itemsToDisplay
+    .filter(item => item.itemType === 'consumable')
+    .sort((a, b) => a.price - b.price);
+  const persistentsToDisplay = itemsToDisplay
+    .filter(item => item.itemType === 'persistent' && !dinosaur.items.some(i => i.id === item.id))
+    .sort((a, b) => a.price - b.price);
 
   // Vérification des ressources
   const skillInsufficient = (price: number): boolean => dinosaur.skill_points < price;
@@ -181,44 +191,46 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {actionMessage && <p className="success-message">{actionMessage}</p>}
 
-        <nav className="shop-tabs">
-          {availableTabs.skills && (
-            <button 
-              className={selectedTab === 'skills' ? 'active' : ''} 
-              onClick={() => setSelectedTab('skills')}
-            >
-              Compétences
-            </button>
-          )}
-          {availableTabs.soulSkills && (
-            <button 
-              className={selectedTab === 'soulSkills' ? 'active' : ''} 
-              onClick={() => setSelectedTab('soulSkills')}
-            >
-              Soul Skills
-            </button>
-          )}
-          {availableTabs.items && (
-            <button 
-              className={selectedTab === 'items' ? 'active' : ''} 
-              onClick={() => setSelectedTab('items')}
-            >
-              Items
-            </button>
-          )}
-          {availableTabs.buildings && (
-            <button 
-              className={selectedTab === 'buildings' ? 'active' : ''} 
-              onClick={() => setSelectedTab('buildings')}
-            >
-              Bâtiments
-            </button>
-          )}
-        </nav>
+        <div className="shop-submenu">
+          <nav className="shop-tabs">
+            {availableTabs.skills && (
+              <button 
+                className={selectedTab === 'skills' ? 'active' : ''} 
+                onClick={() => setSelectedTab('skills')}
+              >
+                Compétences
+              </button>
+            )}
+            {availableTabs.soulSkills && (
+              <button 
+                className={selectedTab === 'soulSkills' ? 'active' : ''} 
+                onClick={() => setSelectedTab('soulSkills')}
+              >
+                Soul Skills
+              </button>
+            )}
+            {availableTabs.items && (
+              <button 
+                className={selectedTab === 'items' ? 'active' : ''} 
+                onClick={() => setSelectedTab('items')}
+              >
+                Items
+              </button>
+            )}
+            {availableTabs.buildings && (
+              <button 
+                className={selectedTab === 'buildings' ? 'active' : ''} 
+                onClick={() => setSelectedTab('buildings')}
+              >
+                Bâtiments
+              </button>
+            )}
+          </nav>
+        </div>
 
-        <div className="shop-items">
-          {selectedTab === 'skills' &&
-            skillsToDisplay.map((skill) => {
+        {selectedTab === 'skills' &&
+          <div className="shop-items">
+            {skillsToDisplay.map((skill) => {
               const preview = skill.minLevelToBuy === dinosaur.level + 1;
               const insufficient = !preview && skillInsufficient(skill.price);
               return (
@@ -230,10 +242,13 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
                   insufficientResources={insufficient}
                 />
               );
-            })
-          }
-          {selectedTab === 'soulSkills' &&
-            soulSkillsToDisplay.map((soulSkill) => {
+            })}
+          </div>
+        }
+
+        {selectedTab === 'soulSkills' &&
+          <div className="shop-items">
+            {soulSkillsToDisplay.map((soulSkill) => {
               const preview = soulSkill.tier === dinosaur.level + 1;
               const insufficient = !preview && soulInsufficient(soulSkill.price, soulSkill.soulType);
               return (
@@ -245,32 +260,54 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
                   insufficientResources={insufficient}
                 />
               );
-            })
-          }
-          {selectedTab === 'items' &&
-            itemsToDisplay.map((item) => {
-              const preview = item.minLevelToBuy === dinosaur.level + 1;
-              const insufficient = !preview && moneyInsufficient(item.price);
-              // Calcul de la quantité possédée pour cet item
-              const ownedQuantity = dinosaur.items.filter(i => i.id === item.id).length;
-              return (
-                <ShopItemCard 
-                  key={item.id} 
-                  item={item} 
-                  onPurchase={handlePurchaseItem} 
-                  onUpgrade={item.itemType === 'persistent' ? undefined : undefined} 
-                  preview={preview}
-                  insufficientResources={insufficient}
-                  ownedQuantity={ownedQuantity}
-                />
-              );
-            })
-          }
-          {selectedTab === 'buildings' &&
-            buildingsToDisplay.map((building) => {
+            })}
+          </div>
+        }
+
+        {selectedTab === 'items' &&
+          <>
+            <div className="shop-items-submenu">
+              <nav className="shop-item-tabs">
+                <button
+                  className={selectedItemTab === 'consommables' ? 'active' : ''}
+                  onClick={() => setSelectedItemTab('consommables')}
+                >
+                  Consommables
+                </button>
+                <button
+                  className={selectedItemTab === 'persistants' ? 'active' : ''}
+                  onClick={() => setSelectedItemTab('persistants')}
+                >
+                  Persistants
+                </button>
+              </nav>
+            </div>
+            <div className="shop-items">
+              {(selectedItemTab === 'consommables' ? consumablesToDisplay : persistentsToDisplay).map((item) => {
+                const preview = item.minLevelToBuy === dinosaur.level + 1;
+                const insufficient = !preview && moneyInsufficient(item.price);
+                const ownedQuantity = dinosaur.items.filter(i => i.id === item.id).length;
+                return (
+                  <ShopItemCard 
+                    key={item.id} 
+                    item={item} 
+                    onPurchase={handlePurchaseItem} 
+                    onUpgrade={item.itemType === 'persistent' ? undefined : undefined} 
+                    preview={preview}
+                    insufficientResources={insufficient}
+                    ownedQuantity={ownedQuantity}
+                  />
+                );
+              })}
+            </div>
+          </>
+        }
+
+        {selectedTab === 'buildings' &&
+          <div className="shop-items">
+            {buildingsToDisplay.map((building) => {
               const preview = building.minLevelToBuy === dinosaur.level + 1;
               const insufficient = !preview && moneyInsufficient(building.price);
-              // Masquer le bâtiment s'il est déjà possédé
               if (dinosaur.buildings.some(b => b.id === building.id)) return null;
               return (
                 <ShopBuildingCard 
@@ -281,9 +318,9 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({ onDinosaurUpdate, active = fa
                   insufficientResources={insufficient}
                 />
               );
-            })
-          }
-        </div>
+            })}
+          </div>
+        }
       </div>
     </div>
   );

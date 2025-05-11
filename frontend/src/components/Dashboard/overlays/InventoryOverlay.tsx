@@ -19,6 +19,12 @@ const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosau
   const [actionMessage, setActionMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  // Onglets : 'consumable' pour consommables, 'persistent' pour persistants
+  const [selectedTab, setSelectedTab] = useState<'consumable' | 'persistent'>('consumable');
+
+  // Filtrer les items selon le type sélectionné
+  const filteredItems = dinosaur.items.filter(item => item.itemType === selectedTab);
+
   if (!active) return null;
 
   const handlePurchase = async (itemId: number) => {
@@ -46,24 +52,65 @@ const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosau
   return (
     <div className="overlay active">
       <div className="overlay-content">
-        <button className="close-button" onClick={onClose}>&times;</button>
-        <h2>Inventaire</h2>
+        <header>
+          <h2>Inventaire</h2>
+          <button className="close-button" onClick={onClose}>&times;</button>
+        </header>
+
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {actionMessage && <p className="success-message">{actionMessage}</p>}
+
+        <div className="inventory-submenu">
+          <nav className="inventory-tabs">
+            <button
+              className={selectedTab === 'consumable' ? 'active' : ''}
+              onClick={() => setSelectedTab('consumable')}
+            >
+              Consommables
+            </button>
+            <button
+              className={selectedTab === 'persistent' ? 'active' : ''}
+              onClick={() => setSelectedTab('persistent')}
+            >
+              Persistents
+            </button>
+          </nav>
+        </div>
+
         <ul className="inventory-list">
-          {dinosaur.items.map(item => (
+          {filteredItems.map(item => (
             <li key={item.id} className="inventory-item">
               <h3>{item.name}</h3>
               {item.description && <p>{item.description}</p>}
-              <p>Niveau/Quantité : {item.currentLevelOrQuantity}</p>
-              {item.itemType && <p>Type : {item.itemType}</p>}
-              <p>Prix : {item.price}</p>
-              <div className="item-actions">
-                <button onClick={() => handlePurchase(item.id)}>Acheter</button>
-                {item.price && (
-                  <button onClick={() => handleUpgrade(item.id)}>Améliorer</button>
-                )}
-              </div>
+
+              {item.itemType === 'consumable' ? (
+                <>
+                  <p>Quantité : {item.currentLevelOrQuantity}</p>
+                  <p>Prix unitaire : {item.price}</p>
+                  <div className="item-actions">
+                    <button onClick={() => handlePurchase(item.id)}>Acheter</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>Niveau actuel : {item.currentLevelOrQuantity}</p>
+                  {(() => {
+                    const nextLevel = item.currentLevelOrQuantity + 1;
+                    const nextDef = item.levels.find(l => l.level === nextLevel);
+                    if (nextDef) {
+                      return (
+                        <>
+                          <p>Prochain niveau ({nextLevel}) – Prix : {nextDef.price}</p>
+                          <div className="item-actions">
+                            <button onClick={() => handleUpgrade(item.id)}>Améliorer</button>
+                          </div>
+                        </>
+                      );
+                    }
+                    return <p>Niveau maximum atteint</p>;
+                  })()}
+                </>
+              )}
             </li>
           ))}
         </ul>

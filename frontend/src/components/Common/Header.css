@@ -26,6 +26,7 @@
 .header-btn-right {
     margin: 0 5px;
     border: 2px solid black;
+    color: black;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.8);
     padding: 8px 12px;
