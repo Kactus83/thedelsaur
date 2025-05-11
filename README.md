@@ -1,32 +1,158 @@
-# Dinosaur Game README
+# The Delsaur Frontend
 
-Welcome to the Dinosaur Game! This game is inspired by the classic Tamagotchi, where you take care of a virtual pet dinosaur. 
+This repository contains the **frontend**, **backend** and **developpement database** application for The Delsaur project, a Tamagotchi‑inspired dinosaur care game. It provides a responsive user interface built with modern web technologies.
 
-## Installation
+---
 
-To play the Dinosaur Game, follow these steps:
+## Table of Contents
 
-1. Clone the repository to your local machine.
-2. Open the terminal and navigate to the project directory.
-3. Run the command `npm install` to install the required dependencies.
-4. Run the command `npm start` to start the game.
+* [Prerequisites](#prerequisites)
+* [Environment Variables](#environment-variables)
+* [Development Setup](#development-setup)
 
-## Gameplay
+  * [Install Dependencies](#install-dependencies)
+  * [Running with Docker Compose](#running-with-docker-compose)
+  * [Running Locally without Docker](#running-locally-without-docker)
+* [Production](#production)
+* [Deployment](#deployment)
+* [Contributing](#contributing)
+* [License](#license)
 
-In the Dinosaur Game, you will be responsible for taking care of your virtual pet dinosaur. You need to feed it, play with it, and make sure it stays happy and healthy.
+---
 
-### Controls
+## Prerequisites
 
-No control
+Before starting, ensure you have the following installed:
 
-### Scoring
+* **Node.js** v16 or higher
+* **npm** (bundled with Node.js) or **yarn**
+* **Docker** v20.10+ and **Docker Compose** v1.27+ (or Docker Compose plugin)
 
-Your score in the game will be based on how well you take care of your dinosaur. The happier and healthier your dinosaur is, the higher your score will be.
+---
+
+## Environment Variables
+
+Configuration is managed via `.env` files. Two main environments are supported:
+
+* **Development**: `.env.dev`
+* **Production**: `.env.prod`
+
+Copy the example file and adjust values as needed:
+
+```bash
+cp .env.example .env.dev
+# or
+cp .env.example .env.prod
+```
+
+Ensure the following variables are set:
+
+```dotenv
+# .env.dev
+REACT_APP_API_URL=http://localhost:3000/api
+# add other keys as required
+```
+
+```dotenv
+# .env.prod
+REACT_APP_API_URL=https://api.yourdomain.com
+# AWS_ACCOUNT_ID, AWS_REGION, TAG may be defined at deployment
+```
+
+---
+
+## Development Setup
+
+### Install Dependencies
+
+```bash
+# In the frontend directory
+npm install
+# or
+yarn install
+```
+
+### Running with Docker Compose
+
+A Docker Compose file for development is provided at `docker-compose.dev.yml`. It brings up MariaDB, the backend, and this frontend:
+
+```bash
+# From project root or frontend folder
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+* Frontend will be available at [http://localhost:8080](http://localhost:8080)
+* Backend (dev) runs on [http://localhost:3000](http://localhost:3000)
+* MariaDB (dev) is exposed on port 3307
+
+> **Tip:** With Docker Compose v2 you can also use:
+>
+> ```bash
+> docker compose -f docker-compose.dev.yml up --build
+> ```
+
+### Running Locally without Docker
+
+If you prefer running the frontend outside of Docker:
+
+```bash
+npm install
+npm run dev       # start in development mode
+# or
+npm start         # if configured for production-like start
+```
+
+You must have the backend running locally at the URL defined in `REACT_APP_API_URL`.
+
+---
+
+## Production
+
+Production images are published to AWS ECR. The production Compose file (used by your deployment pipeline) is `docker-compose.yml` in the project root and references images by tag:
+
+```yaml
+services:
+  frontend:
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/iddlesaur-frontend:${TAG}"
+    env_file:
+      - .env.prod
+```
+
+On deployment, ensure the following variables are set in your CI/CD environment:
+
+* `AWS_ACCOUNT_ID`
+* `AWS_REGION`
+* `TAG` (e.g., `v1.2.3`)
+
+---
+
+## Deployment
+
+The deployment pipeline will:
+
+1. Validate infrastructure (CloudFormation/Terraform)
+2. Build and tag both backend and frontend Docker images
+3. Push images to AWS ECR
+4. Launch or update services in your container platform (e.g., ECS, Kubernetes)
+
+> See the root-level `deploy.sh` (or your CI/CD config) for exact commands.
+
+---
 
 ## Contributing
 
-If you would like to contribute to the Dinosaur Game, feel free to submit a pull request. We welcome any improvements or new features you may have.
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/YourFeature`)
+3. Commit your changes (`git commit -m "Add your feature"`)
+4. Push to the branch (`git push origin feature/YourFeature`)
+5. Open a Pull Request
+
+Ensure all tests pass and follow the established code style.
+
+---
 
 ## License
 
-The Dinosaur Game is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
+The Delsaur Frontend is released under the **MIT License**. See [LICENSE](../LICENSE) for details.
