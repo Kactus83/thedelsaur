@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const persistentExperienceItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Ancient Scroll",
+    name: "Parchemin Ancient",
     description: "Augmente de façon permanente le gain d'expérience.",
     price: 600,
     minLevelToBuy: 6,

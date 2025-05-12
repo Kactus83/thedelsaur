@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const persistentFoodItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Bowl of Ancient Grains",
+    name: "Coffre de Nourriture",
     description: "Augmente de façon permanente la capacité de stockage de nourriture.",
     price: 400,
     minLevelToBuy: 4,

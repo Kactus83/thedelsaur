@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const consumableMoneyItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Gold Nugget",
+    name: "Lingot",
     description: "Augmente temporairement la production de monnaie.",
     price: 250,
     minLevelToBuy: 1,

@@ -7,7 +7,7 @@ import { DinosaurBuildingDTO } from '../../models/dinosaur-building.dto';
 export const universityBuilding: DinosaurBuildingDTO[] = [
   {
     id: 0,
-    name: "University",
+    name: "Université",
     description: "Fournit une éducation avancée pour booster l'expérience et les gains monétaires.",
     price: 1000,
     minLevelToBuy: 5,

@@ -6,7 +6,7 @@ import { DinosaurBuildingDTO } from '../../models/dinosaur-building.dto';
 export const pastureBuilding: DinosaurBuildingDTO[] = [
   {
     id: 0,
-    name: "Pasture",
+    name: "Pâturage",
     description: "Aide à récolter de la nourriture carnivore pour votre dinosaure.",
     price: 500,
     minLevelToBuy: 5,

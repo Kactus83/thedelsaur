@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const persistentMoneyItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Golden Crown",
+    name: "Couronne du Pouvoir",
     description: "Augmente de façon permanente le gain de monnaie.",
     price: 500,
     minLevelToBuy: 5,

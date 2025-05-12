@@ -3,11 +3,6 @@ import './InventoryOverlay.css';
 import { Dinosaur } from '../../../types/Dinosaur';
 import { purchaseItem, upgradeItem } from '../../../services/shopService';
 
-/**
- * Composant affichant en overlay plein écran l'inventaire du dinosaure.
- * Permet d'acheter et d'améliorer les items via le service du shop.
- * Le composant reçoit le dinosaure entier afin d'avoir accès à ses items et à leurs prix.
- */
 interface InventoryOverlayProps {
   dinosaur: Dinosaur;
   onDinosaurUpdate: (dino: Dinosaur) => void;
@@ -15,17 +10,23 @@ interface InventoryOverlayProps {
   active?: boolean;
 }
 
-const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosaurUpdate, onClose, active = false }) => {
+/**
+ * Overlay plein écran pour afficher l'inventaire du dinosaure.
+ * Onglets pour consommables vs persistants, achat et upgrade.
+ */
+const InventoryOverlay: React.FC<InventoryOverlayProps> = ({
+  dinosaur,
+  onDinosaurUpdate,
+  onClose,
+  active = false,
+}) => {
   const [actionMessage, setActionMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-
-  // Onglets : 'consumable' pour consommables, 'persistent' pour persistants
   const [selectedTab, setSelectedTab] = useState<'consumable' | 'persistent'>('consumable');
 
-  // Filtrer les items selon le type sélectionné
-  const filteredItems = dinosaur.items.filter(item => item.itemType === selectedTab);
-
   if (!active) return null;
+
+  const filteredItems = dinosaur.items.filter(item => item.itemType === selectedTab);
 
   const handlePurchase = async (itemId: number) => {
     try {
@@ -33,8 +34,7 @@ const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosau
       setActionMessage(result.message);
       onDinosaurUpdate(result.dinosaur);
     } catch (error: any) {
-      console.error('Erreur achat item:', error);
-      setErrorMessage(error.message || "Erreur lors de l’achat de l’item.");
+      setErrorMessage(error.message || 'Erreur lors de l’achat de l’item.');
     }
   };
 
@@ -44,21 +44,22 @@ const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosau
       setActionMessage(result.message);
       onDinosaurUpdate(result.dinosaur);
     } catch (error: any) {
-      console.error('Erreur upgrade item:', error);
-      setErrorMessage(error.message || "Erreur lors de l’upgrade de l’item.");
+      setErrorMessage(error.message || 'Erreur lors de l’upgrade de l’item.');
     }
   };
 
   return (
-    <div className="overlay active">
-      <div className="overlay-content">
-        <header>
+    <div className="inventory-overlay active">
+      <div className="inventory-overlay-content">
+        <header className="inventory-header">
           <h2>Inventaire</h2>
           <button className="close-button" onClick={onClose}>&times;</button>
         </header>
 
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {actionMessage && <p className="success-message">{actionMessage}</p>}
+        <div className="build-messages">
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {actionMessage && <p className="success-message">{actionMessage}</p>}
+        </div>
 
         <div className="inventory-submenu">
           <nav className="inventory-tabs">
@@ -72,48 +73,73 @@ const InventoryOverlay: React.FC<InventoryOverlayProps> = ({ dinosaur, onDinosau
               className={selectedTab === 'persistent' ? 'active' : ''}
               onClick={() => setSelectedTab('persistent')}
             >
-              Persistents
+              Persistants
             </button>
           </nav>
         </div>
 
-        <ul className="inventory-list">
-          {filteredItems.map(item => (
-            <li key={item.id} className="inventory-item">
-              <h3>{item.name}</h3>
-              {item.description && <p>{item.description}</p>}
+        <div className="inventory-grid">
+          {filteredItems.map(item => {
+            const icon = item.itemType === 'consumable' ? '🍎' : '⚙️';
+            const ownedQty = item.currentLevelOrQuantity;
+            return (
+              <div key={item.id} className="inventory-card">
+                <div className="inventory-card-image">{icon}</div>
+                <div className="inventory-card-content">
+                  <h3>{item.name}</h3>
+                  {item.description && <p>{item.description}</p>}
 
-              {item.itemType === 'consumable' ? (
-                <>
-                  <p>Quantité : {item.currentLevelOrQuantity}</p>
-                  <p>Prix unitaire : {item.price}</p>
-                  <div className="item-actions">
-                    <button onClick={() => handlePurchase(item.id)}>Acheter</button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p>Niveau actuel : {item.currentLevelOrQuantity}</p>
-                  {(() => {
-                    const nextLevel = item.currentLevelOrQuantity + 1;
-                    const nextDef = item.levels.find(l => l.level === nextLevel);
-                    if (nextDef) {
-                      return (
-                        <>
-                          <p>Prochain niveau ({nextLevel}) – Prix : {nextDef.price}</p>
-                          <div className="item-actions">
-                            <button onClick={() => handleUpgrade(item.id)}>Améliorer</button>
-                          </div>
-                        </>
-                      );
-                    }
-                    return <p>Niveau maximum atteint</p>;
-                  })()}
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                  {item.itemType === 'consumable' ? (
+                    <>
+                      <p>Quantité : {ownedQty}</p>
+                      <div className="price-row">
+                        <span className="price-icon">💰</span>
+                        <span>Prix : {item.price}</span>
+                      </div>
+                      <div className="inventory-card-actions">
+                        <button
+                          className="inventory-btn"
+                          onClick={() => handlePurchase(item.id)}
+                        >
+                          Acheter
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p>Niveau : {ownedQty}</p>
+                      {(() => {
+                        const nextLevel = ownedQty + 1;
+                        const nextDef = item.levels.find(l => l.level === nextLevel);
+                        if (nextDef) {
+                          return (
+                            <>
+                              <div className="price-row">
+                                <span className="price-icon">💰</span>
+                                <span>
+                                  Niveau {nextLevel} – Prix : {nextDef.price}
+                                </span>
+                              </div>
+                              <div className="inventory-card-actions">
+                                <button
+                                  className="inventory-btn upgrade"
+                                  onClick={() => handleUpgrade(item.id)}
+                                >
+                                  Améliorer
+                                </button>
+                              </div>
+                            </>
+                          );
+                        }
+                        return <p>Niveau max atteint</p>;
+                      })()}
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

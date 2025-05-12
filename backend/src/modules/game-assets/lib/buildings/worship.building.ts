@@ -7,7 +7,7 @@ import { DinosaurBuildingDTO } from '../../models/dinosaur-building.dto';
 export const worshipBuilding: DinosaurBuildingDTO[] = [
   {
     id: 0,
-    name: "Place of Worship",
+    name: "Lieu de Culte",
     description: "Un lieu sacré pour renforcer le karma de votre dinosaure.",
     price: 900,
     minLevelToBuy: 5,
@@ -15,7 +15,7 @@ export const worshipBuilding: DinosaurBuildingDTO[] = [
     improvementTree: [
       {
         id: 1,
-        name: "Prières Basique",
+        name: "Prières Basiques",
         description: "Augmente le karma gagné de 10%.",
         cost: 450,
         prerequisites: [],

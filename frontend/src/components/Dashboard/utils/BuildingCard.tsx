@@ -12,23 +12,40 @@ interface BuildingCardProps {
 
 /**
  * Affiche une carte détaillée pour un bâtiment.
- * Présente : icône, barre de niveaux, nom, description, niveau actuel,
- * et liste d’upgrades avec état et bouton d’achat.
+ * L'icône change selon le niveau actuel grâce à un mapping symbolique,
+ * et la barre de progression ainsi que les upgrades se mettent à jour
+ * dès que `building.currentLevel` change.
  */
 const BuildingCard: React.FC<BuildingCardProps> = ({ building, onUpgrade }) => {
-  const { improvementTree = [], purchasedUpgrades = {} } = building;
+  const {
+    improvementTree = [],
+    purchasedUpgrades = {},
+    currentLevel,
+    maxLevel
+  } = building;
+
+  // Icônes symboliques par palier (1 à 7).
+  const levelIcons = ['🏚️','🏠','🏡','🏢','🏰','🏯','🗼'];
+  // Assure un niveau au moins à 1, au plus maxLevel
+  const safeLevel = Math.max(1, Math.min(currentLevel, maxLevel));
+  // Index dans levelIcons (capé à length-1)
+  const iconIndex = Math.min(safeLevel - 1, levelIcons.length - 1);
+  const buildingIcon = levelIcons[iconIndex] || '🏛️';
 
   return (
     <div className="building-card">
       <div className="building-header">
-        <div className="building-icon">🏛️</div>
+        {/* key sur l'icône pour forcer remount à chaque changement de level */}
+        <div className="building-icon" key={currentLevel}>
+          {buildingIcon}
+        </div>
         <div className="building-progress">
-          {Array.from({ length: building.maxLevel }).map((_, i) => (
+          {Array.from({ length: maxLevel }).map((_, i) => (
             <span
               key={i}
               className={
                 'level-indicator ' +
-                (i < building.currentLevel ? 'achieved' : 'locked')
+                (i < currentLevel ? 'achieved' : 'locked')
               }
             >
               ●
@@ -43,7 +60,7 @@ const BuildingCard: React.FC<BuildingCardProps> = ({ building, onUpgrade }) => {
           <p className="building-description">{building.description}</p>
         )}
         <p className="building-level">
-          Niveau : {building.currentLevel} / {building.maxLevel}
+          Niveau : {currentLevel} / {maxLevel}
         </p>
 
         <div className="building-upgrades">

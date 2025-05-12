@@ -9,7 +9,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const persistentAdvancedItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Ancient Weapon Blueprint",
+    name: "Plan d'Arme Ancienne",
     description: "Un plan ancien qui augmente de façon permanente la production d'armes.",
     price: 800,
     minLevelToBuy: 4,
@@ -34,7 +34,7 @@ export const persistentAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Legendary Armor Blueprint",
+    name: "Plan d'Armure Légendaire",
     description: "Un plan légendaire qui renforce de façon permanente la production d'armures.",
     price: 800,
     minLevelToBuy: 4,
@@ -59,7 +59,7 @@ export const persistentAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Ancient Friendship Scroll",
+    name: "Parchemin d'Amitié Ancien",
     description: "Un parchemin ancien qui augmente de façon permanente la production d'amis.",
     price: 1000,
     minLevelToBuy: 5,
@@ -84,7 +84,7 @@ export const persistentAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Employee Handbook",
+    name: "Manuel de l'Employé",
     description: "Un manuel indispensable qui augmente de façon permanente la production d'employés.",
     price: 1000,
     minLevelToBuy: 5,

@@ -7,7 +7,7 @@ import { DinosaurBuildingDTO } from '../../models/dinosaur-building.dto';
 export const shaolinTempleBuilding: DinosaurBuildingDTO[] = [
   {
     id: 0,
-    name: "Shaolin Temple",
+    name: "Temple Shaolin",
     description: "Un temple légendaire offrant des entraînements d'exception.",
     price: 2000,
     minLevelToBuy: 8,
@@ -15,7 +15,7 @@ export const shaolinTempleBuilding: DinosaurBuildingDTO[] = [
     improvementTree: [
       {
         id: 1,
-        name: "Meditative Focus",
+        name: "Concentration Méditative",
         description: "Réduit l'augmentation de la faim de 10% et diminue l'usure énergétique de 10%.",
         cost: 1000,
         prerequisites: [],
@@ -26,7 +26,7 @@ export const shaolinTempleBuilding: DinosaurBuildingDTO[] = [
       },
       {
         id: 2,
-        name: "Martial Discipline",
+        name: "Discipline Martiale",
         description: "Réduit l'augmentation de la faim de 15% et diminue l'usure énergétique de 15%.",
         cost: 1500,
         prerequisites: [1],
@@ -37,7 +37,7 @@ export const shaolinTempleBuilding: DinosaurBuildingDTO[] = [
       },
       {
         id: 3,
-        name: "Shaolin Mastery",
+        name: "Maîtrise Shaolin",
         description: "Donne un boost exceptionnel aux points de compétence tout en réduisant encore la faim et l'usure.",
         cost: 2500,
         prerequisites: [2],
@@ -49,7 +49,7 @@ export const shaolinTempleBuilding: DinosaurBuildingDTO[] = [
       },
       {
         id: 4,
-        name: "Zen Enlightenment",
+        name: "Éveil Zen",
         description: "Améliore tous les aspects de la condition physique et mentale.",
         cost: 3000,
         prerequisites: [3],

@@ -4,10 +4,10 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 /**
  * Items consommables pour la catégorie Karma
  */
-export const consumableKarmaItems: DinosaurItemDTO[] = [
+export const consommablesKarmaItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Blessed Amulet",
+    name: "Amulette Bénie",
     description: "Accorde un bonus temporaire de karma.",
     price: 250,
     minLevelToBuy: 1,

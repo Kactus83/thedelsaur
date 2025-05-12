@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const persistentKarmaItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Sacred Talisman",
+    name: "Talisman Sacré",
     description: "Augmente de façon permanente le gain de karma.",
     price: 1000,
     minLevelToBuy: 5,

@@ -7,7 +7,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const consumableExperienceItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "XP Potion",
+    name: "Potion XP",
     description: "Donne un boost temporaire d'expérience.",
     price: 200,
     minLevelToBuy: 1,

@@ -7,7 +7,7 @@ import { DinosaurBuildingDTO } from '../../models/dinosaur-building.dto';
 export const gymBuilding: DinosaurBuildingDTO[] = [
   {
     id: 0,
-    name: "Gym",
+    name: "Gymnase",
     description: "Entraîne votre dinosaure pour améliorer son énergie.",
     price: 700,
     minLevelToBuy: 4,

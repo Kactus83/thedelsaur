@@ -9,7 +9,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 export const consumableAdvancedItems: DinosaurItemDTO[] = [
   {
     id: 0,
-    name: "Weapon Elixir",
+    name: "Élixir d'Armes",
     description: "Un élixir puissant qui augmente temporairement la production d'armes. Parfait pour les batailles décisives !",
     price: 1000,
     minLevelToBuy: 1,
@@ -19,7 +19,7 @@ export const consumableAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Armor Tonic",
+    name: "Tonique d'Armures",
     description: "Un tonique spécial qui booste temporairement la production d'armures. Pour une défense qui en jette !",
     price: 1000,
     minLevelToBuy: 1,
@@ -29,7 +29,7 @@ export const consumableAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Friendship Potion",
+    name: "Potion d'Amitié",
     description: "Une potion rare qui augmente temporairement la production d'amis. Parce que l'amitié, c'est magique !",
     price: 5000,
     minLevelToBuy: 1,
@@ -39,7 +39,7 @@ export const consumableAdvancedItems: DinosaurItemDTO[] = [
   },
   {
     id: 0,
-    name: "Employee Booster",
+    name: "Booster d'Employés",
     description: "Un booster qui stimule temporairement l'efficacité de vos employés. Donnez un coup de fouet à votre équipe !",
     price: 5000,
     minLevelToBuy: 1,
