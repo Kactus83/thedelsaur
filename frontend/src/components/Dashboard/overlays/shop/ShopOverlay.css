@@ -1,0 +1,238 @@
+.shop-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.shop-overlay-content {
+  background-color: #fff;
+  padding: 20px;
+  width: 80%; height: 90%;
+  overflow: auto;
+  max-width: 800px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.shop-overlay-content header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 1.5rem;
+  color: #000;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  width: 32px; height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Resource bar */
+.shop-resources {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.shop-resource {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f0f0f0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.shop-resource .icon {
+  font-size: 1.2rem;
+}
+
+.shop-resource .label {
+  text-transform: uppercase;
+  color: #555;
+}
+
+.shop-resource .value {
+  color: #111;
+}
+
+/* Messages */
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+/* Onglets principaux */
+.shop-submenu {
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.shop-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.shop-tabs button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.shop-tabs button.active {
+  background-color: #333;
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Sous-onglets Items */
+.shop-items-submenu {
+  background: #f9f9f9;
+  padding: 8px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.shop-item-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.shop-item-tabs button {
+  padding: 6px 12px;
+  border: none;
+  background-color: #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.shop-item-tabs button.active {
+  background-color: #333;
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Grille de cards */
+.shop-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Wrapper pour badge + card */
+.shop-card-wrapper {
+  position: relative;
+}
+
+.shop-card-wrapper .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #333;
+  color: #fff;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+/* Badges spécifiques */
+.badge.category-food       { background: #FFD700; color: #000; }
+.badge.category-energy     { background: #87CEEB; color: #000; }
+.badge.category-money      { background: #32CD32; color: #fff; }
+.badge.category-karma      { background: #FF69B4; color: #fff; }
+.badge.category-experience { background: #9370DB; color: #fff; }
+
+.badge.soultype-neutral { background: #888;   color: #fff; }
+.badge.soultype-bright  { background: #FFD700; color: #000; }
+.badge.soultype-dark    { background: #444;   color: #fff; }
+
+/* Badges de type pour skills */
+.badge.type-permanent {
+  background: #2E8B57;
+  color: #fff;
+}
+.badge.type-triggered {
+  background: #FF8C00;
+  color: #fff;
+}
+
+/* Barres de filtres */
+.shop-filter {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  background-color: #fafafa;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.filter-group select {
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+/* Sections groupées */
+.shop-section {
+  margin-bottom: 32px;
+}
+
+.shop-section-header {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-transform: capitalize;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 4px;
+}

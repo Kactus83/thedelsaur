@@ -1,5 +1,5 @@
 import React from 'react';
-import { DinosaurItemDTO } from '../../../types/dinosaur-item.dto';
+import { DinosaurItemDTO } from '../../../../../types/dinosaur-item.dto';
 import './ShopCard.css';
 
 interface ShopItemCardProps {
@@ -21,20 +21,30 @@ const ShopItemCard: React.FC<ShopItemCardProps> = ({
   insufficientResources = false,
   ownedQuantity = 0,
 }) => {
+  const icon = item.itemType === 'consumable' ? '🍎' : '⚙️';
+
   return (
     <div className="shop-card">
       <div className="shop-card-image" style={{ fontSize: '3rem' }}>
-        {/* Placeholder emoji pour les items */}
-        🎒
+        {icon}
       </div>
       <div className="shop-card-content">
-        <h3>{item.name}</h3>
-        <p>{item.description}</p>
-        <p className="shop-card-price">Prix : {item.price}</p>
-        <p className="shop-card-minlevel">Niveau min : {item.minLevelToBuy}</p>
-        {ownedQuantity > 0 && (
-          <p className="shop-card-owned">Possédé : {ownedQuantity}</p>
-        )}
+        <div>
+          <h3>{item.name}</h3>
+          <p>{item.description}</p>
+          {ownedQuantity > 0 && (
+            <p className="shop-card-owned">Possédé : {ownedQuantity}</p>
+          )}
+        </div>
+        <div>
+          <p className="shop-card-price">
+            <span className="price-icon">💰</span>
+            Prix : {item.price}
+          </p>
+          <p className="shop-card-minlevel">
+            Niveau min : {item.minLevelToBuy}
+          </p>
+        </div>
         <div className="shop-card-actions">
           {preview ? (
             <button className="shop-card-btn" disabled>

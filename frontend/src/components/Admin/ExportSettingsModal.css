@@ -1,0 +1,10 @@
+/* réutilise .modal-overlay et .modal-full de UserListModal.css */
+@import './UserListModal.css';
+
+.modal-full h2 {
+  margin-top: 0;
+}
+
+.modal-full p {
+  margin-bottom: 16px;
+}

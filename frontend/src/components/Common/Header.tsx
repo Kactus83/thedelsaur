@@ -35,7 +35,10 @@ const Header: React.FC = () => {
       </div>
 
       {/* -- Titre au centre (desktop) -- */}
-      <div className="Title">IdleSaur🦖</div>
+      <div className="Title">
+        <Link to="/dashboard">
+        IdleSaur🦖
+        </Link></div>
 
       {/* -- Zone droite (desktop) : PvP / Classements -- */}
       <div className="desktop-right">

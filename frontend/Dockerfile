@@ -14,6 +14,8 @@ RUN npm run build
 
 # Étape de production avec Nginx
 FROM nginx:stable-alpine
+# On remplace la conf par défaut
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 # On copie le build de l'application vers le dossier public de Nginx
 COPY --from=build /app/build /usr/share/nginx/html
 EXPOSE 80

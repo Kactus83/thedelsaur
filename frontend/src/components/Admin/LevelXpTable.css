@@ -1,0 +1,29 @@
+.level-xp-table {
+    overflow-x: auto;
+  }
+  
+  .level-xp-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .level-xp-table th,
+  .level-xp-table td {
+    padding: 6px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .level-xp-table th {
+    background-color: #343a40;
+    color: white;
+  }
+  
+  .level-xp-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .error {
+    color: #dc3545;
+  }
+  

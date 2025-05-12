@@ -1,0 +1,29 @@
+.epoch-threshold-table {
+    overflow-x: auto;
+  }
+  
+  .epoch-threshold-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .epoch-threshold-table th,
+  .epoch-threshold-table td {
+    padding: 6px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .epoch-threshold-table th {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .epoch-threshold-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .error {
+    color: #dc3545;
+  }
+  

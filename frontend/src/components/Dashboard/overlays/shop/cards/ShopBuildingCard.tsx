@@ -1,5 +1,5 @@
 import React from 'react';
-import { DinosaurBuildingDTO } from '../../../types/dinosaur-building.dto';
+import { DinosaurBuildingDTO } from '../../../../../types/dinosaur-building.dto';
 import './ShopCard.css';
 
 interface ShopBuildingCardProps {
@@ -22,14 +22,22 @@ const ShopBuildingCard: React.FC<ShopBuildingCardProps> = ({
   return (
     <div className="shop-card">
       <div className="shop-card-image" style={{ fontSize: '3rem' }}>
-        {/* Placeholder emoji pour les bâtiments */}
         🏛️
       </div>
       <div className="shop-card-content">
-        <h3>{building.name}</h3>
-        <p>{building.description}</p>
-        <p className="shop-card-price">Prix : {building.price}</p>
-        <p className="shop-card-minlevel">Niveau min : {building.minLevelToBuy}</p>
+        <div>
+          <h3>{building.name}</h3>
+          <p>{building.description}</p>
+        </div>
+        <div>
+          <p className="shop-card-price">
+            <span className="price-icon">💰</span>
+            Prix : {building.price}
+          </p>
+          <p className="shop-card-minlevel">
+            Niveau min : {building.minLevelToBuy}
+          </p>
+        </div>
         <div className="shop-card-actions">
           {preview ? (
             <button className="shop-card-btn" disabled>
