@@ -15,7 +15,12 @@ interface BuildingsOverlayProps {
  * Overlay plein écran pour afficher les bâtiments du dinosaure.
  * Chaque bâtiment est présenté sous forme de carte détaillée avec possibilité d’upgrade.
  */
-const BuildingsOverlay: React.FC<BuildingsOverlayProps> = ({ dinosaur, onDinosaurUpdate, onClose, active = false }) => {
+const BuildingsOverlay: React.FC<BuildingsOverlayProps> = ({
+  dinosaur,
+  onDinosaurUpdate,
+  onClose,
+  active = false,
+}) => {
   const [actionMessage, setActionMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -36,16 +41,28 @@ const BuildingsOverlay: React.FC<BuildingsOverlayProps> = ({ dinosaur, onDinosau
   return (
     <div className="buildings-overlay">
       <div className="overlay-content">
-        <button className="close-button" onClick={onClose}>&times;</button>
-        <h2>Bâtiments</h2>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
-        {actionMessage && <p className="success-message">{actionMessage}</p>}
+        <header className="buildings-header">
+          <h2>Bâtiments</h2>
+          <button className="close-button" onClick={onClose}>
+            &times;
+          </button>
+        </header>
+
+        <div className="buildings-messages">
+          {errorMessage && (
+            <p className="error-message">{errorMessage}</p>
+          )}
+          {actionMessage && (
+            <p className="success-message">{actionMessage}</p>
+          )}
+        </div>
+
         <div className="buildings-list">
           {dinosaur.buildings.map(building => (
-            <BuildingCard 
-              key={building.id} 
-              building={building} 
-              onUpgrade={handleUpgrade} 
+            <BuildingCard
+              key={building.id}
+              building={building}
+              onUpgrade={handleUpgrade}
             />
           ))}
         </div>

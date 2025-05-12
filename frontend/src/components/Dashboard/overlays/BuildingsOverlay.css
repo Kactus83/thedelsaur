@@ -11,11 +11,11 @@
   z-index: 1000;
 }
 
-.overlay-content {
+.buildings-overlay .overlay-content {
   background-color: #fff;
-  padding: 20px;
-  width: 90%;
-  max-width: 800px;
+  padding: 24px;
+  width: 80%;
+  max-width: 900px;
   max-height: 90%;
   overflow-y: auto;
   border-radius: 10px;
@@ -23,44 +23,56 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+.buildings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
 
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   font-size: 1.5rem;
   background: none;
   border: none;
   cursor: pointer;
   width: 32px;
   height: 32px;
-  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-
 .close-button:hover {
   color: #333;
 }
 
-.buildings-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 20px;
+.buildings-messages {
+  text-align: center;
+  margin-bottom: 16px;
 }
 
 .error-message {
-  color: red;
-  margin-bottom: 10px;
-  text-align: center;
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
 }
 
 .success-message {
-  color: green;
-  margin-bottom: 10px;
-  text-align: center;
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.buildings-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }

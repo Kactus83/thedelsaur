@@ -1,5 +1,5 @@
 /* Scroll vertical */
-root {
+body {
   background-image: url('../../../public/assets/img/Cybercity.jpg'); /* Chemin relatif à partir de HomePage.css */
   background-size: cover;
   background-position: center;
