@@ -11,7 +11,7 @@ export const universityBuilding: DinosaurBuildingDTO[] = [
     description: "Fournit une éducation avancée pour booster l'expérience et les gains monétaires.",
     price: 1000,
     minLevelToBuy: 5,
-    maxLevel: 5,
+    maxLevel: 6,
     improvementTree: [
       {
         id: 1,

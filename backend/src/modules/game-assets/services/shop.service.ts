@@ -250,6 +250,7 @@ export class ShopService {
 
   /**
    * Upgrade d'un bâtiment (achat d'un upgrade spécifique).
+   * Maintenant, on incrémente aussi currentLevel avant de persister.
    */
   public async upgradeBuilding(
     dinosaur: FrontendDinosaurDTO,
@@ -276,13 +277,20 @@ export class ShopService {
       throw new Error("Fonds insuffisants pour acheter cet upgrade");
     }
 
+    // Déduction de la monnaie
     dinosaur.money -= improvementNode.cost;
     await this.shopDinoRepo.updateMoney(dinosaur.id, dinosaur.money);
+
+    // Incrémentation du niveau du bâtiment
+    const newLevel = buildingInstance.currentLevel + 1;
+    buildingInstance.currentLevel = newLevel;
+
+    // Enregistrement de l'upgrade et du nouveau niveau
     buildingInstance.purchasedUpgrades[upgradeId] = true;
     await this.shopDinoRepo.updateBuildingInstance(
       dinosaur.id,
       building.id,
-      buildingInstance.currentLevel,
+      newLevel,
       buildingInstance.purchasedUpgrades
     );
 

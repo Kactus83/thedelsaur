@@ -11,7 +11,7 @@ export const gymBuilding: DinosaurBuildingDTO[] = [
     description: "Entraîne votre dinosaure pour améliorer son énergie.",
     price: 700,
     minLevelToBuy: 4,
-    maxLevel: 5,
+    maxLevel: 6,
     improvementTree: [
       {
         id: 1,

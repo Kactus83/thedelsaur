@@ -16,9 +16,11 @@ import SoulSkillsShop from './shop/SoulSkillsShop';
 import ItemsShop from './shop/ItemsShop';
 import BuildingsShop from './shop/BuildingsShop';
 import './shop/ShopOverlay.css';
+import { fetchUserFromBackend } from '../../../services/authService';
 
 interface ShopOverlayProps {
   onDinosaurUpdate?: (dino: Dinosaur) => void;
+  onUserUpdate?: (user: User) => void;
   active?: boolean;
   dinosaur: Dinosaur;
   user: User;
@@ -26,6 +28,7 @@ interface ShopOverlayProps {
 
 const ShopOverlay: React.FC<ShopOverlayProps> = ({
   onDinosaurUpdate,
+  onUserUpdate,
   active = false,
   dinosaur,
   user
@@ -69,10 +72,15 @@ const ShopOverlay: React.FC<ShopOverlayProps> = ({
       const res = await purchaseSoulSkill(id);
       setActionMessage(res.message);
       onDinosaurUpdate?.(res.dinosaur);
+  
+      // ► Rafraîchir aussi l’utilisateur pour mettre à jour ses soul points
+      const updatedUser = await fetchUserFromBackend();
+      onUserUpdate?.(updatedUser);
+  
     } catch (err: any) {
       setErrorMessage(err.message || 'Erreur achat soul skill.');
     }
-  };
+  };  
   const handlePurchaseItem = async (id: number) => {
     try {
       const res = await purchaseItem(id);

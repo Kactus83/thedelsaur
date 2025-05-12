@@ -4,7 +4,7 @@ import { DinosaurItemType, DinosaurItemCategory } from '../../models/dinosaur-it
 /**
  * Items consommables pour la catégorie Karma
  */
-export const consommablesKarmaItems: DinosaurItemDTO[] = [
+export const consumableKarmaItems: DinosaurItemDTO[] = [
   {
     id: 0,
     name: "Amulette Bénie",

@@ -290,11 +290,12 @@ const DashboardPage: React.FC = () => {
                 />
             )}
             {currentOverlay === 'shop' && dinosaur && user && (
-                <ShopOverlay 
-                  onDinosaurUpdate={setDinosaur} 
-                  active={true}
-                  dinosaur={dinosaur}
-                  user={user}
+                <ShopOverlay
+                    onDinosaurUpdate={setDinosaur}
+                    onUserUpdate={setUser}
+                    active={true}
+                    dinosaur={dinosaur}
+                    user={user}
                 />
             )}
             {currentOverlay === 'ranking' && dinosaur && (

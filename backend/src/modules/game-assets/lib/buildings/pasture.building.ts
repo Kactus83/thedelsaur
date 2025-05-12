@@ -10,7 +10,7 @@ export const pastureBuilding: DinosaurBuildingDTO[] = [
     description: "Aide à récolter de la nourriture carnivore pour votre dinosaure.",
     price: 500,
     minLevelToBuy: 5,
-    maxLevel: 6,
+    maxLevel: 7,
     improvementTree: [
       {
         id: 1,
